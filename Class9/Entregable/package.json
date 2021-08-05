@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "babel-node": "babel-node --presets='@babel/preset-env' --ignore='foo|bar|baz'"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.15.0"
+  },
+  "name": "entregable",
+  "version": "1.0.0",
+  "description": "Class9Homework",
+  "main": "index.js",
+  "dependencies": {},
+  "author": "",
+  "license": "ISC"
+}
