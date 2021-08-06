@@ -1,15 +1,27 @@
 {
   "scripts": {
-    "babel-node": "babel-node --presets='@babel/preset-env' --ignore='foo|bar|baz'"
+    "build": "babel src -d lib",
+    "start" : "nodemon --exec babel-node ./src/index.js"
   },
   "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9",
     "@babel/preset-env": "^7.15.0"
   },
-  "name": "entregable",
+  "name": "class9assignment",
   "version": "1.0.0",
   "description": "Class9Homework",
   "main": "index.js",
-  "dependencies": {},
-  "author": "",
-  "license": "ISC"
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.12",
+    "path": "^0.12.7"
+  },
+  "author": "MansonLautaro",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MansonL/coder/tree/main/Class9/Entregable"
+  }
 }

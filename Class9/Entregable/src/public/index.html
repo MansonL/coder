@@ -11,21 +11,21 @@
     <div class="container d-flex h-100 w-50 align-items-center">
         <div class="container">
             <div class="row">
-                <h2 id="display" class="text-center">Input your JSON as the following:</h2>
+                <h2 id="display" class="text-center">Input your JSON to save as the following:</h2>
                 <h4 class="text-center">{<br/>"title": "randomString",<br/>"price": number, <br/>"thumbnail":"urlString"<br/>}</h4>
             </div>
-            <form class="row d-flex justify-content-center" action="" method="">
+            <form class="row d-flex justify-content-center" action="api/products/save" method="post">
                 <div class="col-12 mb-3">
                     <label for="title" class="form-label">Title:</label>
-                    <input type="text" class="form-control" id="title" placeholder="Insert your product title...">
+                    <input type="text" class="form-control" id="title" name="title"placeholder="Insert your product title...">
                 </div>
                 <div class="col-12 mb-3">
                     <label for="price" class="form-label">Price:</label>
-                    <input type="text" class="form-control" id="price" placeholder="Insert your product price...">
+                    <input type="number" class="form-control" id="price" name="price" placeholder="Insert your product price...">
                 </div>
                 <div class="col-12 mb-3">
                     <label for="thumbnail" class="form-label">Link to the image:</label>
-                    <input type="text" class="form-control" id="thumbnail" placeholder="Insert your product image link...">
+                    <input type="text" class="form-control" id="thumbnail" name="thumbnail"placeholder="Insert your product image link...">
                 </div>
                 <div class="col-4">
                     <button type="submit" class="btn btn-outline-dark btn-lg">Submit</button>
