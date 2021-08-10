@@ -27,16 +27,20 @@ APP.use(express.static(publicPath));
 
 /*--------------- HBS TEMPLATE ENGINE CONFIGURATION  --------*/
 
-APP.engine('hbs',handlebars({
+APP.engine('hbs', handlebars({
     extname: '.hbs',
     defaultLayout: 'index.hbs',
     layoutsDir: __dirname + '/views/layouts',
     partialsDir: __dirname + '/views/partials',
 }));
 
-APP.set('views','./src/views');
-APP.set('view engine','hbs');
+APP.set('views', './src/views');
+APP.set('view engine', 'hbs');
 
-APP.get('/products/view', (req,res) => {
-   res.render('main');
+APP.get('/products/view', (req, res) => {
+    res.render('form', {
+        errorExist: false, messageExist: false, update: false,
+        action: "http://localhost:8080/api/products/save",
+        method: "post"
+    });
 })

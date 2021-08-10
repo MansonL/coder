@@ -16,8 +16,8 @@ export default class Postman {
         let p = !isNaN(price);
         let thumb = typeof thumbnail === 'string';
         try {
-            switch (type) {
-                case 'save':
+            switch (id) {
+                case null:
                     if (!t) throw new Error('Title must be a string');
                     if (!t) throw new Error('Price must be a number');
                     if (!thumb) throw new Error('Thumbnail must be an URL string')
@@ -28,18 +28,19 @@ export default class Postman {
                         thumbnail: thumbnail,
                         id: id
                     });
-                    return this.products[this.products.length-1];
+                    return 'Product saved succesfully!'
                     
-                case 'update':
+                case typeof id === 'number':
                     if (typeof id !== 'number') throw new Error(`No id indicated.`)
                     if (typeof this.products[id] !== 'object') throw new Error(`Couldn't find any product, try another id starting on 0...`);
                     if (t) this.products[id].title = title;
                     if (p) this.products[id].price = price;
                     if (thumb) this.products[id].thumbnail = thumbnail;
-                    return this.products[id];
+                    return 'Product updated successfully!'
             }
         } catch (error) {
-            console.error(error)
+            console.error(error);
+            return error    
         }
     }
     async delete(id) {
