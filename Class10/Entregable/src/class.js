@@ -8,7 +8,7 @@ export default class Postman {
     }
 
     async getOne(id) {
-        return typeof this.products[id] === 'object' ? this.products[id] : `Couldn't find any product. Try another id starting on 0...`
+        return typeof this.products[id] === 'object' ? this.products[id] : ({ error: `Couldn't find any product. Try another id starting on 0...` })
     }
 
     async addUpdateProduct(title=null, price=null, thumbnail=null, type, id=null) {

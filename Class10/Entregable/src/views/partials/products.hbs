@@ -8,13 +8,22 @@
     </tr>
   </thead>
   <tbody>
-    {{#each products}}
+    {{#if items}}
+      {{#each products}}
+        <tr>
+          <th scope="row">{{{this.id}}}</th>
+          <td>{{{this.title}}}</td>
+          <td>{{{this.price}}}</td>
+          <td><img src="{{{this.thumbnail}}}" class="w-100 h-100" /></td>
+        </tr>
+      {{/each}}
+    {{else}}
       <tr>
-        <th scope="row">{{{this.id}}}</th>
-        <td>{{{this.title}}}</td>
-        <td>{{{this.price}}}</td>
-        <td><img src="{{{this.thumbnail}}}" class="w-100 h-100" /></td>
+        <th scope="row">{{{products.id}}}</th>
+        <td>{{{products.title}}}</td>
+        <td>{{{products.price}}}</td>
+        <td><img src="{{{products.thumbnail}}}" class="w-100 h-100" /></td>
       </tr>
-    {{/each}}
+    {{/if}}
   </tbody>
 </table>
