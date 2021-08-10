@@ -5,10 +5,10 @@ const router = express.Router();
 
 const test = new Postman();
 
-test.addUpdateProduct('Roast Beef', 8.99,'https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/327DBA15-0C31-4CC6-ABCA-2FCE38AF66CD/Derivates/edb1c351-ed50-4560-a2d1-bf3e0be1a04d.jpg','save');
+/*test.addUpdateProduct('Roast Beef', 8.99,'https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/327DBA15-0C31-4CC6-ABCA-2FCE38AF66CD/Derivates/edb1c351-ed50-4560-a2d1-bf3e0be1a04d.jpg','save');
 test.addUpdateProduct('Milk',1.29, 'https://33q47o1cmnk34cvwth15pbvt120l-wpengine.netdna-ssl.com/wp-content/uploads/raw-milk-1-e1563894986431.jpg','save' );
 test.addUpdateProduct('Beans', 0.99, 'https://static.independent.co.uk/2021/01/04/09/iStock-969582980.jpg?width=982&height=726&auto=webp&quality=75','save');
-
+*/
 
 const saveUpdateVal = async (title,price,thumbnail,id = null) => {
     if(title !== '' && price !== '' && thumbnail !== ''){
@@ -33,8 +33,9 @@ router.get('/products', (req,res) => {
        '/api/products/delete/id'`)
 });
 router.get('/products/list',async (req,res) => {
-    let products = await test.getProducts();
-    res.render('table',{products:products}) // Here we are going to render table.hbs
+    let result = await test.getProducts();
+    console.log(result)
+    result.length > 0 ? res.render('table',{errorExists: false, productsExist: true, products:result}) : res.render('table',{errorExists: true, productsExist: false, message: result.error}) // Here we are going to render table.hbs
 });
 router.get('/products/list/:id', async (req,res) => {
     let id = req.params.id;
@@ -45,21 +46,20 @@ router.get('/products/list/:id', async (req,res) => {
 router.post('/products/save',async (req,res) => {
     const {title,price,thumbnail} = req.body;
     const result = await saveUpdateVal(title,price,thumbnail);
-    const err = /[Error:]/gi;
+    const err = /Error:/gi;
     console.log(result);
-    err.test(result) ? res.render('form',{message: `${result}`, errorExist: true, messageExist: false}) : res.render('form', {message: `${result}`, errorExist: false,messageExist: true}); 
+    err.test(result) ? res.render('form',{message: `${result}`, errorExists: true, messageExists: false}) : res.render('form', {message: `${result}`, errorExists: false, messageExists: true}); 
     
 });
 router.get('/products/save', async (req,res) => {
-    res.render('form', {errorExist:false,messageExist:false});
+    res.render('form', {errorExists:false,messageExists: false});
 })
 router.put('/products/update/:id', async(req,res) => {
     const {title,price,thumbnail} = req.body;
     const id = req.params.id;
     const result =  await saveUpdateVal(title,price,thumbnail,id);
     const err = /[Error:]/gi;
-    console.log(result)
-    err.test(result) ? res.render('form',{message: `${result}`,errorExist: true,messageExist:false}) : res.render('form',{message: `${result}`, errorExist: false, messageExist: true});
+    res.json(result);
 });
 router.delete('/products/delete/:id',async (req,res) => {
      let id = req.params.id;

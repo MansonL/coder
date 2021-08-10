@@ -1,30 +1,15 @@
 <div class="container">
-    <div class="row">
-        <div class="text-center mt-3">
-        Products List:
+  <div class="row">
+    <div class="text-center fs-2 mt-3">
+      Products List:
     </div>
-    </div>
-    <div class="row">
-        <table class="table table-stripped table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Image</th>
-                </tr>
-            </thead>
-            <tbody>
-            {{#each products}}
-            <tr>
-            <th scope="row">{{this.id}}</th>
-            <td>{{this.name}}</td>
-            <td>{{this.price}}</td>
-            <td><img src="{{{this.thumbnail}}}" class="w-100 h-100"></td>
-            </tr>
-            {{/each}}
-            
-            </tbody>
-        </table>
-    </div>
+  </div>
+  <div class="row">
+    {{#if productsExist}}
+    {{> products}}
+    {{/if}}
+    {{#if errorExists}}
+    {{> noproducts}}
+    {{/if}}
+  </div>
 </div>

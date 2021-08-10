@@ -4,7 +4,7 @@ export default class Postman {
     }
 
     async getProducts() {
-        return this.products.length === 0 ? ({ error: 'No products saved.' }) : this.products
+        return this.products.length === 0 ? ({ error: `No products saved.` }) : this.products
     }
 
     async getOne(id) {
