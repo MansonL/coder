@@ -15,9 +15,11 @@ export default class Postman {
         let t = typeof title === 'string';
         let p = !isNaN(price);
         let thumb = typeof thumbnail === 'string';
+        let typeid = typeof id;
+        console.log(`${id} ${typeof id}`)
         try {
-            switch (id) {
-                case null:
+            switch (typeid) {
+                case 'object':
                     if (!t) throw new Error('Title must be a string');
                     if (!t) throw new Error('Price must be a number');
                     if (!thumb) throw new Error('Thumbnail must be an URL string')
@@ -30,8 +32,8 @@ export default class Postman {
                     });
                     return 'Product saved succesfully!'
                     
-                case typeof id === 'number':
-                    if (typeof id !== 'number') throw new Error(`No id indicated.`)
+                case 'string':
+                    if (typeof eval(id) !== 'number') throw new Error(`No id indicated.`)
                     if (typeof this.products[id] !== 'object') throw new Error(`Couldn't find any product, try another id starting on 0...`);
                     if (t) this.products[id].title = title;
                     if (p) this.products[id].price = price;
@@ -47,6 +49,12 @@ export default class Postman {
         try {
             if(typeof this.products[id] !== 'object') throw new Error(`Couldn't find any product, try another id starting on 0...`)
             let deleted = this.products[id];
+            this.products = this.products.map(elem => {
+                if(elem.id > deleted.id){
+                   elem.id--;
+                }
+                return elem
+            })
             this.products.splice(id, 1);
             return deleted
         } catch (error) {

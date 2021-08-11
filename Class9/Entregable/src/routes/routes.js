@@ -42,6 +42,7 @@ router.put('/products/update/:id', async(req,res) => {
     const {title,price,thumbnail} = req.body;
     let id = req.params.id;
     let product =  await test.addUpdateProduct(title,Number(price),thumbnail,'update',Number(id));
+    console.log(product)
     product === undefined ? res.json(`Couldn't modify the product, check the id of the product you're interested in...`) : res.json(`Product updated: ${JSON.stringify(product)}`);
 });
 router.delete('/products/delete/:id',async (req,res) => {
