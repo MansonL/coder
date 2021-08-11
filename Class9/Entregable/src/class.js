@@ -5,7 +5,7 @@ export default class Postman {
 
   async getProducts() {
     return this.products.length === 0
-      ? { error: "No products saved." }
+      ? "No products saved."
       : this.products;
   }
 
@@ -30,14 +30,14 @@ export default class Postman {
         case "save":
           if (!t) throw new Error("Title must be a string");
           if (!t) throw new Error("Price must be a number");
-          if (!thumb) throw new Error("Thumbnail must be an URL string");
+          if (!thumb) throw new Error("Thumbnail must be an URL string");       // VALIDATING OBJECT PROPERTIES TO MODIFY
           id = this.products.length;
           this.products.push({
             title: title,
-            price: price,
+            price: price,        // SAVING THE NEW PRODUCT
             thumbnail: thumbnail,
             id: id,
-          });
+          });     
           return this.products[this.products.length - 1];
 
         case "update":
@@ -45,7 +45,7 @@ export default class Postman {
           if (typeof this.products[id] !== "object")
             throw new Error(
               `Couldn't find any product, try another id starting on 0...`
-            );
+            );           // VALIDATING OBJECT PROPERTIES TO MODIFY
           if (t) this.products[id].title = title;
           if (p) this.products[id].price = price;
           if (thumb) this.products[id].thumbnail = thumbnail;
@@ -60,14 +60,14 @@ export default class Postman {
     try {
       if (typeof this.products[id] !== "object")
         throw new Error(
-          `Couldn't find any product, try another id starting on 0...`
+          `Couldn't find any product, try another id starting on 0...`    // VALIDATION IN CASE INVALID ID
         );
       const deleted = this.products[id];
       this.products = this.products.map((obj) => {
         if (obj.id > deleted.id) {
           obj.id--;
-        }
-        return obj;
+        }                       // ORDERING THE FOLLOWINGS ID'S DUE
+        return obj;             // THE CHANGE
       });
       this.products.splice(id, 1);
       return deleted;
