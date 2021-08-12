@@ -2,7 +2,6 @@ import express from 'express';
 import path from 'path';
 import routerPostman from './routes/routes.js';
 import handlebars from 'express-handlebars'
-import fs from 'fs'
 
 /*-------------  INITIALIZING SERVER & APP  -----------------*/
 const PORT = 8080;
