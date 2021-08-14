@@ -1,0 +1,29 @@
+<table class="table table-stripped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Image</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (items){%>
+      <% products.forEach(product => {%>
+        <tr>
+          <th scope="row"><%=product.id%></th>
+          <td><%=product.title%></td>
+          <td><%=product.price%></td>
+          <td><img src=`${product.thumbnail}` class="w-100 h-100" /></td>
+        </tr>
+      <%)}%>
+    <%} else{%>
+      <tr>
+        <th scope="row"><%=products.id%></th>
+        <td><%=products.title%></td>
+        <td><%=products.price%></td>
+        <td><img src=`${products.thumbnail}` class="w-100 h-100" /></td>
+      </tr>
+    <%}%>
+  </tbody>
+</table>

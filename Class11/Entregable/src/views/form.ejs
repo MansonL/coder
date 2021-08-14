@@ -1,0 +1,40 @@
+<div class="container">
+    <% if(errorExists){%>
+    <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+        <% message %>
+        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <% };%>
+    <% if(messageExists){ %>
+    <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <% } %>
+    <div class="row">
+        <h2 id="display" class="text-center mt-2">Input the product to be saved:</h2>
+    </div>
+    <form class="row d-flex align-items-center" action="http://localhost:8080/api/products/save" method="post">
+        <div class="col-12 mb-3">
+            <label for="title" class="form-label">Title:</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="Insert your product title...">
+        </div>
+        <div class="col-12 mb-3">
+            <label for="price" class="form-label">Price:</label>
+            <input type="number" min="0.01" step="0.01" class="form-control" id="price" name="price"
+                placeholder="Insert your product price...">
+        </div>
+        <div class="col-12 mb-3">
+            <label for="thumbnail" class="form-label">Link to the image:</label>
+            <input type="text" class="form-control" id="thumbnail" name="thumbnail"
+                placeholder="Insert your product image link...">
+        </div>
+        <div class="col-4">
+            <button type="submit" id="button" class="btn btn-outline-dark btn-lg mb-3">Save</button>
+        </div>
+        <div class="col-4">
+            <a class="btn btn-outline-dark btn-lg mb-3" href="http://localhost:8080/api/products/list">View products</a>
+        </div>
+    </form>
+</div>
+</div>
