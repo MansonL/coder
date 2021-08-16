@@ -16,8 +16,8 @@ table(class="table table-stripped table-hover")
             img(src=product.thumbnail class="w-100 h-100") 
     else
       tr
-        th(scope="row") #{product.id}
-          td #{product.title}
-          td #{product.price}
+        th(scope="row") #{products.id}
+          td #{products.title}
+          td #{products.price}
           td 
-            img(src=product.thumbnail class="w-100 h-100")
+            img(src=products.thumbnail class="w-100 h-100")
