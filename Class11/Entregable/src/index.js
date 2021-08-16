@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import routerPostman from './routes/routes.js';
+import handlebars from 'express-handlebars'
 
 /*-------------  INITIALIZING SERVER & APP  -----------------*/
 const PORT = 8080;
@@ -23,11 +24,17 @@ SERVER.on('error', error => {
 APP.use('/api', routerPostman);
 APP.use(express.static(publicPath));
 
-/*--------------- EJS TEMPLATE ENGINE CONFIGURATION  --------*/
+/*--------------- HBS TEMPLATE ENGINE CONFIGURATION  --------*/
 
+APP.engine('hbs', handlebars({
+    extname: '.hbs',
+    defaultLayout: 'index.hbs',
+    layoutsDir: __dirname + '/views/layouts',
+    partialsDir: __dirname + '/views/partials',
+}));
 
 APP.set('views', './src/views');
-APP.set('view engine', 'pug');
+APP.set('view engine', 'hbs');
 
 APP.get('/products/view', (req, res) => {
     res.render('form', {

@@ -1,35 +1,28 @@
 {
-  "name": "entregable",
+  "name": "class10entregable",
   "version": "1.0.0",
-  "description": "Class11 Assignment",
+  "description": "Class10 Assignment",
   "main": "index.js",
+  "dependencies": {
+    "@babel/preset-env": "^7.15.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.3",
+    "nodemon": "^2.0.12",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9"
+  },
   "scripts": {
-    "transpile": "babel src --out-dir dist",
-    "start": "node ./dist/index.js",
-    "dev": "nodemon --exec babel-node ./src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec babel-node ./src/index.js",
+    "build": "babel ./src/index.js — out-file index-compiled.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MansonL/coder.git"
+    "url": "https://github.com/MansonL/coder/tree/main/Class10/Entregable"
   },
-  "author": "MansonL",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MansonL/coder/issues"
-  },
-  "homepage": "https://github.com/MansonL/coder#readme",
-  "devDependencies": {
-    "@babel/cli": "^7.14.8",
-    "@babel/core": "^7.14.8",
-    "@babel/node": "^7.14.7",
-    "@babel/preset-env": "^7.14.8",
-    "nodemon": "^2.0.12"
-  },
-  "dependencies": {
-    "ejs": "^3.1.6",
-    "express": "^4.17.1",
-    "path": "^0.12.7",
-    "pug": "^3.0.2"
-  }
+  "author": "MansonLautaro",
+  "license": "ISC"
 }
