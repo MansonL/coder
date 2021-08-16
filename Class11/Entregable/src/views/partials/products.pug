@@ -1,0 +1,23 @@
+table(class="table table-stripped table-hover")
+  thead
+    tr
+      th(scope="col") #
+      th(scope="col") Name
+      th(scope="col") Price
+      th(scope="col") Image
+  tbody
+    if items
+      each product in products
+        tr
+          th(scope="row") #{product.id}
+          td #{product.title}
+          td #{product.price}
+          td 
+            img(src=product.thumbnail class="w-100 h-100") 
+    else
+      tr
+        th(scope="row") #{product.id}
+          td #{product.title}
+          td #{product.price}
+          td 
+            img(src=product.thumbnail class="w-100 h-100")

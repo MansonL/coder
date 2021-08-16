@@ -27,7 +27,7 @@ APP.use(express.static(publicPath));
 
 
 APP.set('views', './src/views');
-APP.set('view engine', 'ejs');
+APP.set('view engine', 'pug');
 
 APP.get('/products/view', (req, res) => {
     res.render('form', {

@@ -13,7 +13,7 @@ APP.use('/', routerEj);
 /* ------------------- APP SET -------------------*/
 
 APP.set('views', './src/views');
-APP.set('view engine', 'ejs');
+APP.set('view engine', 'pug');
 
 /* --------------------- SERVER ----    -------------*/
 
