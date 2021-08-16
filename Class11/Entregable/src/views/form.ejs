@@ -1,13 +1,13 @@
 <div class="container">
     <% if(errorExists){%>
     <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
-        <% message %>
+        <%= message %>
         <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
     </div>
     <% };%>
     <% if(messageExists){ %>
     <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-        {{message}}
+        <%= message %>
         <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
     </div>
     <% } %>

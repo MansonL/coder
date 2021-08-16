@@ -42,7 +42,6 @@ router.get("/products", (req, res) => {
 });
 router.get("/products/list", async (req, res) => {
   let result = await test.getProducts();
-  console.log(result)
   result.length > 0
     ? res.render("layouts/index", { // WILL RENDER DIFFERENT TEMPLATES 
         productsExist: true, // IF THERE'S ANY PRODUCT OR NOT
@@ -65,6 +64,7 @@ router.get("/products/list/:id", async (req, res) => {
     ? res.render("layouts/index", {   // WILL RENDER DIFFERENTS TEMPLATES
         errorExists: false,   // IF THE PRODUCT EXISTS OR NOT
         productsExist: true,
+        items:false,
         products: result,
         view:'table'
       })
@@ -72,6 +72,7 @@ router.get("/products/list/:id", async (req, res) => {
         errorExists: true,
         productsExist: false,
         message: result.error,
+        items:false,
         view:'table'
       });
 });

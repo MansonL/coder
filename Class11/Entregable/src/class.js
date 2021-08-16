@@ -25,7 +25,6 @@ export default class Postman {
     let p = !isNaN(price);
     let thumb = typeof thumbnail === "string";
     let typeid = typeof id;
-    console.log(typeid)
     try {
       switch (typeid) {
         case "object":
