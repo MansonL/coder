@@ -15,7 +15,7 @@ APP.use('/', routerEj);
 APP.set('views', './src/views');
 APP.set('view engine', 'pug');
 
-/* --------------------- SERVER -----------------*/
+/* --------------------- SERVER ----    -------------*/
 
 const SERVER = APP.listen(PORT, () => {
     console.log(`Server hosted at PORT: ${SERVER.address().port}`)
