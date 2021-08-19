@@ -1,0 +1,33 @@
+{
+  "name": "entregable",
+  "version": "1.0.0",
+  "description": "Class12 Assignment",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.1.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9",
+    "@babel/preset-env": "^7.15.0",
+    "nodemon": "^2.0.12"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./dist/server.js",
+    "transpile": "babel src --out-dir dist",
+    "dev": "nodemon --exec babel-node ./src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MansonL/coder.git"
+  },
+  "author": "MansonL",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MansonL/coder/issues"
+  },
+  "homepage": "https://github.com/MansonL/coder#readme"
+}
