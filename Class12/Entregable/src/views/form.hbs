@@ -14,7 +14,7 @@
     <div class="row">
         <h2 id="display" class="text-center mt-2">Input the product to be saved:</h2>
     </div>
-    <form class="row d-flex align-items-center" action="http://localhost:8080/api/products/save" method="post">
+    <form class="row d-flex align-items-center" action="http://localhost:8080/socket/form" method="post">
         <div class="col-12 mb-3">
             <label for="title" class="form-label">Title:</label>
             <input type="text" class="form-control" id="title" name="title" placeholder="Insert your product title...">
@@ -31,9 +31,6 @@
         </div>
         <div class="col-4">
             <button type="submit" id="button" class="btn btn-outline-dark btn-lg mb-3">Save</button>
-        </div>
-        <div class="col-4">
-            <a class="btn btn-outline-dark btn-lg mb-3" href="http://localhost:8080/api/products/list">View products</a>
         </div>
     </form>
     <div id="table-container">
