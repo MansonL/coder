@@ -1,8 +1,7 @@
 import express from 'express';
 import path from 'path';
-import routerPostman from './routes/routes.js';
+import router from './routes/routes.js';
 import handlebars from 'express-handlebars';
-
 
 
 /*-------------  INITIALIZING SERVER & APP  -----------------*/
@@ -20,11 +19,11 @@ http.listen(PORT, () => {
 
     console.log(`Hi! This server is hosted at PORT: ${http.address().port}`);
 });
-SERVER.on('error', error => {
+http.on('error', error => {
     console.log(`Error: ${error}`)
 });
 
-APP.use('/api', routerPostman);
+APP.use('/api', router);
 APP.use(express.static(publicPath));
 
 /*--------------- HBS TEMPLATE ENGINE CONFIGURATION  --------*/
@@ -50,16 +49,30 @@ APP.get('/products/view', (req, res) => {
 /* ------------------ SOCKET IMPLEMENTATION ----------------------- */
 
 const io = require('socket.io')(http);
+const test = require('./class.js');
+
 
 io.on('connection', socket => {
     console.log('New client connected!');
-    socket.on()
+    socket.emit()
 });
 
 APP.get('/socket/form', (req,res) => {
-    res.render('form', {
-     errorExist: false,
-     messageExist: false,
-     
-    });
+    const result = await test.getProducts();
+    result.length > 0
+    ? res.render("form", { 
+        errorExists: false, 
+        productsExist: true,
+        items: true,
+        products: result,
+      })
+    : res.render("form", {
+        errorExists: true,
+        productsExist: false,
+        message: result.error,
+      });
+    
 });
+
+
+  

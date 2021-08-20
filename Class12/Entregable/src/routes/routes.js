@@ -45,7 +45,7 @@ router.get("/products", (req, res) => {
   res.render("home");
 });
 router.get("/products/list", async (req, res) => {
-  let result = await test.getProducts();
+  const result = await test.getProducts();
   result.length > 0
     ? res.render("table", { // WILL RENDER DIFFERENT TEMPLATES
         errorExists: false, // IF THERE'S ANY PRODUCT OR NOT
@@ -118,6 +118,6 @@ router.delete("/products/delete/:id", async (req, res) => {
     : res.json(`Product deleted: ${JSON.stringify(deleted)}`);
 });
 
-/* --------------  EXPORT DEFAULT  ------------------- */
+/* --------------  EXPORTS  ------------------- */
 
-export default router;
+export {router, test} 
