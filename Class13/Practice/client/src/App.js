@@ -1,20 +1,20 @@
 import { BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import io from 'socket.io-client';
-import Home from './Home';
-import Form from './Form'
+import Home from './components/Home';
+import Layout from './components/Layout';
 
 const socket = io().connect('/');
 
 function App() {
   return (
     <Router>
-      <div className="container-fluid d-flex justify-content-center bg-light ">
+      <div className="container-fluid vh-100">
         <Switch>
           <Route path="/" exact>
             <Home />
           </Route>
           <Route path="/chatandsave">
-            <Form socket={socket}/>
+            <Layout socket={socket}/>
           </Route>
         </Switch>
       </div>

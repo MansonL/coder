@@ -1,4 +1,4 @@
- import {useState,useEffect} from 'react'
+ import React, {useState,useEffect} from 'react'
  import {inputVal} from './lib/validations'
  import Message from './fragments/Message'
  import Inputs from './fragments/Inputs';
@@ -29,21 +29,25 @@
        inputs[1].value = '';
        inputs[2].value = ''
    }
-
+   useEffect(() => {
+       setError(false);
+       setMessage('');
+       setSucccess(false);
+   })
 
    return (
-    <div className="container">
+    <React.Fragment>
     <Message errorExist={errorExist} success={success} message={message}/>
     <div className="row">
-        <h2 id="display" className="text-center mt-2">Input the product to be saved:</h2>
+    <h2 id="display" className="text-center mt-2 text-color fs-4">Input the product to be saved:</h2>
     </div>
-    <form className="row d-flex align-items-center" onSubmit={sendData}>
+    <form className="row justify-content-center" onSubmit={sendData}>
         <Inputs />
         <div className="col-4">
-            <button type="submit" className="btn btn-outline-dark btn-lg mb-3">Save</button>
+            <button type="submit" id="button" className="btn btn-light btn-lg mb-3">Save</button>
         </div>
     </form>
-    </div>
+    </React.Fragment>
    )
 
  }
