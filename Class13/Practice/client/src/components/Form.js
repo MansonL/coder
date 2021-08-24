@@ -1,12 +1,12 @@
  import React, {useState,useEffect} from 'react'
- import {inputVal} from './lib/validations'
- import Message from './fragments/Message'
- import Inputs from './fragments/Inputs';
+ import {inputVal} from '../lib/validations'
+ import Message from '../fragments/Message'
+ import Inputs from '../fragments/Inputs';
  
  export default function Form ({ socket }){
-   const [errorExist, setError] = useState(false);
-   const [success, setSucccess] = useState(false); 
-   const [message, setMessage] = useState('')
+   let [errorExist, setError] = useState(false);
+   let [success, setSucccess] = useState(false); 
+   let [message, setMessage] = useState('')
    const sendData = (e) => {
     e.preventDefault(); 
     const inputs = [e.target[0].value,e.target[1].value,e.target[2].value];
@@ -29,11 +29,6 @@
        inputs[1].value = '';
        inputs[2].value = ''
    }
-   useEffect(() => {
-       setError(false);
-       setMessage('');
-       setSucccess(false);
-   })
 
    return (
     <React.Fragment>

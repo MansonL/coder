@@ -8,7 +8,7 @@ const socket = io().connect('/');
 function App() {
   return (
     <Router>
-      <div className="container-fluid vh-100">
+      <div className="container-fluid d-flex align-items-center vh-100">
         <Switch>
           <Route path="/" exact>
             <Home />

@@ -24,7 +24,7 @@ body{
     overflow-y: auto;
   }
   #msg-received {
-    text-alignt: left;
+    text-align: left;
   }
   #msg-sent {
     text-align: right
@@ -35,3 +35,4 @@ body{
   span {
     color: #6C370E;
   }
+ 
