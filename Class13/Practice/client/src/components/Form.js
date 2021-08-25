@@ -1,35 +1,21 @@
 import React, { useState, useEffect } from "react";
 import Message from "../fragments/Message";
 import Inputs from "../fragments/Inputs";
-import axios from "axios";
-import {socket} from "../lib/socket";
 
-export default function Form() {
-  let [errorExist, setError] = useState(false);
-  let [success, setSucccess] = useState(false);
-  let [message, setMessage] = useState("");
-  const sendData = async (e) => {
+export default function Form( { message, errorExist, success, handleData }) {
+  
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(`${e.target[0].value} ${e.target[1].value}`)
     const inputs = [
       e.target[0].value,
       Number(e.target[1].value),
       e.target[2].value,
     ];
-    let result = await axios.post("http://localhost:8080/products/save", inputs);
     clearFields(e.target)
-    if(/success\w/.test(result)){
-      setSucccess(true);
-      setError(false);
-      setMessage(result.data);
-      socket.emit('save');
-    }else{
-      setError(true);
-      setSucccess(false);
-      setMessage(result.data);
-    }
-  };
+    handleData(inputs);
+  }
 
+  
   const clearFields = (inputs) => {
     inputs[0].value = "";
     inputs[1].value = "";
@@ -44,7 +30,7 @@ export default function Form() {
           Input the product to be saved:
         </h2>
       </div>
-      <form className="row justify-content-center" onSubmit={sendData}>
+      <form className="row justify-content-center" onSubmit={handleSubmit}>
         <Inputs />
         <div className="col-4">
           <button

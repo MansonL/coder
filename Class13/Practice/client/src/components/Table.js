@@ -1,12 +1,5 @@
 import React from "react";
-import { useEffect, useState } from "react";
-import {socket} from "../lib/socket";
-export default function Table() {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    socket.emit("");
-  });
+export default function Table({ products }) {
   return (
     <React.Fragment>
       <div className="row">

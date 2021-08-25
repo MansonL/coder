@@ -5,7 +5,7 @@ import React from 'react';
 
 
 
-function App({ socket }) {
+function App() {
   return (
     <Router>
       <div className="container-fluid d-flex align-items-center vh-100">
@@ -14,7 +14,7 @@ function App({ socket }) {
             <Home />
           </Route>
           <Route path="/chatandsave">
-            <Layout socket={socket}/>
+            <Layout/>
           </Route>
         </Switch>
       </div>

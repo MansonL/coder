@@ -12,7 +12,7 @@ class Products {
 
   }
   getProducts(req, res){
-    const { id } = req.params;
+    const { id } = req.params
     this.products.length === 0
       ? res.send("No products added.")
       : id == null
@@ -21,7 +21,7 @@ class Products {
   };
   addUpdateProducts(req, res){
     if (valid(req.body)) {
-      const { title, price, thumbnail } = req.body;
+      const [ title, price, thumbnail ] = req.body;
       if (req.params.id) {
         const id = req.params.id;
         if (this.products[id]) {
@@ -33,13 +33,15 @@ class Products {
           res.send("Product not found. Please try another id...");
         }
       } else {
+        console.log(this.products);
         this.products.push({
           title: title,
           price: price,
           thumbnail: thumbnail,
-          id: this.products.length++,
+          id: this.products.length + 1,
         });
-        res.send("Product succesfully saved!");
+        console.log(this.products);
+        res.send("Product successfully saved!");
       }
     } else {
       res.send("Please, insert the product properties correctly...");
