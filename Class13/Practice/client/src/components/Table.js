@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
-
-export default function Table({ socket }) {
+import {socket} from "../lib/socket";
+export default function Table() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function Table({ socket }) {
             <tbody>
               {products.map((product) => {
                 return (
-                  <tr>
+                  <tr key={product.id}>
                     <th scope="row">
                       <img src={product.thumbnail} className="w-100" />
                     </th>

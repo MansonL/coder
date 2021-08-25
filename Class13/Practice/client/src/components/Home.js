@@ -1,3 +1,6 @@
+/* eslint-disable react/no-unescaped-entities */
+import React from "react"
+
 export default function Home(){
     return (
         <div className="container card mx-auto my-auto w-50 h-80">

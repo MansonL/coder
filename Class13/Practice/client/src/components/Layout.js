@@ -1,19 +1,29 @@
 import Table from './Table'
 import Chat from './Chat';
 import Form from './Form';
-import React from "react";
-
-export default function Layout({ socket }) {
+import React, { useState } from "react";
+import {socket} from '../lib/socket';
+export default function Layout() {
+  const [products, setProducts] = useState([])
+  const handleProducts = (products) => {
+     setProducts(products);
+  };
+  socket.on('update', data => {
+    handleProducts(data);
+  })
+  socket.on('renderTable', data => {
+       setProducts(data);
+  })
   return (
     <React.Fragment>
       <div className="col-12 col-sm-4">
         <div className="container card">
-            <Form socket={socket}/>
+            <Form/>
         </div>
       </div>
       <div className="col-12 col-sm-4">
         <div className="container card">
-            <Table socket={socket}/>
+            <Table products={products}/>
         </div>
       </div>
       <div className="col-12 col-sm-4">

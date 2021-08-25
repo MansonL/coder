@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Switch, Route} from 'react-router-dom'
-import io from 'socket.io-client';
 import Home from './components/Home';
 import Layout from './components/Layout';
+import React from 'react';
 
-const socket = io().connect('/');
 
-function App() {
+
+function App({ socket }) {
   return (
     <Router>
       <div className="container-fluid d-flex align-items-center vh-100">
