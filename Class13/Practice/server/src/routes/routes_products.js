@@ -2,7 +2,7 @@ import express from "express";
 import {controller} from "../class";
 
 
-const router = express.Router();
+const router_products = express.Router();
 
 
 /* ------------------------ ROUTES GET ---------------------------- */ 
