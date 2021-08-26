@@ -4,42 +4,68 @@ import Form from './Form';
 import React, { useState } from "react";
 import {socket} from '../lib/socket';
 import axios from 'axios';
+import Message from '../fragments/Message';
 
 export default function Layout() {
    let [products, setProducts] = useState([])
    let [errorExist, setError] = useState(false);
-   let [success, setSucccess] = useState(false);
+   let [success, setSuccess] = useState(false);
    let [message, setMessage] = useState("");
-  
-   socket.on('update', async () => {
+   let  [emailAlert, setEmailAlert] = useState(false);
+   let [productAlert, setProductAlert] = useState(false);
+   
+   socket.on('updateProducts', async () => {
     const data = await (await axios.get('http://localhost:8080/products/list')).data;
     setProducts(data);
-  })
+  });
+
   socket.on('renderTable', async () => {
     const result = await (await axios.get('http://localhost:8080/products/list')).data;
     if(typeof result !== 'string'){
       setProducts(result);
     }
-  })
+  });
+  
+  const failed = (msg) => {
+    setError(true);
+    setSuccess(false);
+    setMessage(msg);
+  }
+  
+  const passed = (msg) => {
+    setSuccess(true);
+    setError(false);
+    setMessage(msg);
+  }
 
-  const sendData = async (inputs) => {
+  const handleData = async (inputs,type) => {
+    if(type === 'product'){
     let result = await (await axios.post("http://localhost:8080/products/save", inputs)).data
+    setEmailAlert(false);
+    setProductAlert(true)
     if(/success\w/.test(result)){
-      socket.emit('save');
-      setSucccess(true);
-      setError(false);
-      setMessage(result);
+      socket.emit('saveProduct');
+      passed(result);
     }else{
-      setError(true);
-      setSucccess(false);
-      setMessage(result);
+      failed(result);
+    }
+    }else{
+      setProductAlert(false);
+      setEmailAlert(true);
+      if(type){
+       passed('Correct email!');
+      }else{
+        failed('Incorrect email!')
+      }
     }
   };
+
   return (
     <React.Fragment>
       <div className="col-12 col-sm-4">
         <div className="container card">
-            <Form message={message} errorExist={errorExist} success={success} handleData={sendData}/>
+            {productAlert && <Message errorExist={errorExist} success={success} message={message}/>}
+            <Form handleData={handleData}/>
         </div>
       </div>
       <div className="col-12 col-sm-4">
@@ -49,7 +75,8 @@ export default function Layout() {
       </div>
       <div className="col-12 col-sm-4">
         <div className="container card py-2">
-            <Chat socket={socket}/>
+            {emailAlert && <Message errorExist={errorExist} success={success} message={message}/>}
+            <Chat handleData={handleData}/>
         </div>
       </div>
     </React.Fragment>

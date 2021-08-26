@@ -14,6 +14,6 @@ class Messages {
     }
 }
 
-const Messages = new Messages();
+const controller = new Messages();
 
-export { Messages } 
+export { controller } 

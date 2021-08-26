@@ -33,14 +33,12 @@ class Products {
           res.send("Product not found. Please try another id...");
         }
       } else {
-        console.log(this.products);
         this.products.push({
           title: title,
           price: price,
           thumbnail: thumbnail,
           id: this.products.length + 1,
         });
-        console.log(this.products);
         res.send("Product successfully saved!");
       }
     } else {

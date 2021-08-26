@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Message from "../fragments/Message";
 import Inputs from "../fragments/Inputs";
 
-export default function Form( { message, errorExist, success, handleData }) {
+export default function Form( { handleData }) {
   
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -12,7 +12,7 @@ export default function Form( { message, errorExist, success, handleData }) {
       e.target[2].value,
     ];
     clearFields(e.target)
-    handleData(inputs);
+    handleData(inputs,'product');
   }
 
   
@@ -24,7 +24,7 @@ export default function Form( { message, errorExist, success, handleData }) {
 
   return (
     <React.Fragment>
-      <Message errorExist={errorExist} success={success} message={message} />
+      
       <div className="row">
         <h2 id="display" className="text-center mt-2 text-color fs-4">
           Input the product to be saved:

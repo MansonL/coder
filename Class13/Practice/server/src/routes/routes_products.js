@@ -7,18 +7,18 @@ const router_products = express.Router();
 
 /* ------------------------ ROUTES GET ---------------------------- */ 
 
-router.get("/list", controller.getProducts);
+router_products.get("/list", controller.getProducts);
 
-router.get("/list/:id", controller.getProducts);
+router_products.get("/list/:id", controller.getProducts);
 
-router.put("/update/:id", controller.addUpdateProducts);
+router_products.put("/update/:id", controller.addUpdateProducts);
 
-router.post("/save", controller.addUpdateProducts);
+router_products.post("/save", controller.addUpdateProducts);
 
-router.delete("/delete/:id", controller.deleteProduct);
+router_products.delete("/delete/:id", controller.deleteProduct);
 
 
 
 /* --------------------------- EXPORT ------------------------------- */
 
-export {router}; 
+export {router_products}; 
