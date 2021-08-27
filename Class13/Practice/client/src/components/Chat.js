@@ -9,30 +9,33 @@ export default function Chat( { handleData } ) {
   let email = "";
   
   const handleSubmit = (e) => {
-    //console.log(e.value)
-    //const regex = /[^.;,/"#!¡$%&()=?¿]\w+@/g;
-    //console.log(email);
-    socket.emit('test', e.target.elements.email.value)
-    //console.log(regex.test(email));
-    //e.target.value = ''
-    //handleData(email, regex.test(email));
+    e.preventDefault();
+    email = e.target.elements.email.value;
+    const regex = /[^.;,/"#!¡$%&()=?¿]\w+@/g;
+    const passed = handleData(email, regex.test(email));
+    if(passed){
+       e.target.elements.email.value = '';
+       setInputDisabled(false);  
+      socket.emit('test', e.target.elements.email.value)
+    }
+    
   };
 
   const handleMessage = async (e) => {
-    const text = e.target.value;
+    e.preventDefault();
+    const text = e.target.elements.text.value;
     if (text !== "") {
       const date = new Date();
       const time = `${date.getDate()}/${date.getMonth() + 1}/${
-        date.getFullYear
-      } ${date.getUTCHours}:${date.getUTCMinutes}:${date.getUTCSeconds}`;
+        date.getFullYear()
+      } ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
       const message = {
         user: email,
         time: time,
         text: text,
       };
-      const messages = await (
         await axios.post("http://localhost:8080/message/save", message)
-      ).data;
+    
       socket.emit("saveMessage");
     }
   };
@@ -81,14 +84,15 @@ export default function Chat( { handleData } ) {
             })}
         </div>
         <div className="card-footer">
-          <form className="input-group">
+          <form className="input-group" onSubmit={handleMessage}>
             <input
               type="text"
               className="form-control"
               placeholder="Set your message here..."
+              id="text"
               disabled={inputDisabled}
             />
-            <button className="btn btn-outline-light" type="submit" onSubmit={handleMessage}>
+            <button className="btn btn-outline-light" type="submit" >
               Send
             </button>
           </form>

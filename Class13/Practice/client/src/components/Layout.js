@@ -54,6 +54,7 @@ export default function Layout() {
       setEmailAlert(true);
       if(type){
        passed('Correct email!');
+       return true
       }else{
         failed('Incorrect email!')
       }
