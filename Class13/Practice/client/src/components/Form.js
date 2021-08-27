@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import Message from "../fragments/Message";
+import React from "react";
+
 import Inputs from "../fragments/Inputs";
 
 export default function Form( { handleData }) {

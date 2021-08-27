@@ -6,15 +6,16 @@ import { socket } from "../lib/socket";
 export default function Chat( { handleData } ) {
   let [inputDisabled, setInputDisabled] = useState(true);
   let [messages, setMessages] = useState([]);
-  let email = "";
+  let [email, setEmail] = useState("");
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    email = e.target.elements.email.value;
+    let email = e.target.elements.email.value;
     const regex = /[^.;,/"#!¡$%&()=?¿]\w+@/g;
     const passed = handleData(email, regex.test(email));
     if(passed){
-       e.target.elements.email.value = '';
+      setEmail(email);
+      e.target.elements.email.value = '';
        setInputDisabled(false);  
       socket.emit('test', e.target.elements.email.value)
     }
@@ -59,6 +60,7 @@ export default function Chat( { handleData } ) {
           placeholder="Set your email"
           className="form-control"
           id="email"
+          disabled={!inputDisabled}
         />
         <button className="btn btn-light mx-1" type="submit">
           Confirm email
@@ -76,8 +78,9 @@ export default function Chat( { handleData } ) {
               }
               return (
                 <div id={messageType} key={idx} className="mt-1">
-                  <span>{message.time}</span>
-                  <b>{message.user}</b>
+                  <span>{message.time}  </span>
+                  <b> {message.user}:</b>
+                  <br/>
                   <i>{message.text}</i>
                 </div>
               );
