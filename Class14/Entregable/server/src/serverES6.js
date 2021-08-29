@@ -10,7 +10,7 @@ const app = express();
 const server = http.createServer(app);
 const PORT = 8080;
 
-server.listen(PORT, () => console.log(`Server hosted at PORT: ${server.address().port}`));
+server.listen(PORT, () => console.log(`Server hosted at PORT: ${PORT}`));
 
 
 app.use(express.json());

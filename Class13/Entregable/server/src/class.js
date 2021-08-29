@@ -1,5 +1,5 @@
 const valid = (body) => {
-  const [title,price, thumbnail] = body;
+  const {title,price, thumbnail} = body;
   return title != '' && price != '' && !isNaN(Number(price)) && thumbnail != ''
 };
 
@@ -21,7 +21,7 @@ class Products {
   };
   addUpdateProducts(req, res){
     if (valid(req.body)) {
-      const [ title, price, thumbnail ] = req.body;
+      const { title, price, thumbnail } = req.body;
       if (req.params.id) {
         const id = req.params.id;
         if (this.products[id]) {

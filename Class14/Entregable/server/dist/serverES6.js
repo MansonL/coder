@@ -4,8 +4,6 @@ var _express = _interopRequireDefault(require("express"));
 
 var _http = _interopRequireDefault(require("http"));
 
-var _socket = _interopRequireDefault(require("socket.io"));
-
 var _routes_products = require("./routes/routes_products");
 
 var _cors = _interopRequireDefault(require("cors"));
@@ -19,7 +17,7 @@ var server = _http["default"].createServer(app);
 
 var PORT = 8080;
 server.listen(PORT, function () {
-  return console.log("Server hosted at PORT: ".concat(server.address().port));
+  return console.log("Server hosted at PORT: ".concat(PORT));
 });
 app.use(_express["default"].json());
 app.use(_express["default"].urlencoded({

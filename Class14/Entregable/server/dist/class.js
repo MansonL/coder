@@ -5,34 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.controller = void 0;
 
-function _readOnlyError(name) { throw new TypeError("\"" + name + "\" is read-only"); }
+var _index = require("./utils/index.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-var valid = function valid(body) {
-  var _body = _slicedToArray(body, 3),
-      title = _body[0],
-      price = _body[1],
-      thumbnail = _body[2];
-
-  return title != '' && price != '' && !isNaN(Number(price)) && thumbnail != '';
-};
 
 var Products = /*#__PURE__*/function () {
   function Products() {
@@ -48,34 +27,46 @@ var Products = /*#__PURE__*/function () {
     key: "getProducts",
     value: function getProducts(req, res) {
       var id = req.params.id;
-      this.products.length === 0 ? res.send("No products added.") : id == null ? res.send(this.products) : res.send(this.products[id]);
+
+      if (this.products.length === 0) {
+        res.send('No products added.');
+      } else {
+        if (id == null) {
+          res.send(JSON.stringify(this.products));
+        } else {
+          console.log(id);
+          var lookedFor = (0, _index.findProduct)(this.products, id);
+          lookedFor !== -1 ? res.send(JSON.stringify(this.products[lookedFor])) : res.send("Product doesn't exist or wrong id typed...");
+        }
+      }
     }
   }, {
     key: "addUpdateProducts",
     value: function addUpdateProducts(req, res) {
-      if (valid(req.body)) {
-        var _req$body = _slicedToArray(req.body, 3),
-            title = _req$body[0],
-            price = _req$body[1],
-            thumbnail = _req$body[2];
+      if ((0, _index.valid)(req.body)) {
+        var _req$body = req.body,
+            title = _req$body.title,
+            price = _req$body.price,
+            thumbnail = _req$body.thumbnail;
 
         if (req.params.id) {
           var id = req.params.id;
+          var lookedFor = (0, _index.findProduct)(this.products, id);
 
-          if (this.products[id]) {
-            if (title) this.products[id].title = title;
-            if (price) this.products[id].price = price;
-            if (thumbnail) this.products[id].thumbnail = thumbnail;
-            res.send("Product successfully updated! ".concat(this.products[id]));
+          if (lookedFor !== -1) {
+            if (title) this.products[lookedFor].title = title;
+            if (price) this.products[lookedFor].price = price;
+            if (thumbnail) this.products[lookedFor].thumbnail = thumbnail;
+            res.send("Product successfully updated! ".concat(JSON.stringify(this.products[lookedFor])));
           } else {
             res.send("Product not found. Please try another id...");
           }
         } else {
           this.products.push({
             title: title,
-            price: price,
+            price: Number(price),
             thumbnail: thumbnail,
-            id: this.products.length + 1
+            id: (0, _index.generateID)()
           });
           res.send("Product successfully saved!");
         }
@@ -86,14 +77,12 @@ var Products = /*#__PURE__*/function () {
   }, {
     key: "deleteProduct",
     value: function deleteProduct(req, res) {
-      var id = --req.params.id;
+      var id = req.params.id;
+      var lookedFor = (0, _index.findProduct)(this.products, id);
 
-      if (this.products[id]) {
-        var deleted = this.products.splice(id, 1);
-        this.products.forEach(function (product) {
-          if (product.id > (+id, _readOnlyError("id"))) product.id -= 1;
-        });
-        res.send("Product successfully deleted! ".concat(deleted));
+      if (lookedFor !== -1) {
+        var deleted = this.products.splice(lookedFor, 1);
+        res.send("Product successfully deleted! ".concat(JSON.stringify(deleted)));
       } else {
         res.send("Product not found. Please try another id...");
       }
