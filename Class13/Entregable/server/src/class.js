@@ -1,7 +1,4 @@
-const valid = (body) => {
-  const {title,price, thumbnail} = body;
-  return title != '' && price != '' && !isNaN(Number(price)) && thumbnail != ''
-};
+import { valid, generateID, findProduct } from './utils/index.js'
 
 class Products {
   constructor() {
@@ -12,51 +9,56 @@ class Products {
 
   }
   getProducts(req, res){
-    const { id } = req.params
-    this.products.length === 0
-      ? res.send("No products added.")
-      : id == null
-      ? res.send(this.products)
-      : res.send(this.products[id]);
-  };
+    const id = req.params.id
+    if(this.products.length === 0){
+      res.send('No products added.')
+    }else{
+      if(id == null){
+        res.send(JSON.stringify(this.products));
+      }else{
+        console.log(id);
+        const lookedFor = findProduct(this.products,id);
+        lookedFor !== -1 ? res.send(JSON.stringify(this.products[lookedFor])) : res.send(`Product doesn't exist or wrong id typed...`)
+      }
+    }
+  }
   addUpdateProducts(req, res){
     if (valid(req.body)) {
-      const { title, price, thumbnail } = req.body;
+      const [ title, price, thumbnail ] = req.body;
       if (req.params.id) {
         const id = req.params.id;
-        if (this.products[id]) {
-          if (title) this.products[id].title = title;
-          if (price) this.products[id].price = price;
-          if (thumbnail) this.products[id].thumbnail = thumbnail;
-          res.send(`Product successfully updated! ${this.products[id]}`);
+        const lookedFor = findProduct(this.products,id);
+        if ( lookedFor !== -1 ) {
+          if (title) this.products[lookedFor].title = title;
+          if (price) this.products[lookedFor].price = price;
+          if (thumbnail) this.products[lookedFor].thumbnail = thumbnail;
+          res.send(`Product successfully updated! ${JSON.stringify(this.products[lookedFor])}`);
         } else {
           res.send("Product not found. Please try another id...");
         }
       } else {
         this.products.push({
           title: title,
-          price: price,
+          price: Number(price),
           thumbnail: thumbnail,
-          id: this.products.length + 1,
+          id: generateID()
         });
         res.send("Product successfully saved!");
       }
     } else {
       res.send("Please, insert the product properties correctly...");
     }
-  };
- deleteProduct (req,res){
-      const id = --req.params.id;
-      if(this.products[id]){
-        const deleted = this.products.splice(id,1);
-        this.products.forEach(product => {
-           if(product.id > ++id) product.id -= 1;
-        });
-        res.send(`Product successfully deleted! ${deleted}`)
-      }else{
-        res.send("Product not found. Please try another id...")
-      }
   }
+ deleteProduct (req,res){
+  const id = req.params.id
+  const lookedFor = findProduct(this.products,id);
+  if(lookedFor !== -1){
+    const deleted = this.products.splice(lookedFor,1);
+    res.send(`Product successfully deleted! ${JSON.stringify(deleted)}`)
+  }else{
+    res.send("Product not found. Please try another id...")
+  }
+}
 }
 let controller = new Products();
 

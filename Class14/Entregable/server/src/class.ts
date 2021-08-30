@@ -19,7 +19,6 @@ class Products {
       if(id == null){
         res.send(JSON.stringify(this.products));
       }else{
-        console.log(id);
         const lookedFor : number = findProduct(this.products,id);
         lookedFor !== -1 ? res.send(JSON.stringify(this.products[lookedFor])) : res.send(`Product doesn't exist or wrong id typed...`)
       }
@@ -28,7 +27,7 @@ class Products {
   
   addUpdateProducts(req: Request, res: Response){
     if (valid(req.body)) {
-      const { title, price, thumbnail } = req.body;
+      const [ title, price, thumbnail ] = req.body;
       if (req.params.id) {
         const id : string = req.params.id;
         const lookedFor : number = findProduct(this.products,id);

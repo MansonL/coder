@@ -1,5 +1,6 @@
 import React from "react";
 export default function Table({ products }) {
+  console.log(products)
   return (
     <React.Fragment>
       <div className="row">
@@ -9,10 +10,12 @@ export default function Table({ products }) {
         
           <table className="table table-stripped table-hover">
             <thead>
+              <tr>
               <th scope="col">Image</th>
               <th scope="col">#</th>
               <th scope="col">Name</th>
               <th scope="col">Price</th>
+              </tr>
             </thead>
             <tbody>
               {products.map((product) => {

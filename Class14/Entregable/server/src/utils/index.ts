@@ -1,10 +1,9 @@
-const valid = (body : {title:string, price:string, thumbnail:string}) => {
-    const {title,price, thumbnail} = body;
+const valid = (body : [title:string, price:string, thumbnail:string]) => {
+    const [title,price, thumbnail] = body;
     return title != '' && price != '' && !isNaN(Number(price)) && thumbnail != ''
   };
 
 const generateID = () => {
-    console.log(`_${Math.random().toString(36).substr(2,9)}`)
     return `_${Math.random().toString(36).substr(2,9)}`;
 }
 
