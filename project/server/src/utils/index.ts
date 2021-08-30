@@ -8,16 +8,21 @@ const generateID = () => {
 }
 
 interface PRODUCT {
+    id: string,
+    timestamp: string,
     title: string,
+    description: string, 
+    code: string,
+    img: string,
+    stock: number,
     price: number,
-    thumbnail: string,
-    id: string
+    
+    
 }
 
 const findProduct = (products : PRODUCT[], id : string) => {
     return products.findIndex((product: PRODUCT) : boolean => product.id === id)
 }
-
 
 
 export { valid, generateID, PRODUCT, findProduct }
