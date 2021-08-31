@@ -100,6 +100,6 @@ class Products {
       }
 }
 }
-const  productModel = new Products();
+const  productModel : Products = new Products();
 
 export { productModel, productsFile }

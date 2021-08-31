@@ -72,7 +72,7 @@ class Cart {
            throw e
        }
    };
-   async delete (id: string): Promise<{message:string, data:PRODUCT}> {
+   async deleteProduct (id: string): Promise<{message:string, data:PRODUCT}> {
        try {
            const cartProducts : string = await fsPromises.readFile(cartFile, 'utf-8');
            if(cartProducts !== ''){
@@ -96,6 +96,6 @@ class Cart {
 
 }
 
-const cartModel = new Cart();
+const cartModel : Cart = new Cart();
 
 export default cartModel
