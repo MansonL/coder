@@ -1,8 +1,9 @@
 enum EErrors {
     NoProducts,
-    ProductNotFound 
-    
-
+    ProductNotFound,
+    NotAuthorizedUser,
+    PropertiesIncorrect,
+    IdIncorrect
 }
 
 export default EErrors

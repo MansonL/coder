@@ -1,30 +1,27 @@
-import express, { Router } from "express";
-//import controllerProduct from "../controllers/products";
-
+import express, { Router } from 'express';
+import {
+  getAll,
+  getOne,
+  saveProduct,
+  modifyProduct,
+  wipeProduct,
+} from '../controllers/products';
+import checkAdmin from '../middleware/isAdmin';
 
 const router_products: Router = express.Router();
-const {
-   getProducts ,
-   getProduct,
-   addProduct,
-   updateProduct,
-   deleteProduct
-} = controllerProduct;
 
-/* ------------------------ ROUTES ---------------------------- */ 
+/* ------------------------ ROUTES ---------------------------- */
 
-router_products.get("/list", getProducts)
+router_products.get('/list', checkAdmin, getAll);
 
-router_products.get("/list/:id", getProduct);
+router_products.get('/list/:id', checkAdmin, getOne);
 
-router_products.put("/update/:id", updateProduct);
+router_products.put('/update/:id', checkAdmin, modifyProduct);
 
-router_products.post("/save", addProduct);
+router_products.post('/save', checkAdmin, saveProduct);
 
-router_products.delete("/delete/:id", deleteProduct);
-
-
+router_products.delete('/delete/:id', checkAdmin, wipeProduct);
 
 /* --------------------------- EXPORT ------------------------------- */
 
-export default router_products
+export default router_products;

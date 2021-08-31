@@ -6,11 +6,11 @@ export default function Form( { handleData }) {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    const inputs = [
-      e.target[0].value,
-      Number(e.target[1].value),
-      e.target[2].value,
-    ];
+    const inputs = {
+      title: e.target[0].value,
+      price: Number(e.target[1].value),
+      img: e.target[2].value,
+  };
     clearFields(e.target)
     handleData(inputs,'product');
   }

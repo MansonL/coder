@@ -1,9 +1,25 @@
-const valid = (body : [title:string, price:string, thumbnail:string]) => {
-    const [title,price, thumbnail] = body;
-    return title != '' && price != '' && !isNaN(Number(price)) && thumbnail != ''
+const validSave = (body : FORM_DATA) => {
+    const {title, description, code, img, stock, price} = body;
+    return title !== '' && description !== '' && code !== '' && img !== '' && !isNaN(price) && !isNaN(stock) 
   };
 
-const generateID = () => {
+
+const validUpdate = (body: FORM_DATA) => {
+   const {title, description, code, img, stock, price} = body;
+   return title !== '' || description !== '' || code !== '' || img !== '' || !isNaN(stock) || isNaN(stock) || isNaN(price);
+}
+
+interface FORM_DATA {
+    title: string,
+    description: string, 
+    code: string,
+    img: string,
+    stock: number,
+    price: number
+}
+
+
+const generateID = () : string => {
     return `_${Math.random().toString(36).substr(2,9)}`;
 }
 
@@ -16,13 +32,12 @@ interface PRODUCT {
     img: string,
     stock: number,
     price: number,
-    
-    
 }
 
-const findProduct = (products : PRODUCT[], id : string) => {
-    return products.findIndex((product: PRODUCT) : boolean => product.id === id)
+const findProduct = (products : PRODUCT[], id : string): PRODUCT | undefined => {
+    return products.find((product : PRODUCT) : boolean => product.id === id)
 }
 
 
-export { valid, generateID, PRODUCT, findProduct }
+
+export { validSave, validUpdate,  generateID, PRODUCT, findProduct }
