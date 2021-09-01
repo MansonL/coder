@@ -39,18 +39,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.productsFile = exports.productModel = void 0;
 var fs_1 = require("fs");
 var path_1 = __importDefault(require("path"));
 var EErrors_1 = __importDefault(require("../common/EErrors"));
-var index_1 = require("../utils/index");
+var utils_1 = require("../utils/utils");
 var NoProducts = EErrors_1.default.NoProducts, ProductNotFound = EErrors_1.default.ProductNotFound;
 var productsFile = path_1.default.resolve(__dirname, '../../products.json');
+exports.productsFile = productsFile;
 var Products = /** @class */ (function () {
     function Products() {
-        this.getProducts = this.getProducts.bind(this);
-        this.addProduct = this.addProduct.bind(this);
-        this.updateProduct = this.updateProduct.bind(this);
-        this.deleteProduct = this.deleteProduct.bind(this);
     }
     Products.prototype.getProduct = function (id) {
         return __awaiter(this, void 0, void 0, function () {
@@ -62,9 +60,9 @@ var Products = /** @class */ (function () {
                         return [4 /*yield*/, fs_1.promises.readFile(productsFile, 'utf-8')];
                     case 1:
                         products = _a.sent();
-                        productsJSON = JSON.parse(products);
-                        if (productsJSON.length > 0) {
-                            lookedFor = (0, index_1.findProduct)(productsJSON, id);
+                        if ((0, utils_1.productsExist)(products)) {
+                            productsJSON = JSON.parse(products);
+                            lookedFor = (0, utils_1.findProduct)(productsJSON, id);
                             if (lookedFor != null)
                                 return [2 /*return*/, lookedFor];
                             throw { error: ProductNotFound, message: "Wrong id or the product doesn't exist..." };
@@ -91,10 +89,14 @@ var Products = /** @class */ (function () {
                         return [4 /*yield*/, fs_1.promises.readFile(productsFile, 'utf-8')];
                     case 1:
                         products = _a.sent();
-                        productsJSON = JSON.parse(products);
-                        if (productsJSON.length > 0)
+                        if ((0, utils_1.productsExist)(products)) {
+                            productsJSON = JSON.parse(products);
                             return [2 /*return*/, productsJSON];
-                        throw { error: NoProducts, message: "No products added." };
+                        }
+                        else {
+                            throw { error: NoProducts, message: "No products added." };
+                        }
+                        return [3 /*break*/, 3];
                     case 2:
                         e_2 = _a.sent();
                         throw e_2;
@@ -113,8 +115,14 @@ var Products = /** @class */ (function () {
                         return [4 /*yield*/, fs_1.promises.readFile(productsFile, 'utf-8')];
                     case 1:
                         products = _a.sent();
-                        productsJSON = JSON.parse(products);
-                        productsJSON.push(product);
+                        productsJSON = void 0;
+                        if ((0, utils_1.productsExist)(products)) {
+                            productsJSON = [product];
+                        }
+                        else {
+                            productsJSON = JSON.parse(products);
+                            productsJSON.push(product);
+                        }
                         return [4 /*yield*/, fs_1.promises.writeFile(productsFile, JSON.stringify(productsJSON, null, '\t'))];
                     case 2:
                         _a.sent();
@@ -135,24 +143,25 @@ var Products = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 7, , 8]);
                         return [4 /*yield*/, fs_1.promises.readFile(productsFile, 'utf-8')];
                     case 1:
                         products = _a.sent();
+                        if (!(0, utils_1.productsExist)(products)) return [3 /*break*/, 5];
                         productsJSON = JSON.parse(products);
-                        lookedFor = (0, index_1.findProduct)(productsJSON, id);
+                        lookedFor = (0, utils_1.findProduct)(productsJSON, id);
                         if (!(lookedFor != null)) return [3 /*break*/, 3];
-                        if (data.title !== '')
+                        if (data.title !== '' && data.title != null)
                             lookedFor.title = data.title;
-                        if (data.description !== '')
+                        if (data.description !== '' && data.description != null)
                             lookedFor.description = data.description;
-                        if (data.code !== '')
+                        if (data.code !== '' && data.code != null)
                             lookedFor.code = data.code;
-                        if (data.img !== '')
+                        if (data.img !== '' && data.img != null)
                             lookedFor.img = data.img;
-                        if (data.stock !== -1)
+                        if (data.stock !== -1 && !isNaN(data.stock))
                             lookedFor.stock = data.stock; //  HERE WE USE -1 AS A VALUE
-                        if (data.price !== -1)
+                        if (data.price !== -1 && !isNaN(data.price))
                             lookedFor.price = data.price; // FOR NOT CHANGING STOCK OR PRICE
                         arrayId = productsJSON.indexOf(lookedFor);
                         productsJSON[arrayId] = lookedFor;
@@ -165,10 +174,12 @@ var Products = /** @class */ (function () {
                             }];
                     case 3: throw { error: ProductNotFound, message: "Wrong id or the product doesn't exist..." };
                     case 4: return [3 /*break*/, 6];
-                    case 5:
+                    case 5: throw { error: NoProducts, message: "No products" };
+                    case 6: return [3 /*break*/, 8];
+                    case 7:
                         e_4 = _a.sent();
                         throw e_4;
-                    case 6: return [2 /*return*/];
+                    case 8: return [2 /*return*/];
                 }
             });
         });
@@ -181,8 +192,9 @@ var Products = /** @class */ (function () {
                     case 0: return [4 /*yield*/, fs_1.promises.readFile(productsFile, 'utf-8')];
                     case 1:
                         products = _a.sent();
+                        if (!(0, utils_1.productsExist)(products)) return [3 /*break*/, 5];
                         productsJSON = JSON.parse(products);
-                        lookedFor = (0, index_1.findProduct)(productsJSON, id);
+                        lookedFor = (0, utils_1.findProduct)(productsJSON, id);
                         if (!(lookedFor != null)) return [3 /*break*/, 3];
                         arrayID = productsJSON.indexOf(lookedFor);
                         deleted = productsJSON.splice(arrayID, 1)[0];
@@ -193,6 +205,9 @@ var Products = /** @class */ (function () {
                                 data: deleted
                             }];
                     case 3: throw { error: ProductNotFound, message: "Wrong id or the product doesn't exist..." };
+                    case 4: return [3 /*break*/, 6];
+                    case 5: throw { error: NoProducts, message: "No products" };
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -200,5 +215,5 @@ var Products = /** @class */ (function () {
     return Products;
 }());
 var productModel = new Products();
-exports.default = productModel;
+exports.productModel = productModel;
 //# sourceMappingURL=products.js.map

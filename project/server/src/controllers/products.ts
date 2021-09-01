@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { validSave, validUpdate,  generateID, PRODUCT} from '../utils/index';
+import { validSave, validUpdate,  generateID, PRODUCT} from '../utils/utils';
 import {productModel} from '../models/products';
 import EErrors from '../common/EErrors';
 import moment from 'moment'

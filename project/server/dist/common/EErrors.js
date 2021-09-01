@@ -7,6 +7,7 @@ var EErrors;
     EErrors[EErrors["NotAuthorizedUser"] = 2] = "NotAuthorizedUser";
     EErrors[EErrors["PropertiesIncorrect"] = 3] = "PropertiesIncorrect";
     EErrors[EErrors["IdIncorrect"] = 4] = "IdIncorrect";
+    EErrors[EErrors["RouteUndefined"] = 5] = "RouteUndefined";
 })(EErrors || (EErrors = {}));
 exports.default = EErrors;
 //# sourceMappingURL=EErrors.js.map

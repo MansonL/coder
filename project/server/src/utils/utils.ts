@@ -38,6 +38,14 @@ const findProduct = (products : PRODUCT[], id : string): PRODUCT | undefined => 
     return products.find((product : PRODUCT) : boolean => product.id === id)
 }
 
+const productsExist = (file: string) => {
+    const data : string | [] | PRODUCT[] = JSON.parse(file)
+    if(data === '' || data.length === 0 ){
+        return false
+    }else{
+        return true
+    }
+}
 
 
-export { validSave, validUpdate,  generateID, PRODUCT, findProduct }
+export { validSave, validUpdate,  generateID, PRODUCT, findProduct, productsExist }

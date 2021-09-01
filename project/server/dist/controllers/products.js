@@ -51,11 +51,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.wipeProduct = exports.modifyProduct = exports.saveProduct = exports.getAll = exports.getOne = void 0;
-var index_1 = require("../utils/index");
-var products_1 = __importDefault(require("../models/products"));
+var utils_1 = require("../utils/utils");
+var products_1 = require("../models/products");
 var EErrors_1 = __importDefault(require("../common/EErrors"));
 var moment_1 = __importDefault(require("moment"));
-var getProduct = products_1.default.getProduct, getProducts = products_1.default.getProducts, addProduct = products_1.default.addProduct, updateProduct = products_1.default.updateProduct, deleteProduct = products_1.default.deleteProduct;
+var getProduct = products_1.productModel.getProduct, getProducts = products_1.productModel.getProducts, addProduct = products_1.productModel.addProduct, updateProduct = products_1.productModel.updateProduct, deleteProduct = products_1.productModel.deleteProduct;
 var PropertiesIncorrect = EErrors_1.default.PropertiesIncorrect, IdIncorrect = EErrors_1.default.IdIncorrect, NoProducts = EErrors_1.default.NoProducts, ProductNotFound = EErrors_1.default.ProductNotFound;
 var getAll = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var products, e_1;
@@ -114,8 +114,8 @@ var saveProduct = function (req, res) { return __awaiter(void 0, void 0, void 0,
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 4, , 5]);
-                if (!(0, index_1.validSave)(req.body)) return [3 /*break*/, 2];
-                product = __assign({ id: (0, index_1.generateID)(), timestamp: (0, moment_1.default)().format('DD/MM/YYYY HH:mm:ss') }, req.body);
+                if (!(0, utils_1.validSave)(req.body)) return [3 /*break*/, 2];
+                product = __assign({ id: (0, utils_1.generateID)(), timestamp: (0, moment_1.default)().format('DD/MM/YYYY HH:mm:ss') }, req.body);
                 product.stock = Number(product.stock);
                 product.price = Number(product.price);
                 return [4 /*yield*/, addProduct(product)];
@@ -142,7 +142,7 @@ var modifyProduct = function (req, res) { return __awaiter(void 0, void 0, void 
             case 0:
                 _a.trys.push([0, 4, , 5]);
                 id = req.params.id;
-                if (!((0, index_1.validUpdate)(req.body) && id !== '')) return [3 /*break*/, 2];
+                if (!((0, utils_1.validUpdate)(req.body) && id !== '')) return [3 /*break*/, 2];
                 newProperties = req.body;
                 newProperties.stock = Number(newProperties.stock);
                 newProperties.price = Number(newProperties.price);

@@ -2,6 +2,7 @@ import express from "express";
 import http from "http";
 import router from "./routes/index";
 import cors from 'cors'
+import unknownRoute from "./utils/routeUndefined";
 
 /* --------------------------- SERVER, APP & SOCKET ----------------------------- */
 
@@ -17,3 +18,4 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 app.use("/", router);
+app.use(unknownRoute)

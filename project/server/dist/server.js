@@ -7,6 +7,7 @@ var express_1 = __importDefault(require("express"));
 var http_1 = __importDefault(require("http"));
 var index_1 = __importDefault(require("./routes/index"));
 var cors_1 = __importDefault(require("cors"));
+var routeUndefined_1 = __importDefault(require("./utils/routeUndefined"));
 /* --------------------------- SERVER, APP & SOCKET ----------------------------- */
 var app = (0, express_1.default)();
 var server = http_1.default.createServer(app);
@@ -16,4 +17,5 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cors_1.default)());
 app.use("/", index_1.default);
+app.use(routeUndefined_1.default);
 //# sourceMappingURL=server.js.map
