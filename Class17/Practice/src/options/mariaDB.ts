@@ -1,3 +1,4 @@
+import knex from "knex";
 const options = {
     client: 'mysql',
     connection: {
@@ -7,5 +8,6 @@ const options = {
         database: 'messages',
     },
 };
+const db = knex(options)
 
-export default options;
+export default db
