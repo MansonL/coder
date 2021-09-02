@@ -13,7 +13,7 @@ function App() {
           <Route path="/" exact>
             <Home />
           </Route>
-          <Route path="/chatandsave">
+          <Route path="/">
             <Layout/>
           </Route>
         </Switch>
