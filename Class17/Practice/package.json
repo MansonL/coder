@@ -1,21 +1,24 @@
 {
-  "name": "Practice",
+  "name": "practice",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "lint": "eslint \"**/*.{ts,tsx}\" --quiet --fix",
     "dev": "nodemon -L ./src/server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "knex": "^0.95.10",
+    "moment": "^2.29.1",
     "mysql": "^2.18.1",
+    "socket.io": "^4.2.0",
     "sqlite3": "^5.0.2"
   },
   "devDependencies": {
@@ -25,6 +28,7 @@
     "@typescript-eslint/parser": "^4.30.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-knex": "^0.2.1",
     "eslint-plugin-prettier": "^4.0.0",
     "nodemon": "^2.0.12",
     "prettier": "^2.3.2",
