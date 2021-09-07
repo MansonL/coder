@@ -1,13 +1,15 @@
 interface Message {
-    type: "message",
-    time: string,
-    user: string,
-    message: string
+    type: 'message';
+    user_id: number;
+    time: string;
+    user: string;
+    message: string;
 }
 
 interface User {
-    type:"user",
-    email: string
+    type: 'user';
+    id: number;
+    email: string;
 }
 
-export {Message, User}
+export { Message, User };
