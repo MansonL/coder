@@ -6,7 +6,7 @@ const up = (knex: Knex) => {
             users.string('user');
         })
         .createTable('messages', (messages) => {
-            messages.increments();
+            messages.increments('id');
             messages.string('time');
             messages.string('user');
             messages.string('message');

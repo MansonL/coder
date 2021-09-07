@@ -15,7 +15,7 @@ const production = {
       host: '127.0.0.1',
       user: 'root',
       password: '',
-      database: 'pepito',
+      database: 'messages',
     },
     migrations: {
       directory: __dirname + '/db/migrations',
