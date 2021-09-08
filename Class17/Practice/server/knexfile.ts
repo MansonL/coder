@@ -1,6 +1,6 @@
 const development = {
   client: 'sqlite3',
-  connection: { filename: './msgDB' },
+  connection: { filename: './msgDB.sqlite' },
   useNullAsDefault: true,
   migrations: {
     directory: __dirname + '/db/migrations',

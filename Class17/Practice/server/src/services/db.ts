@@ -1,4 +1,4 @@
-import { development, production } from '../../../knexfile';
+import { development, production } from '../../knexfile';
 import knex, { Knex } from 'knex';
 import { Message, User } from '../utils';
 
@@ -11,29 +11,46 @@ class DB {
         this.connection = knex(option);
     }
     getMessages = async () => {
-        return await this.connection<Message>('messages');
+        try {
+            return await this.connection<Message>('messages');
+        } catch (error) {
+            throw error
+        }
     };
     getUsers = async () => {
-        return await this.connection<User>('users');
+        try {
+            return await this.connection<User>('users');
+        } catch (error) {
+            throw error
+        }
     };
     getUserId = async (email: string) => {
         try {
-            const user = await this.connection<User>('users').select().where({ email: email }).first();
+            const user = await this.connection<User>('users').select().where({ user: email }).first();
             if (user?.id) {
                 return user?.id;
             } else {
-                throw `Couldn't get the user id, probably it doesn't exist.`
+                throw `Couldn't get the user id, probably it doesn't exist.`;
             }
         } catch (error) {
-            throw error
-            
+            throw error;
         }
     };
-    saveUser = async (email: string): Promise<User>=> {
-        return await this.connection.table<User>('users').insert({email:email});
+    saveUser = async (email: string): Promise<User> => {
+        try {
+            return await this.connection.table<User>('users').insert({ user: email });
+        } catch (error) {
+            throw error
+        }
     };
-    saveMessage = async (data: Message) : Promise<Message> => {
-        return await this.connection.table<Message>('messsages').insert(data)
+    saveMessage = async (data: Message) /*Promise<Message>*/ => {
+        try {
+            console.log(data)
+            const result = await this.connection.table<Message>('messsages').insert(data);
+            console.log(result)
+        } catch (error) {
+            throw error
+        }
     };
 }
 

@@ -1,13 +1,14 @@
 interface Message {
-    user_id: number;
+    
     time: string;
     user: string;
     message: string;
+    user_id: number;
 }
 
 interface User {
     id: number;
-    email: string;
+    user: string;
 }
 
 export { Message, User };
