@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "lint": "eslint \"**/*.{ts,tsx}\" --quiet --fix",
-    "dev": "nodemon -L ./src/server.ts"
+      "migrate": "npx knex migrate:latest",
+      "seed": "npx knex seed:run",
+      "rollback": "npx knex migrate:rollback",
+    "dev:server": "nodemon --watch './**/*.ts' --exec ts-node src/index.ts"
   },
   "keywords": [],
   "author": "",

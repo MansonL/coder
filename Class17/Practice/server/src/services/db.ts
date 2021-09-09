@@ -14,14 +14,14 @@ class DB {
         try {
             return await this.connection<Message>('messages');
         } catch (error) {
-            throw error
+            throw error;
         }
     };
     getUsers = async () => {
         try {
             return await this.connection<User>('users');
         } catch (error) {
-            throw error
+            throw error;
         }
     };
     getUserId = async (email: string) => {
@@ -40,16 +40,16 @@ class DB {
         try {
             return await this.connection.table<User>('users').insert({ user: email });
         } catch (error) {
-            throw error
+            throw error;
         }
     };
     saveMessage = async (data: Message) /*Promise<Message>*/ => {
         try {
-            console.log(data)
-            const result = await this.connection.table<Message>('messsages').insert(data);
-            console.log(result)
+            console.log(data + `Logging message`);
+            const result = await this.connection<Message>('messsages').insert(data);
+            console.log(result);
         } catch (error) {
-            throw error
+            throw error;
         }
     };
 }

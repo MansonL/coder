@@ -8,3 +8,4 @@ const seed = (knex: Knex) => {
     };
     return knex.table('messages').del().insert(welcome);
 };
+export { seed };

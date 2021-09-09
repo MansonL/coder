@@ -23,8 +23,8 @@ const getUsrs = async (req: Request, res: Response) => {
 const saveMsg = async (req: Request, res: Response) => {
     try {
         const data: Message = req.body;
-        //const user_id = await getUserId(data.user);
-        //data.user_id = user_id;
+        const user_id = await getUserId(data.user);
+        data.user_id = user_id;
         const result = await saveMessage(data);
         res.send(result);
     } catch (error) {
@@ -33,10 +33,11 @@ const saveMsg = async (req: Request, res: Response) => {
 };
 const saveUsr = async (req: Request, res: Response) => {
     try {
-        const { user } = req.body;
-        console.log(user);
-        const result: User = await saveUser(user);
-        res.send(result);
+        console.log(req);
+        //const user = req.body;
+        //console.log(user);
+        //const result: User = await saveUser(user);
+        //res.send(result);
     } catch (error) {
         res.json(error);
     }

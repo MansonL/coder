@@ -15,6 +15,7 @@ const Chat: React.FunctionComponent = (): JSX.Element => {
         const regex = /[^.;,/"#!¡$%&()=?¿]\w+@/g;
         if (regex.test(email)) {
             setInputDisabled(false);
+            console.log(typeof email);
             await axios.post('http://localhost:8080/users', email);
             socket.emit('saveUser');
         }
@@ -42,7 +43,7 @@ const Chat: React.FunctionComponent = (): JSX.Element => {
     };
 
     socket.on('updateMessages', renderMessages);
-
+    socket.on('renderAll', renderMessages);
     return (
         <React.Fragment>
             <form className="input-group my-2" onSubmit={handleSubmit}>

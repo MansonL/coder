@@ -12,7 +12,7 @@ function Users(): JSX.Element {
         setUsers(data);
     };
     socket.on('updateUsers', renderUsers);
-
+    socket.on('renderAll', renderUsers);
     return (
         <div className="card">
             <div className="card-body bg-white rounded text-left" id="users">
