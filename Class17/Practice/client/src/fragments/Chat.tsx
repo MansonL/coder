@@ -16,7 +16,7 @@ const Chat: React.FunctionComponent = (): JSX.Element => {
         if (regex.test(email)) {
             setInputDisabled(false);
             console.log(typeof email);
-            await axios.post('http://localhost:8080/users', email);
+            await axios.post('http://localhost:8080/users', { user: email });
             socket.emit('saveUser');
         }
     };

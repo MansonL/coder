@@ -1,5 +1,4 @@
 interface Message {
-    
     time: string;
     user: string;
     message: string;

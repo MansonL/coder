@@ -36,22 +36,36 @@ class DB {
             throw error;
         }
     };
-    saveUser = async (email: string): Promise<User> => {
+    saveUser = async (email: string) => {
         try {
+            const exist = await this.connection.select('user').from('users').where({user: email});
+            if(exist.length > 0) return
             return await this.connection.table<User>('users').insert({ user: email });
         } catch (error) {
             throw error;
         }
     };
-    saveMessage = async (data: Message) /*Promise<Message>*/ => {
+    saveMessage = async (data: Message) => {
         try {
-            console.log(data + `Logging message`);
-            const result = await this.connection<Message>('messsages').insert(data);
-            console.log(result);
+            return await this.connection.table<Message>('messages').insert(data);
         } catch (error) {
             throw error;
         }
     };
+    deleteMessage = async (id: number) => {
+        try {
+            return await this.connection.table<Message>('messages').where('id',id).del();
+        } catch (error) {
+            throw error
+        }
+    }
+    deleteUser = async (id: number) => {
+        try {
+            return await this.connection.table<User>('users').where('id', id).del();
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 const dbController = new DB();

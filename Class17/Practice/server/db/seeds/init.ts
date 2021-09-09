@@ -6,6 +6,12 @@ const seed = (knex: Knex) => {
         user: 'Welcome Bot',
         message: 'Welcome everyone to my Message API chat.',
     };
-    return knex.table('messages').del().insert(welcome);
+    const botUser = {
+        user: 'WelcomeBot'
+    }
+    return knex('messages').del()
+    .then(()=>knex('users').del())
+    .then(()=>knex('messages').insert(welcome))
+    .then(()=>knex('users').insert(botUser))
 };
 export { seed };
