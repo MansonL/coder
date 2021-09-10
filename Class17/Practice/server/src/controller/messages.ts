@@ -33,14 +33,14 @@ const saveMsg = async (req: Request, res: Response) => {
 };
 const saveUsr = async (req: Request, res: Response) => {
     try {
-        const {user} = req.body;
+        const { user } = req.body;
         console.log(user);
         const result = await saveUser(user);
         res.send(result);
     } catch (error) {
         res.json(error);
     }
-}
+};
 const deleteMsg = async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.id);
@@ -48,10 +48,9 @@ const deleteMsg = async (req: Request, res: Response) => {
         const result = await deleteMessage(id);
         res.send(result);
     } catch (error) {
-        res.json(error)
+        res.json(error);
     }
-
-}
+};
 const deleteUsr = async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.id);
@@ -61,4 +60,4 @@ const deleteUsr = async (req: Request, res: Response) => {
         res.json(error);
     }
 };
-export { getMsgs, getUsrs, saveMsg, saveUsr, deleteMsg, deleteUsr};
+export { getMsgs, getUsrs, saveMsg, saveUsr, deleteMsg, deleteUsr };
