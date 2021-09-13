@@ -2,7 +2,6 @@ import * as fsPromises from 'fs/promises';
 import * as moment from 'moment';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import * as axios from 'axios';
 
 interface IProduct {
     timestamp: string;
