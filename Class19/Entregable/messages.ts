@@ -19,11 +19,15 @@ interface IQuotes {
     text: string;
 }
 
+/*------------------ QUERY TO RANDOM QUOTES TO GET SOME RANDOM TEXT ---------- */
+
 const newMessages = async () => {
     const quotes: [] = await (await axios.get('https://goquotes-api.herokuapp.com/api/v1/random?count=10')).data.quotes;
     const messages = quotes.map((messages: IQuotes) => messages.text);
     return messages;
 };
+
+/*------------------ QUERY TO RANDOM AVATAR CREATOR TO PERFOM A USERNAME ---------- */
 
 const newUsers = async () => {
     const users = [];
