@@ -1,4 +1,5 @@
-import { Schema, model } from 'mongoose';
+import { Schema, Model,Document, Query, model } from 'mongoose';
+
 interface IStudent {
     name: string;
     surname: string;
@@ -7,7 +8,7 @@ interface IStudent {
     course: string;
     grade: number;
 }
-const studentsC = 'students';
+
 const studentsSchema = new Schema<IStudent>({
     name: { type: String, required: true },
     surname: { type: String, required: true },
@@ -17,6 +18,9 @@ const studentsSchema = new Schema<IStudent>({
     grade: { type: Number, required: true, max: 10, min: 1 },
 });
 
-const Student = model<IStudent>(studentsC, studentsSchema);
+  
+
+const studentsC = 'students';
+const Student = model<IStudent, Model<IStudent>>(studentsC, studentsSchema);
 
 export default Student;

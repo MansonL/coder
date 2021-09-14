@@ -37,33 +37,80 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
-var models_1 = require("./models");
-var uri = "mongodb+srv://mansonl_00:lautaro123@20practice.q4rlk.mongodb.net/20Practice?retryWrites=true&w=majority";
+var student_1 = require("./models/student");
+var studentsArr_1 = require("./utils/studentsArr");
+var uri = 'mongodb+srv://mansonl_00:lautaro123@20practice.q4rlk.mongodb.net/20Practice?retryWrites=true&w=majority';
 var CRUD = function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, gradesDoc, numberOfStudents, gradesArr, gradesTotal, gradesDoc_1A, numberOfStudents_1A, gradesArr_1A, gradesTotal_1A;
+    return __generator(this, function (_o) {
+        switch (_o.label) {
             case 0:
                 console.log("Connecting to the DB");
+                /* ---------- CONNECTION -------------------- */
                 return [4 /*yield*/, (0, mongoose_1.connect)(uri)];
             case 1:
-                _a.sent();
-                return [4 /*yield*/, models_1.default.deleteMany({})];
+                /* ---------- CONNECTION -------------------- */
+                _o.sent();
+                /* ---------- INSERTING STUDENTS DOCUMENT ----------*/
+                return [4 /*yield*/, student_1.default.deleteMany({})];
             case 2:
-                _a.sent();
-                return [4 /*yield*/, models_1.default.insertMany([
-                        { name: 'Pedro', surname: 'Mei', age: 21, DNI: '31155898', course: '1A', grade: 7 },
-                        { name: 'Ana', surname: 'Gonzalez', age: 32, DNI: '27651878', course: '1A', grade: 8 },
-                        { name: 'José', surname: 'Picos', age: 29, DNI: '34554398', course: '2A', grade: 6 },
-                        { name: 'Lucas', surname: 'Blanco', age: 22, DNI: '30355874', course: '3A', grade: 10 },
-                        { name: 'María', surname: 'García', age: 36, DNI: '29575148', course: '1A', grade: 9 },
-                        { name: 'Federico', surname: 'Perez', age: 41, DNI: '320118321', course: '2A', grade: 5 },
-                        { name: 'Tomas', surname: 'Sierra', age: 19, DNI: '38654790', course: '2B', grade: 4 },
-                        { name: 'Carlos', surname: 'Fernández', age: 33, DNI: '26935670', course: '3B', grade: 2 },
-                        { name: 'Fabio', surname: 'Pieres', age: 39, DNI: '4315388', course: '1B', grade: 9 },
-                        { name: 'Daniel', surname: 'Gallo', age: 25, DNI: '37923460', course: '3B', grade: 2 }
-                    ])];
+                /* ---------- INSERTING STUDENTS DOCUMENT ----------*/
+                _o.sent();
+                return [4 /*yield*/, student_1.default.insertMany(studentsArr_1.default)];
             case 3:
-                _a.sent();
+                _o.sent();
+                /* -------------- DIFFERENTS READING ---------------*/
+                // Descending name order.
+                _b = (_a = console).log;
+                return [4 /*yield*/, student_1.default.find({}).sort({ name: 1 })];
+            case 4:
+                /* -------------- DIFFERENTS READING ---------------*/
+                // Descending name order.
+                _b.apply(_a, [_o.sent()]);
+                // The youngest student.
+                _d = (_c = console).log;
+                return [4 /*yield*/, student_1.default.find({}).sort({ age: 1 }).limit(1)];
+            case 5:
+                // The youngest student.
+                _d.apply(_c, [_o.sent()]);
+                // The 2A course students.
+                _f = (_e = console).log;
+                return [4 /*yield*/, student_1.default.find({ course: '2A' })];
+            case 6:
+                // The 2A course students.
+                _f.apply(_e, [_o.sent()]);
+                // The second youngest student.
+                _h = (_g = console).log;
+                return [4 /*yield*/, student_1.default.find({}).sort({ age: 1 }).skip(1).limit(1)];
+            case 7:
+                // The second youngest student.
+                _h.apply(_g, [_o.sent()]);
+                //  Just student's name, surname, and course in a descending order by their surnames.
+                _k = (_j = console).log;
+                return [4 /*yield*/, student_1.default.find({}, { name: 1, surname: 1, course: 1 }).sort({ surname: 1 })];
+            case 8:
+                //  Just student's name, surname, and course in a descending order by their surnames.
+                _k.apply(_j, [_o.sent()]);
+                // The students that have gotten a 10 grade.
+                _m = (_l = console).log;
+                return [4 /*yield*/, student_1.default.find({ grade: 10 })];
+            case 9:
+                // The students that have gotten a 10 grade.
+                _m.apply(_l, [_o.sent()]);
+                return [4 /*yield*/, student_1.default.find({}, { grade: 1, _id: 0 })];
+            case 10:
+                gradesDoc = _o.sent();
+                numberOfStudents = gradesDoc.length;
+                gradesArr = gradesDoc.map(function (grades) { return grades.grade; });
+                gradesTotal = gradesArr.reduce(function (acc, grade) { return acc + grade; });
+                console.log("" + gradesTotal / numberOfStudents);
+                return [4 /*yield*/, student_1.default.find({ course: '1A' }, { grade: 1, _id: 0 })];
+            case 11:
+                gradesDoc_1A = _o.sent();
+                numberOfStudents_1A = gradesDoc_1A.length;
+                gradesArr_1A = gradesDoc_1A.map(function (grades) { return grades.grade; });
+                gradesTotal_1A = gradesArr_1A.reduce(function (acc, grade) { return acc + grade; });
+                console.log("" + gradesTotal_1A / numberOfStudents_1A);
                 return [2 /*return*/];
         }
     });
