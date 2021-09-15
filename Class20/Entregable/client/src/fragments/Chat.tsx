@@ -24,7 +24,7 @@ const Chat: React.FunctionComponent = (): JSX.Element => {
     const handleMessage: FormEventHandler = async (e: FormEvent<Element>) => {
         e.preventDefault();
         if (msg !== '') {
-            const time = moment().format('MM D YYYY HH mm ss');
+            const time = moment().format('MM/D/YYYY HH:mm:ss');
             const message: IMessage = {
                 time: time,
                 user: email,

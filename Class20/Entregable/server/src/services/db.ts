@@ -1,17 +1,27 @@
-import { IMessage, IUser, models } from '../models';
+import { IMessage, IUser, models, welcomeBotMsg } from '../models';
 import { Model, connect } from 'mongoose';
+
+const username = 'mansonl_00';
+const pwd = 'admin123';
 
 class MongoDBaaS {
     messages: Model<IMessage>;
     users: Model<IUser>;
+    uri: string;
     constructor() {
         this.messages = models.messages;
         this.users = models.users;
-        this.uri = 
+        this.uri = `mongodb+srv://${username}:${pwd}@20entregable.ugrtd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
     }
     init = async () => {
-        connect()
-    }
+        connect(this.uri);
+        await this.users.deleteMany({});
+        await this.messages.deleteMany({});
+        await this.users.create({ user: 'WelcomeBot' });
+        const WelcomeBotID = await this.users.find({ user: 'WelcomeBot' }, { _id: 1 });
+        welcomeBotMsg.user_id = WelcomeBotID[0].id;
+        await this.messages.create(welcomeBotMsg);
+    };
     getMessages = async () => {
         try {
             const result = await this.messages.find({}).sort({ time: 1 });
@@ -31,14 +41,17 @@ class MongoDBaaS {
     getUserId = async (email: string) => {
         try {
             const result = await this.users.find({ user: email }, { _id: 1 });
-            console.log(result);
+            return result[0].id;
         } catch (error) {
             throw error;
         }
     };
     saveUser = async (email: string) => {
         try {
-            const result = await new this.users({ user: email });
+            const exist = await this.users.find({ user: email });
+            console.log(exist.length);
+            if (exist.length > 0) return;
+            const result = await this.users.create({ user: email });
             return result;
         } catch (error) {
             throw error;
@@ -46,7 +59,8 @@ class MongoDBaaS {
     };
     saveMessage = async (data: IMessage) => {
         try {
-            const result = await new this.messages(data);
+            console.log(data);
+            const result = await this.messages.create(data);
             return result;
         } catch (error) {
             throw error;

@@ -34,7 +34,6 @@ const saveMsg = async (req: Request, res: Response) => {
 const saveUsr = async (req: Request, res: Response) => {
     try {
         const { user } = req.body;
-        console.log(user);
         const result = await saveUser(user);
         res.send(result);
     } catch (error) {

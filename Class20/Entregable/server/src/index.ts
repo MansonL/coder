@@ -4,7 +4,7 @@ import http from 'http';
 import cors from 'cors';
 import msgRouter from './routes/routes';
 import { Server } from 'socket.io';
-
+import MongoDBaaScontroller from './services/db';
 const app: Application = express();
 const server = http.createServer(app);
 const PORT = 8080;
@@ -30,3 +30,5 @@ io.on('connection', (socket) => {
         io.sockets.emit('updateUsers');
     });
 });
+
+MongoDBaaScontroller.init();

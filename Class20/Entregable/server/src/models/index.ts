@@ -1,7 +1,7 @@
+import moment from 'moment';
 import { Model, model, Schema } from 'mongoose';
 
 interface IMessage {
-    _id: string;
     time: string;
     user: string;
     message: string;
@@ -9,7 +9,6 @@ interface IMessage {
 }
 
 interface IUser {
-    _id: string;
     user: string;
 }
 
@@ -20,7 +19,6 @@ const MessageSchema = new Schema<IMessage>({
     user_id: { type: String, required: true },
 });
 const UserSchema = new Schema<IUser>({
-    _id: { type: String, required: true },
     user: { type: String, required: true },
 });
 const CMessages = 'messages';
@@ -31,4 +29,11 @@ const models = {
     messages: model<IMessage, Model<IMessage>>(CMessages, MessageSchema),
 };
 
-export { IMessage, IUser, models };
+const welcomeBotMsg = {
+    time: moment().format('MM/D/YYYY HH:mm:ss'),
+    user: 'WelcomeBot',
+    message: 'Welcome everyone to my very simple APP!',
+    user_id: '',
+};
+
+export { IMessage, IUser, models, welcomeBotMsg };
