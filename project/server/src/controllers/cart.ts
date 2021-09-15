@@ -24,11 +24,7 @@ const getProduct = async (req: Request, res: Response) => {
 const getCart = async (req: Request, res: Response) => {
   try {
     const result: PRODUCT[] = await getAll();
-    if (result != null) {
-      res.json({ data: result });
-    } else {
-      throw { error: NoProducts, message: 'No products added to the cart...' };
-    }
+    res.json({data: result})
   } catch (e) {
     res.status(404).json(e)
   }
@@ -41,7 +37,7 @@ const addToCart = async (req: Request, res: Response) => {
       const result = await add(id);
       res.json({data: result});
     }else{
-      throw {error: IdIncorrect, message:"Wrong id"}
+      throw {error: IdIncorrect, message:'Please, type a valid id...'}
     } 
   } catch (e) {
     res.status(422).json(e)
@@ -59,7 +55,7 @@ const deleteFromCart = async (req: Request, res: Response) => {
       } else {
         throw {
           error: IdIncorrect,
-          message: "Wrong id.",
+          message: 'Please, type a valid id...',
         };
       }
   } catch (e) {

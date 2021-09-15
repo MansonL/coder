@@ -3,7 +3,7 @@ import EErrors from "../common/EErrors";
 
 
 const { NotAuthorizedUser } = EErrors;
-const isAdmin = true;
+const isAdmin : boolean = true;
 
 const checkAdmin = (req: Request, res: Response, next : NextFunction) => {
    if(isAdmin){
