@@ -1,4 +1,4 @@
-import { Schema, Model,Document, Query, model } from 'mongoose';
+import { Schema, Model, model } from 'mongoose';
 
 interface IStudent {
     name: string;
@@ -17,8 +17,6 @@ const studentsSchema = new Schema<IStudent>({
     course: { type: String, required: true },
     grade: { type: Number, required: true, max: 10, min: 1 },
 });
-
-  
 
 const studentsC = 'students';
 const Student = model<IStudent, Model<IStudent>>(studentsC, studentsSchema);
