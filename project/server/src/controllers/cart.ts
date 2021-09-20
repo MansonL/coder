@@ -1,66 +1,75 @@
-import cartModel from '../models/cart';
-import { Request, Response } from 'express';
-import { PRODUCT } from '../utils/utils';
-import EErrors from '../common/EErrors';
+import { NextFunction, Request, Response } from 'express';
+import { EErrors } from '../common/EErrors';
+import { IProduct } from '../models/products.interface';
+import { cartApi } from '../apis/cartApi';
+import { validator } from '../common/joi_schemas';
+import { productsApi } from '../apis/productsApi';
 
-const { IdIncorrect, NoProducts, ProductNotFound } = EErrors;
-
-const { getOne, getAll, add, deleteProduct } = cartModel;
-
-const getProduct = async (req: Request, res: Response) => {
-  try {
-    const id = req.params.id;
-    if (id !== '') {
-      const result: PRODUCT = await getOne(id);
-      res.json({ data: result });
-    } else {
-      throw { error: IdIncorrect, message: 'Please, type a valid id...' };
+/**
+ *
+ * Cart Controller Class
+ *
+ */
+class CartController {
+    async getProduct(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        const id: string | undefined = req.params.id;
+        console.log(`[PATH] Inside controller.`);
+        const { error } = await validator.id.validateAsync(id);
+        if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
+        const result: IProduct[] | [] = await cartApi.getProduct(id);
+        if (result.length > 0) res.status(200).send(result);
+        next(ApiError.notFound(EErrors.ProductNotFound));
     }
-  } catch (e) {
-    res.status(400).json(e);
-};
+    async getCart(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        const result: IProduct[] | [] = await cartApi.getProduct();
+        console.log(`[PATH] Inside controller.`);
+        if (result.length !== 0) res.status(200).send(result);
+        next(ApiError.notFound(EErrors.NoProducts));
+    }
+
+    async addToCart(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        const id: string = req.params.id;
+        console.log(`[PATH] Inside controller.`);
+        const { error } = await validator.id.validate(id);
+        if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
+        const product: IProduct[] | [] = await productsApi.getProduct(id);
+        if (product.length > 0) {
+            const results = await cartApi.addProduct(product[0]);
+            res.status(200).send(results);
+        } else {
+            next(ApiError.notFound(EErrors.ProductNotFound));
+        }
+    }
+
+    async deleteFromCart(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        const id: string = req.params.id;
+        console.log(`[PATH] Inside controller.`);
+        const { error } = await validator.id.validate(id);
+        if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
+        const product: IProduct[] | [] = await cartApi.getProduct(id);
+        if (product.length > 0) {
+            const result = await cartApi.deleteProduct(id);
+            res.status(200).send(result);
+        } else {
+            next(ApiError.notFound(EErrors.ProductNotFound));
+        }
+    }
 }
 
-const getCart = async (req: Request, res: Response) => {
-  try {
-    const result: PRODUCT[] = await getAll();
-    res.json({data: result})
-  } catch (e) {
-    res.status(404).json(e)
-  }
-};
-
-const addToCart = async (req: Request, res: Response) => {
-  try {
-    const id = req.params.id;
-    if(id !== ''){
-      const result = await add(id);
-      res.json({data: result});
-    }else{
-      throw {error: IdIncorrect, message:'Please, type a valid id...'}
-    } 
-  } catch (e) {
-    res.status(422).json(e)
-  }
-};
-
-const deleteFromCart = async (req: Request, res: Response) => {
-  try {
-    const id = req.params.id;
-    if (id !== '') {
-      const result: { message: string; data: PRODUCT } = await deleteProduct(
-        id
-      );
-      res.json({data: result})
-      } else {
-        throw {
-          error: IdIncorrect,
-          message: 'Please, type a valid id...',
-        };
-      }
-  } catch (e) {
-    res.status(422).json(e)
-  }
-};
-
-export { getProduct, getCart, addToCart, deleteFromCart };
+export const c_controller = new CartController();

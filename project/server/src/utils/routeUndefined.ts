@@ -1,7 +1,4 @@
 import { Request, Response } from "express"
-import EErrors from "../common/EErrors"
-
-const { RouteUndefined } = EErrors;
 const availableRoutes : string = `
 '/products/list': show available products.
 '/products/list/id': show the product you want by typing the product id.
@@ -15,7 +12,7 @@ const availableRoutes : string = `
 '/cart/add/id': to add a product to the cart with its id.`
 
  const unknownRoute = (req: Request, res: Response)=> {
-     res.status(404).json({error: RouteUndefined, message:`The route doesn't exist, please try the followings: ${availableRoutes} `})
+     res.status(404).json({message:`The route doesn't exist, please try the followings: ${availableRoutes} `})
 }
 
 export default unknownRoute
