@@ -4,7 +4,8 @@ import {
     INew_Product,
     CUDResponse,
     IProduct,
-    IQueryOrUpdate,
+    IQuery,
+    IUpdate,
 } from '../models/products.interface';
 import { storage } from '.';
 
@@ -32,17 +33,18 @@ class ProductsApi {
         const result = await this.products.add(product);
         return result;
     }
-    async updateProduct(
-        id: string,
-        product: IQueryOrUpdate
-    ): Promise<CUDResponse> {
+    async updateProduct(id: string, product: IUpdate): Promise<CUDResponse> {
         const result = await this.products.update(id, product);
         return result;
     }
     async deleteProduct(id: string): Promise<CUDResponse> {
         const result = await this.products.delete(id);
+        return result;
     }
-    async query(options: IQueryOrUpdate): Promise<IProduct[] | []> {}
+    async query(options: IQuery): Promise<IProduct[] | []> {
+        const result = await this.products.query(options);
+        return result;
+    }
 }
 
 export const productsApi = new ProductsApi();

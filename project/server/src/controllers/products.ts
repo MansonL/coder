@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import {
     IProduct,
     INew_Product,
-    IQueryOrUpdate,
+    IUpdate,
+    IQuery,
 } from '../models/products.interface';
 import { productsApi } from '../apis/productsApi';
 import { EErrors } from '../common/EErrors';
@@ -44,15 +45,10 @@ class ProductController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const properties: INew_Product = req.body;
+        const product: INew_Product = req.body;
         console.log(`[PATH] Inside controller.`);
-        const { error } = validator.newProduct.validate(properties);
+        const { error } = validator.newProduct.validate(product);
         if (error) next(ApiError.badRequest(EErrors.PropertiesIncorrect));
-        const product = {
-            timestamp: moment().format('MM/D/YYYY HH:mm:ss'),
-            code: utils.generateCode(),
-            ...properties,
-        };
         const result = await productsApi.addProduct(product);
         res.status(200).send(result);
     }
@@ -62,7 +58,7 @@ class ProductController {
         next: NextFunction
     ): Promise<void> {
         const id: string = req.params.id;
-        const newProperties: IQueryOrUpdate = req.body;
+        const newProperties: IUpdate = req.body;
         const resultID = validator.id.validate(id);
         const resultProps = validator.update.validate(newProperties);
         if (resultID.error) next(ApiError.badRequest(EErrors.IdIncorrect));
@@ -101,8 +97,12 @@ class ProductController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const options = req.body;
-        const {error} = validator.
+        const options: IQuery = req.body;
+        const { error } = validator.query.validate(options);
+        if (error) next(ApiError.badRequest(EErrors.PropertiesIncorrect)); // This is just for checking if there's an error in the query implementatio
+        const result: IProduct[] | [] = await productsApi.query(options);
+        if (result.length > 0) res.status(200).send(result);
+        next(ApiError.notFound(EErrors.NoProducts));
     }
 }
 

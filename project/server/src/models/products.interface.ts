@@ -1,6 +1,8 @@
+import { StringSchema } from 'joi';
+
 /**
  *
- * Type of Product to be stored to and query from the DB
+ * Type of Product to be stored to and query from the DB.
  *
  */
 export interface IProduct {
@@ -16,24 +18,28 @@ export interface IProduct {
 
 /**
  *
- * Type of Product Object we are receiving from the frontend
+ * Type of Product Object we are receiving from the frontend.
  *
  */
 export interface INew_Product {
     title: string;
-    description?: string;
+    description: string;
+    timestamp: string; // Will have this type after the controller set product's
+    code: string; // timestamp.
     img: string;
     stock: number;
     price: number;
 }
+
 /**
  *
- * Type of the possible filters in a product query
+ * Type of the possible Update Object properties in an update request.
  *
  */
-export interface IQueryOrUpdate {
+export interface IUpdate {
     title?: string;
     description?: string;
+    code?: string;
     img?: string;
     stock?: number;
     price?: number;
@@ -41,35 +47,53 @@ export interface IQueryOrUpdate {
 
 /**
  *
- * Response type of adding, deleting & updating products from storage
+ * Type of the possible Query Object properties in a query request.
+ *
+ */
+export interface IQuery {
+    title: string;
+    code: string;
+    stock: {
+        minStock: number;
+        maxStock: number;
+    };
+    price: {
+        minPrice: number;
+        maxPrice: number;
+    };
+}
+
+/**
+ *
+ * Response type of adding, deleting & updating products from storage.
  *
  */
 
 export interface CUDResponse {
     message: string;
-    data: IProduct;
+    data: IProduct | [];
 }
 
 /**
  *
- * Product Storage Classes structure
+ * Product Storage Classes structure.
  *
  */
 export interface DBProductsClass {
     get(id?: string | undefined): Promise<IProduct[] | []>;
-    add(product: INew_Product): Promise<CUDResponse>;
-    update(id: string, data: IQueryOrUpdate): Promise<CUDResponse>;
+    add(newProduct: INew_Product): Promise<CUDResponse>;
+    update(id: string, data: IUpdate): Promise<CUDResponse>;
     delete(id: string): Promise<CUDResponse>;
-    query(options: IQueryOrUpdate): Promise<IProduct[] | []>;
+    query(options: IQuery): Promise<IProduct[] | []>;
 }
 
 /**
  *
- * Cart Storage Classes structure
+ * Cart Storage Classes structure.
  *
  */
 export interface DBCartClass {
     get(id?: string | undefined): Promise<IProduct[] | []>;
-    add(product: IProduct): Promise<CUDResponse>;
+    add(product: IProduct | INew_Product): Promise<CUDResponse>;
     delete(id: string): Promise<CUDResponse>;
 }

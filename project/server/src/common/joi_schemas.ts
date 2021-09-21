@@ -1,9 +1,10 @@
 import Joi from 'joi';
-import { INew_Product, IQueryOrUpdate } from '../models/products.interface';
+import { INew_Product, IQuery, IUpdate } from '../models/products.interface';
 
 class Validations {
     newProduct: Joi.ObjectSchema<INew_Product>;
-    update: Joi.ObjectSchema<IQueryOrUpdate>;
+    update: Joi.ObjectSchema<IUpdate>;
+    query: Joi.ObjectSchema<IQuery>;
     id: Joi.StringSchema;
     constructor() {
         /**
@@ -19,12 +20,19 @@ class Validations {
         /**
          * JOI Schema to validate the objects from the frontend for updates
          */
-        this.update = Joi.object<IQueryOrUpdate>({
+        this.update = Joi.object<IUpdate>({
             title: Joi.string().alphanum().min(4).max(30),
             description: Joi.string().alphanum().min(10).max(60),
             img: Joi.string().uri(),
+            code: Joi.string().alphanum().min(5).max(30),
             price: Joi.number().min(0.01),
             stock: Joi.number().min(0),
+        });
+        this.query = Joi.object<IQuery>({
+            title: Joi.string().alphanum(),
+            code: Joi.string().alphanum(),
+            price: Joi.string().alphanum(),
+            stock: Joi.string().alphanum(),
         });
         /**
          * Simple JOI Schema to validate ids used to update or query products
