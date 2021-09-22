@@ -27,10 +27,13 @@ export class FSCart implements DBCartClass {
     }
     async delete(id: string): Promise<CUDResponse> {
         const products: IProduct[] = await utils.readFS(cartFile);
+        console.log(products);
         const deletedID: number = products.findIndex(
             (product) => product.id === id
         );
+        console.log(deletedID);
         const deleted: IProduct = products.splice(deletedID, 1)[0];
+        await utils.writeFS(products, cartFile);
         return { message: `Product successfully deleted.`, data: deleted };
     }
 }

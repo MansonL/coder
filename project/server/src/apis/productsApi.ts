@@ -23,9 +23,11 @@ class ProductsApi {
     async getProduct(id?: string | undefined): Promise<IProduct[] | []> {
         if (id != null) {
             const result = await this.products.get(id);
+            console.log(result);
             return result;
         } else {
             const result = await this.products.get();
+            //console.log(result);
             return result;
         }
     }

@@ -9,7 +9,7 @@ import { productsApi } from '../apis/productsApi';
 import { EErrors } from '../common/EErrors';
 import { validator } from '../common/joi_schemas';
 import moment from 'moment';
-import { utils } from '../utils/utils';
+import { ApiError } from '../common/ApiError';
 
 /**
  *
@@ -37,6 +37,7 @@ class ProductController {
         const { error } = validator.id.validate(id);
         if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
         const product: IProduct[] | [] = await productsApi.getProduct(id);
+        console.log(product);
         if (product.length > 0) res.status(200).send(product);
         next(ApiError.notFound(EErrors.ProductNotFound));
     }
@@ -97,7 +98,13 @@ class ProductController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const options: IQuery = req.body;
+        const { title, code, price, stock } = req.params;
+        const options: IQuery = {
+            title,
+            code,
+            price,
+            stock,
+        };
         const { error } = validator.query.validate(options);
         if (error) next(ApiError.badRequest(EErrors.PropertiesIncorrect)); // This is just for checking if there's an error in the query implementatio
         const result: IProduct[] | [] = await productsApi.query(options);

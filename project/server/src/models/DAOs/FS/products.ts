@@ -31,6 +31,7 @@ export class FSProducts implements DBProductsClass {
             id: utils.generateID(),
         };
         products.push(product);
+        await utils.writeFS(products, productsFile);
         return { message: `Product added successfully.`, data: product };
     }
     async update(id: string, data: IUpdate): Promise<CUDResponse> {
@@ -59,6 +60,7 @@ export class FSProducts implements DBProductsClass {
             (product) => product.id == id
         );
         const deleted: IProduct = products.splice(deletedID, 1)[0];
+        await utils.writeFS(products, productsFile);
         return { message: `Product deleted successfully.`, data: deleted };
     }
     async query(options: IQuery): Promise<IProduct[] | []> {

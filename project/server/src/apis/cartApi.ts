@@ -1,7 +1,7 @@
 import { storage } from '.';
-import { ProductsFactory } from '../models/products.factory';
 import { CUDResponse, IProduct } from '../models/products.interface';
 import { FSCart } from '../models/DAOs/FS/cart';
+import { CartFactory } from '../models/cart.factory';
 /**
  *
  * ApiProducts Class: here we are receiving the type of storage
@@ -11,7 +11,7 @@ import { FSCart } from '../models/DAOs/FS/cart';
 class CartApi {
     private products: FSCart; // Ir cambiando tipo de clase cuando se agreguen más persistencias
     constructor() {
-        this.products = ProductsFactory.get(storage);
+        this.products = CartFactory.get(storage);
     }
     async getProduct(id?: string | undefined): Promise<IProduct[] | []> {
         if (id != null) {

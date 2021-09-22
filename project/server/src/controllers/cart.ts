@@ -4,7 +4,7 @@ import { IProduct } from '../models/products.interface';
 import { cartApi } from '../apis/cartApi';
 import { validator } from '../common/joi_schemas';
 import { productsApi } from '../apis/productsApi';
-
+import { ApiError } from '../common/ApiError';
 /**
  *
  * Cart Controller Class

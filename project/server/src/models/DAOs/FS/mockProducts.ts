@@ -24,7 +24,7 @@ const randomNumber = (type: string): number => {
         return Number((Math.random() * (1000 - 0 + 1) + 0).toFixed(0));
     }
 };
-const productsPath = path.resolve(__dirname + '../../products.json');
+const productsPath = path.resolve(__dirname + '../../../products.json');
 const products = [
     {
         id: '',
