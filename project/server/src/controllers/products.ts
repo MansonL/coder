@@ -10,6 +10,7 @@ import { EErrors } from '../common/EErrors';
 import { validator } from '../common/joi_schemas';
 import moment from 'moment';
 import { ApiError } from '../common/ApiError';
+import { utils } from '../utils/utils';
 
 /**
  *
@@ -37,7 +38,6 @@ class ProductController {
         const { error } = validator.id.validate(id);
         if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
         const product: IProduct[] | [] = await productsApi.getProduct(id);
-        console.log(product);
         if (product.length > 0) res.status(200).send(product);
         next(ApiError.notFound(EErrors.ProductNotFound));
     }
@@ -98,18 +98,35 @@ class ProductController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const { title, code, price, stock } = req.params;
-        const options: IQuery = {
-            title,
-            code,
-            price,
-            stock,
+        let { title, code} = {
+            title: req.query.title as string,
+            code: req.query.code as string
         };
+        let { minPrice, maxPrice, minStock, maxStock } = req.query;
+        title = title != null ? title : '';
+        code = code != null ? code : '';
+        minPrice = minPrice != null ? minPrice : '0.01';
+        maxPrice = maxPrice != null ? maxPrice : (await utils.getMaxStockPrice('price')).toString()
+        minStock = minStock != null ? minStock : '0';
+        maxStock = maxStock != null ? maxStock : (await utils.getMaxStockPrice('stock')).toString()
+        const options :IQuery = {
+            title: title,
+            code: code,
+            price: {
+                minPrice: Number(minPrice),
+                maxPrice: Number(maxPrice)
+            },
+            stock: {
+                minStock: Number(minStock),
+                maxStock: Number(maxStock)
+            }
+        }
         const { error } = validator.query.validate(options);
         if (error) next(ApiError.badRequest(EErrors.PropertiesIncorrect)); // This is just for checking if there's an error in the query implementatio
         const result: IProduct[] | [] = await productsApi.query(options);
-        if (result.length > 0) res.status(200).send(result);
+        if (result.length > 0){res.status(200).send(result)}else{
         next(ApiError.notFound(EErrors.NoProducts));
+        }
     }
 }
 

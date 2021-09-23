@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'fs/promises';
 import { v4 as uuid } from 'uuid';
 import { IProduct } from '../models/products.interface';
+import { productsFile } from '../models/DAOs/FS/products';
 
 class Utils {
     /**
@@ -57,8 +58,8 @@ class Utils {
      */
     readFS = async (filePath: string): Promise<IProduct[]> => {
         const stringFile = await readFile(filePath, 'utf-8');
-        const product: IProduct[] | [] | '' = JSON.parse(stringFile);
-        if (product == '') return [];
+        if (stringFile == '') return [];
+        const product: IProduct[] | [] = JSON.parse(stringFile);
         return product;
     };
 
@@ -73,6 +74,17 @@ class Utils {
             JSON.stringify(product, null, `\t`)
         );
     };
+
+    getMaxStockPrice = async (type: string): Promise<number> => {
+        const products = await this.readFS(productsFile);
+        if(type === 'price'){
+            const prices = products.map(product => product.price)
+            return Math.max(...prices);
+        }else{
+            const stocks = products.map(product => product.stock)
+            return Math.max(...stocks);
+        }
+    } 
 }
 
 export const utils = new Utils();

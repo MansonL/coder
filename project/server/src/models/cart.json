@@ -1,92 +1,22 @@
 [
 	{
-		"id": "88847a72-4f7c-4388-b75c-6554d6174fdb",
+		"id": "3494a7b9-bfc0-43a5-8115-bf0993f2a4f2",
 		"name": "Beef Choice Angus Rump Roast, 2.25 - 3.87 lb",
 		"description": "There's nothing like cooking from scratch, especially when you start with our Beef Choice Angus Rump Roast. Made with quality USDA Choice Angus beef our roast is a savory cut with natural tenderness and exceptional taste. ",
 		"img": "https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff",
-		"code": "08c687db-7a25-43c6-9b42-713e8f46bd97",
-		"timestamp": "September 21, 2021 9:56 PM",
-		"price": 596.34,
-		"stock": 259
+		"code": "aba10c31-9cdd-4224-8e4e-a0af8d155ee8",
+		"timestamp": "September 23, 2021 4:48 PM",
+		"price": 4307.09,
+		"stock": 155
 	},
 	{
-		"id": "88847a72-4f7c-4388-b75c-6554d6174fdb",
-		"name": "Beef Choice Angus Rump Roast, 2.25 - 3.87 lb",
-		"description": "There's nothing like cooking from scratch, especially when you start with our Beef Choice Angus Rump Roast. Made with quality USDA Choice Angus beef our roast is a savory cut with natural tenderness and exceptional taste. ",
-		"img": "https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff",
-		"code": "08c687db-7a25-43c6-9b42-713e8f46bd97",
-		"timestamp": "September 21, 2021 9:56 PM",
-		"price": 596.34,
-		"stock": 259
-	},
-	{
-		"id": "88847a72-4f7c-4388-b75c-6554d6174fdb",
-		"name": "Beef Choice Angus Rump Roast, 2.25 - 3.87 lb",
-		"description": "There's nothing like cooking from scratch, especially when you start with our Beef Choice Angus Rump Roast. Made with quality USDA Choice Angus beef our roast is a savory cut with natural tenderness and exceptional taste. ",
-		"img": "https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff",
-		"code": "08c687db-7a25-43c6-9b42-713e8f46bd97",
-		"timestamp": "September 21, 2021 9:56 PM",
-		"price": 596.34,
-		"stock": 259
-	},
-	{
-		"id": "88847a72-4f7c-4388-b75c-6554d6174fdb",
-		"name": "Beef Choice Angus Rump Roast, 2.25 - 3.87 lb",
-		"description": "There's nothing like cooking from scratch, especially when you start with our Beef Choice Angus Rump Roast. Made with quality USDA Choice Angus beef our roast is a savory cut with natural tenderness and exceptional taste. ",
-		"img": "https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff",
-		"code": "08c687db-7a25-43c6-9b42-713e8f46bd97",
-		"timestamp": "September 21, 2021 9:56 PM",
-		"price": 596.34,
-		"stock": 259
-	},
-	{
-		"id": "b88c82cd-8441-4b08-9f40-25fdfafc74e2",
-		"name": "Beef Choice Angus Rump Roast, 2.25 - 3.87 lb",
-		"description": "There's nothing like cooking from scratch, especially when you start with our Beef Choice Angus Rump Roast. Made with quality USDA Choice Angus beef our roast is a savory cut with natural tenderness and exceptional taste. ",
-		"img": "https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff",
-		"code": "e445c335-cf5c-49ba-9b16-3f02911df7d0",
-		"timestamp": "September 21, 2021 10:02 PM",
-		"price": 2648.85,
-		"stock": 764
-	},
-	{
-		"id": "b88c82cd-8441-4b08-9f40-25fdfafc74e2",
-		"name": "Beef Choice Angus Rump Roast, 2.25 - 3.87 lb",
-		"description": "There's nothing like cooking from scratch, especially when you start with our Beef Choice Angus Rump Roast. Made with quality USDA Choice Angus beef our roast is a savory cut with natural tenderness and exceptional taste. ",
-		"img": "https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff",
-		"code": "e445c335-cf5c-49ba-9b16-3f02911df7d0",
-		"timestamp": "September 21, 2021 10:02 PM",
-		"price": 2648.85,
-		"stock": 764
-	},
-	{
-		"id": "782ce831-3ed9-4d05-8b08-4bc1f57ced7b",
-		"name": "HARRIS FARMS CERAMIC NESTING EGGS WHITE",
-		"description": "Harris Farms CERAMIC NESTING EGGS-White. Use for encourage hens to lay eggs inside nesting box and determine if a hen is ready to lay. Discourage chickens from eating eggs and also used as a decorative item.",
-		"img": "https://i5.walmartimages.com/asr/67915ce5-df83-4e53-825e-82f2b7c80136.d994d81e0cf8aee3a395cb0b933d06a4.jpeg?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff",
-		"code": "bd166cec-b928-4960-a888-a1e4aa2c3207",
-		"timestamp": "September 21, 2021 10:02 PM",
-		"price": 4017.73,
-		"stock": 669
-	},
-	{
-		"id": "782ce831-3ed9-4d05-8b08-4bc1f57ced7b",
-		"name": "HARRIS FARMS CERAMIC NESTING EGGS WHITE",
-		"description": "Harris Farms CERAMIC NESTING EGGS-White. Use for encourage hens to lay eggs inside nesting box and determine if a hen is ready to lay. Discourage chickens from eating eggs and also used as a decorative item.",
-		"img": "https://i5.walmartimages.com/asr/67915ce5-df83-4e53-825e-82f2b7c80136.d994d81e0cf8aee3a395cb0b933d06a4.jpeg?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff",
-		"code": "bd166cec-b928-4960-a888-a1e4aa2c3207",
-		"timestamp": "September 21, 2021 10:02 PM",
-		"price": 4017.73,
-		"stock": 669
-	},
-	{
-		"id": "4b6acc0f-7a5c-48bc-9409-b46e4be904cf",
-		"name": "Beef Choice Angus Rump Roast, 2.25 - 3.87 lb",
-		"description": "There's nothing like cooking from scratch, especially when you start with our Beef Choice Angus Rump Roast. Made with quality USDA Choice Angus beef our roast is a savory cut with natural tenderness and exceptional taste. ",
-		"img": "https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff",
-		"code": "9c704692-31ca-4a0f-9f95-381298c983ba",
-		"timestamp": "September 21, 2021 10:04 PM",
-		"price": 371.83,
-		"stock": 829
+		"id": "07e0c15a-6144-48b4-ac83-6468dbbe07d4",
+		"name": "Great Value Long Grain Enriched Rice, 320 oz",
+		"description": "Keep your body in optimal shape with the right food such as this Great Value Long-Grain Enriched Rice. This product is simply pure with absolutely no artificial flavors or colors added. This nutritious Great Value rice cooks quickly and efficiently on the stovetop or in a rice cooker and gives you premium quality for an excellent value. ",
+		"img": "https://i5.walmartimages.com/asr/77b5ab4d-14fd-4fb2-9cd6-8aa6c3f18e2e_1.f940b3bfded7a5a097c2b11887643144.jpeg?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff",
+		"code": "c2ff6ca4-d2a5-448c-ab2a-2676a9299210",
+		"timestamp": "September 23, 2021 4:48 PM",
+		"price": 4131.43,
+		"stock": 757
 	}
 ]

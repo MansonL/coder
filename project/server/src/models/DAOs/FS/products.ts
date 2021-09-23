@@ -9,7 +9,7 @@ import {
 } from '../../../models/products.interface';
 import { IProduct } from '../../../models/products.interface';
 
-const productsFile: string = path.resolve(__dirname, '../../products.json');
+export const productsFile: string = path.resolve(__dirname, '../../products.json');
 
 export class FSProducts implements DBProductsClass {
     async get(id?: string | undefined): Promise<IProduct[] | []> {
