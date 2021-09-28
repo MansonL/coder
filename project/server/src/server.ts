@@ -3,7 +3,7 @@ import http from 'http';
 import router from './routes/index';
 import cors from 'cors';
 import unknownRoute from './utils/routeUndefined';
-import { mockProducts } from './models/DAOs/FS/mockProducts';
+import { createMockProducts } from './models/DAOs/FS/mockProducts';
 import { errorHandler } from './common/ErrorHandler';
 
 /* --------------------------- SERVER, APP & SOCKET ----------------------------- */
@@ -19,6 +19,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use('/', router);
 app.use(unknownRoute);
-app.use(errorHandler)
+app.use(errorHandler);
 
-mockProducts(); // This line is just for mocking data to FS Storage
+createMockProducts(); // This line is just for mocking data to FS Storage

@@ -32,7 +32,9 @@ export class ProductsFactory {
             case MemoryType.FileSystem:
                 console.log(`Using FILESYSTEM`);
                 return new FSProducts();
-
+            case MemoryType.MySQL:
+                console.log(`Using MySQL`);
+                return new SQLProducts();
             default:
                 console.log(`USING DEFAULT: MEMORY`);
                 return new FSProducts();

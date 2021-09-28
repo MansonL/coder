@@ -17,7 +17,9 @@ export class CartFactory {
             case MemoryType.FileSystem:
                 console.log(`Using FILESYSTEM`);
                 return new FSCart();
-
+            case MemoryType.MySQL:
+                console.log(`Using MySQL`);
+                return new SQLCart();
             default:
                 console.log(`USING DEFAULT: MEMORY`);
                 return new FSCart();

@@ -29,16 +29,16 @@ class Validations {
             stock: Joi.number().min(0),
         });
         this.query = Joi.object<IQuery>({
-            title: Joi.string().alphanum(),
+            title: Joi.string().alphanum().allow(''),
             code: Joi.string().alphanum().allow(''),
             price: {
                 minPrice: Joi.number().min(0.01).max(Infinity),
-                maxPrice: Joi.number().min(0).max(Infinity)
+                maxPrice: Joi.number().min(0).max(Infinity),
             },
             stock: {
                 minStock: Joi.number().min(0).max(Infinity),
-                maxStock: Joi.number().min(0).max(Infinity)
-            }
+                maxStock: Joi.number().min(0).max(Infinity),
+            },
         });
         /**
          * Simple JOI Schema to validate ids used to update or query products

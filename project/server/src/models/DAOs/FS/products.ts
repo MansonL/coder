@@ -9,7 +9,10 @@ import {
 } from '../../../models/products.interface';
 import { IProduct } from '../../../models/products.interface';
 
-export const productsFile: string = path.resolve(__dirname, '../../products.json');
+export const productsFile: string = path.resolve(
+    __dirname,
+    '../../products.json'
+);
 
 export class FSProducts implements DBProductsClass {
     async get(id?: string | undefined): Promise<IProduct[] | []> {
@@ -65,8 +68,14 @@ export class FSProducts implements DBProductsClass {
     }
     async query(options: IQuery): Promise<IProduct[] | []> {
         const products: IProduct[] | [] = await this.get();
-        const titleRegex = new RegExp(`${options.title}`);
-        const codeRegex = new RegExp(`${options.code}`);
+        const titleRegex =
+            options.title === ''
+                ? new RegExp(`.*`)
+                : new RegExp(`(${options.title})`);
+        const codeRegex =
+            options.code === ''
+                ? new RegExp(`.*`)
+                : new RegExp(`(${options.code})`);
         const results: IProduct[] | [] = products.filter(
             (product) =>
                 titleRegex.test(product.title) &&

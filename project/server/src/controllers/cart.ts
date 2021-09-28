@@ -31,8 +31,11 @@ class CartController {
     ): Promise<void> {
         const result: IProduct[] | [] = await cartApi.getProduct();
         console.log(`[PATH] Inside controller.`);
-        if (result.length !== 0) res.status(200).send(result);
-        next(ApiError.notFound(EErrors.NoProducts));
+        if (result.length !== 0) {
+            res.status(200).send(result);
+        } else {
+            next(ApiError.notFound(EErrors.NoProducts));
+        }
     }
 
     async addToCart(
