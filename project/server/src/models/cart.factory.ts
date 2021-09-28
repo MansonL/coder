@@ -19,7 +19,10 @@ export class CartFactory {
                 return new FSCart();
             case MemoryType.MySQL:
                 console.log(`Using MySQL`);
-                return new SQLCart();
+                return new SQLCart('mysql');
+            case MemoryType.SQLITE3:
+                console.log(`Using SQLITE3`);
+                return new SQLCart('sqlite3');
             default:
                 console.log(`USING DEFAULT: MEMORY`);
                 return new FSCart();

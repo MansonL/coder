@@ -1,5 +1,5 @@
 export default {
-    production: {
+    development: {
         client: 'mysql',
         connection: {
             host: '127.0.0.1',
@@ -16,7 +16,7 @@ export default {
             directory: __dirname + '/db/seeds',
         },
     },
-    development: {
+    development2: {
         client: 'sqlite3',
         connection: { filename: './db.sqlite3' },
         migrations: { directory: __dirname + '/db/migrations' },

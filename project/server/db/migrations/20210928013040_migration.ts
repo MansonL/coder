@@ -16,10 +16,10 @@ export async function up(knex: Knex): Promise<void> {
         });
     }
     if (!existsCart) {
-        await knex.schema.createTable('cart', (cart) => {
-            cart.increments('id');
-            cart.timestamp('timestamp').defaultTo(knex.fn.now());
-            cart.string('name').notNullable();
+        await knex.schema.createTable('carts', (carts) => {
+            carts.increments('id');
+            carts.timestamp('timestamp').defaultTo(knex.fn.now());
+            carts.string('name').notNullable();
         });
     }
 }

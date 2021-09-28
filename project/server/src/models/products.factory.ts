@@ -34,7 +34,10 @@ export class ProductsFactory {
                 return new FSProducts();
             case MemoryType.MySQL:
                 console.log(`Using MySQL`);
-                return new SQLProducts();
+                return new SQLProducts(`mysql`);
+            case MemoryType.SQLITE3:
+                console.log(`Using SQLITE3`);
+                return new SQLProducts('sqlite3');
             default:
                 console.log(`USING DEFAULT: MEMORY`);
                 return new FSProducts();
