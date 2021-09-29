@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'fs/promises';
 import { v4 as uuid } from 'uuid';
-import { IProduct } from '../models/products.interface';
+import { IProduct, IQuery } from '../models/products.interface';
 import { productsFile } from '../models/DAOs/FS/products';
 
 class Utils {
@@ -77,14 +77,39 @@ class Utils {
 
     getMaxStockPrice = async (type: string): Promise<number> => {
         const products = await this.readFS(productsFile);
-        if(type === 'price'){
-            const prices = products.map(product => product.price)
+        if (type === 'price') {
+            const prices = products.map((product) => product.price);
             return Math.max(...prices);
-        }else{
-            const stocks = products.map(product => product.stock)
+        } else {
+            const stocks = products.map((product) => product.stock);
             return Math.max(...stocks);
         }
-    } 
+    };
+    /**
+     *
+     * Method for queries. Filtering the array data coming from the database with specific values from the front.
+     *
+     */
+    query = (products: IProduct[], options: IQuery): IProduct[] | [] => {
+        const titleRegex =
+            options.title === ''
+                ? new RegExp(`.*`)
+                : new RegExp(`(${options.title})`);
+        const codeRegex =
+            options.code === ''
+                ? new RegExp(`.*`)
+                : new RegExp(`(${options.code})`);
+        const results: IProduct[] | [] = products.filter(
+            (product) =>
+                titleRegex.test(product.title) &&
+                codeRegex.test(product.code) &&
+                product.price >= options.price.minPrice &&
+                product.price <= options.price.maxPrice &&
+                product.stock >= options.stock.minStock &&
+                product.stock <= options.stock.maxStock
+        );
+        return results;
+    };
 }
 
 export const utils = new Utils();

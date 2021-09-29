@@ -1,10 +1,11 @@
+import { FSProducts } from './DAOs/FS/products';
+import { SQLProducts } from './DAOs/SQL/MySQL/products';
+
 /**
  *
  * Different types of memory storage
  *
  */
-
-import { FSProducts } from './DAOs/FS/products';
 
 export enum MemoryType {
     Memory = 'MEM',
@@ -27,7 +28,7 @@ export enum MemoryType {
  */
 
 export class ProductsFactory {
-    static get(type: MemoryType) {
+    static get(type: MemoryType): FSProducts | SQLProducts {
         switch (type) {
             case MemoryType.FileSystem:
                 console.log(`Using FILESYSTEM`);
@@ -37,7 +38,7 @@ export class ProductsFactory {
                 return new SQLProducts(`mysql`);
             case MemoryType.SQLITE3:
                 console.log(`Using SQLITE3`);
-                return new SQLProducts('sqlite3');
+                return new SQLProducts('SQLITE3');
             default:
                 console.log(`USING DEFAULT: MEMORY`);
                 return new FSProducts();

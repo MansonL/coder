@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon -L ./src/server.ts  ",
+    "rollback:db": "npx knex migrate:rollback --env development",
+    "migrate:db": "npx knex migrate:latest --env development",
+    "seed:db": "npx knex seed:run --env development",
     "build": "tsc"
   },
   "keywords": [],
@@ -19,6 +22,7 @@
     "knex": "^0.95.11",
     "moment": "^2.29.1",
     "mongoose": "^6.0.7",
+    "mysql": "^2.18.1",
     "socket.io": "^4.2.0",
     "sqlite3": "^5.0.2",
     "uuid": "^8.3.2"

@@ -68,23 +68,7 @@ export class FSProducts implements DBProductsClass {
     }
     async query(options: IQuery): Promise<IProduct[] | []> {
         const products: IProduct[] | [] = await this.get();
-        const titleRegex =
-            options.title === ''
-                ? new RegExp(`.*`)
-                : new RegExp(`(${options.title})`);
-        const codeRegex =
-            options.code === ''
-                ? new RegExp(`.*`)
-                : new RegExp(`(${options.code})`);
-        const results: IProduct[] | [] = products.filter(
-            (product) =>
-                titleRegex.test(product.title) &&
-                codeRegex.test(product.code) &&
-                product.price >= options.price.minPrice &&
-                product.price <= options.price.maxPrice &&
-                product.stock >= options.stock.minStock &&
-                product.stock <= options.stock.maxStock
-        );
+        const results = utils.query(products, options);
         if (results) return results;
         return [];
     }

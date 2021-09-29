@@ -16,10 +16,15 @@ export async function up(knex: Knex): Promise<void> {
         });
     }
     if (!existsCart) {
-        await knex.schema.createTable('carts', (carts) => {
-            carts.increments('id');
-            carts.timestamp('timestamp').defaultTo(knex.fn.now());
-            carts.string('name').notNullable();
+        await knex.schema.createTable('cart', (cart) => {
+            cart.increments('id');
+            cart.timestamp('timestamp').defaultTo(knex.fn.now());
+            cart.string('title').notNullable();
+            cart.string('description').notNullable();
+            cart.string('code').notNullable();
+            cart.string('img').notNullable();
+            cart.decimal('price', 6, 2).unsigned().notNullable();
+            cart.integer('stock').notNullable();
         });
     }
 }

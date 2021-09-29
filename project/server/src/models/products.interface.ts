@@ -94,6 +94,6 @@ export interface DBProductsClass {
  */
 export interface DBCartClass {
     get(id?: string | undefined): Promise<IProduct[] | []>;
-    add(product: IProduct | INew_Product): Promise<CUDResponse>;
+    add(product: IProduct): Promise<CUDResponse>;
     delete(id: string): Promise<CUDResponse>;
 }
