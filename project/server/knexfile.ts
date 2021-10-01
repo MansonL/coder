@@ -1,10 +1,13 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 export default {
     development: {
-        client: 'mysql',
+        client: 'mysql2',
         connection: {
             host: 'localhost',
-            username: 'root',
-            password: '12345',
+            port: '3306',
+            user: process.env.DB_USER,
+            password: process.env.DB_PASS,
             database: 'project',
         },
         migrations: {

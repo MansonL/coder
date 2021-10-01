@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'fs/promises';
 import { v4 as uuid } from 'uuid';
-import { IProduct, IQuery } from '../models/products.interface';
+import { INew_Product, IProduct, IQuery } from '../models/products.interface';
 import { productsFile } from '../models/DAOs/FS/products';
 
 class Utils {
@@ -109,6 +109,12 @@ class Utils {
                 product.stock <= options.stock.maxStock
         );
         return results;
+    };
+    mockDataForFS = (mockData: INew_Product[]): IProduct[] => {
+        return mockData.map((product) => {
+            const FSProduct = { id: '', ...product };
+            return FSProduct;
+        });
     };
 }
 

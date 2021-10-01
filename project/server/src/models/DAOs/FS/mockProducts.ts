@@ -27,6 +27,7 @@ const addingProperties = (mockProducts: IProduct[]): void => {
 };
 
 export const createMockProducts = async (): Promise<void> => {
-    addingProperties(mockProducts);
+    const FSProducts = utils.mockDataForFS(mockProducts);
+    addingProperties(FSProducts);
     await writeFile(productsPath, JSON.stringify(mockProducts, null, '\t'));
 };

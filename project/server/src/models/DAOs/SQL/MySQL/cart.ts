@@ -7,6 +7,7 @@ import { IProduct } from '../../../products.interface';
 export class SQLCart implements DBCartClass {
     private db: Knex;
     constructor(type: 'mysql' | 'SQLITE3') {
+        console.log(dbConfig);
         const options =
             type === 'mysql'
                 ? process.env.NODE_ENV || 'development'

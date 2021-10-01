@@ -8,7 +8,7 @@ export async function up(knex: Knex): Promise<void> {
             products.increments('id');
             products.timestamp('timestamp').defaultTo(knex.fn.now());
             products.string('title').notNullable();
-            products.string('description').notNullable();
+            products.text('description', 'longText').notNullable();
             products.string('code').notNullable();
             products.string('img').notNullable();
             products.decimal('price', 6, 2).unsigned().notNullable();
