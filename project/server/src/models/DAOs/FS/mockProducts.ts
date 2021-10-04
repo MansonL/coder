@@ -1,9 +1,7 @@
 import path from 'path';
 import moment from 'moment';
-import { writeFile } from 'fs/promises';
 import { v4 as uuidv4 } from 'uuid';
 import { utils } from '../../../utils/utils';
-import { mockProducts } from '../mockProducts';
 import { IProduct } from '../../products.interface';
 
 const randomNumber = (type: string): number => {
@@ -15,8 +13,8 @@ const randomNumber = (type: string): number => {
         return Number((Math.random() * (1000 - 0 + 1) + 0).toFixed(0));
     }
 };
-const productsPath = path.resolve(__dirname + '../../../products.json');
-const addingProperties = (mockProducts: IProduct[]): void => {
+export const productsPath = path.resolve(__dirname + '../../../products.json');
+export const addingProperties = (mockProducts: IProduct[]): IProduct[] => {
     mockProducts.forEach((product: IProduct) => {
         product.id = utils.generateID();
         product.timestamp = moment().format('LLL');
@@ -24,10 +22,5 @@ const addingProperties = (mockProducts: IProduct[]): void => {
         product.price = randomNumber('price');
         product.stock = randomNumber('stock');
     });
-};
-
-export const createMockProducts = async (): Promise<void> => {
-    const FSProducts = utils.mockDataForFS(mockProducts);
-    addingProperties(FSProducts);
-    await writeFile(productsPath, JSON.stringify(mockProducts, null, '\t'));
+    return mockProducts;
 };

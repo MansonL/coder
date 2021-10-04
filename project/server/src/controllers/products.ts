@@ -128,12 +128,15 @@ class ProductController {
             },
         };
         const { error } = validator.query.validate(options);
-        if (error) next(ApiError.badRequest(EErrors.PropertiesIncorrect)); // This is just for checking if there's an error in the query implementatio
-        const result: IProduct[] | [] = await productsApi.query(options);
-        if (result.length > 0) {
-            res.status(200).send(result);
+        if (error) {
+            next(ApiError.badRequest(error.message)); // This is just for checking if there's an error in the query implementatio
         } else {
-            next(ApiError.notFound(EErrors.NoProducts));
+            const result: IProduct[] | [] = await productsApi.query(options);
+            if (result.length > 0) {
+                res.status(200).send(result);
+            } else {
+                next(ApiError.notFound(EErrors.NoProducts));
+            }
         }
     }
 }

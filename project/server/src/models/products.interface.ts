@@ -5,8 +5,17 @@ import { StringSchema } from 'joi';
  * Type of Product to be stored to and query from the DB.
  *
  */
-export interface IProduct {
-    id: string;
+export interface IProduct extends INew_Product {
+    id: string | number;
+}
+
+/**
+ *
+ * Cart data obtained from Cart Table
+ *
+ */
+export interface ICartProduct {
+    product_id: string | number;
     timestamp: string;
     title: string;
     description: string;
@@ -82,8 +91,8 @@ export interface CUDResponse {
 export interface DBProductsClass {
     get(id?: string | undefined): Promise<IProduct[] | []>;
     add(newProduct: INew_Product): Promise<CUDResponse>;
-    update(id: string, data: IUpdate): Promise<CUDResponse>;
-    delete(id: string): Promise<CUDResponse>;
+    update(id: string | number, data: IUpdate): Promise<CUDResponse>;
+    delete(id: string | number): Promise<CUDResponse>;
     query(options: IQuery): Promise<IProduct[] | []>;
 }
 
@@ -93,7 +102,8 @@ export interface DBProductsClass {
  *
  */
 export interface DBCartClass {
-    get(id?: string | undefined): Promise<IProduct[] | []>;
-    add(product: IProduct): Promise<CUDResponse>;
+    init?(): Promise<void>;
+    get(id?: string | undefined): Promise<ICartProduct[] | []>;
+    add(id: string, product: INew_Product): Promise<CUDResponse>;
     delete(id: string): Promise<CUDResponse>;
 }

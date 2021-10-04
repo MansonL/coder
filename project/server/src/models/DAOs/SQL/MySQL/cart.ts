@@ -1,5 +1,9 @@
 import knex, { Knex } from 'knex';
-import { CUDResponse, DBCartClass } from '../../../products.interface';
+import {
+    CUDResponse,
+    DBCartClass,
+    ICartProduct,
+} from '../../../products.interface';
 import dbConfig from '../../../../../knexfile';
 import { IKnex } from '../../../../common/interfaces';
 import { IProduct } from '../../../products.interface';
@@ -7,7 +11,6 @@ import { IProduct } from '../../../products.interface';
 export class SQLCart implements DBCartClass {
     private db: Knex;
     constructor(type: 'mysql' | 'SQLITE3') {
-        console.log(dbConfig);
         const options =
             type === 'mysql'
                 ? process.env.NODE_ENV || 'development'
@@ -35,28 +38,35 @@ export class SQLCart implements DBCartClass {
             })
             .catch((e) => console.log(e));
     }
-    async get(id?: string | undefined): Promise<IProduct[] | []> {
+    async get(id?: string | undefined): Promise<ICartProduct[] | []> {
         if (id != null) {
-            const product: IProduct[] = await this.db<IProduct>('cart').where({
-                id: id,
+            const product: ICartProduct[] = await this.db<ICartProduct>(
+                'cart'
+            ).where({
+                product_id: Number(id),
             });
             return product;
         } else {
-            const products: IProduct[] = await this.db<IProduct>('cart');
+            const products: ICartProduct[] = await this.db<ICartProduct>(
+                'cart'
+            );
             return products;
         }
     }
     async add(product: IProduct): Promise<CUDResponse> {
-        const result = await this.db<IProduct>('cart').insert(product);
+        const { id, ...restOfProduct } = product;
+        const cartProduct: ICartProduct = { product_id: id, ...restOfProduct };
+        const result = await this.db<ICartProduct>('cart').insert(cartProduct);
         console.log(result);
         return { message: `Product successfully added.`, data: product };
     }
     async delete(id: string): Promise<CUDResponse> {
-        const product: IProduct[] = await this.db<IProduct>('cart').where({
-            id: id,
+        const product: IProduct[] = await this.db<IProduct>('products').where({
+            id: Number(id),
         });
-        const result = await this.db<IProduct>('cart').where({ id: id }).del();
-        console.log(product);
+        const result = await this.db<ICartProduct>('cart')
+            .where({ product_id: Number(id) })
+            .del();
         console.log(result);
         return { message: `Product successfully deleted`, data: product[0] };
     }

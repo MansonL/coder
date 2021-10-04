@@ -16,7 +16,9 @@ export const productsFile: string = path.resolve(
 
 export class FSProducts implements DBProductsClass {
     async get(id?: string | undefined): Promise<IProduct[] | []> {
-        const products: IProduct[] | [] = await utils.readFS(productsFile);
+        const products: IProduct[] | [] = (await utils.readFS(productsFile)) as
+            | IProduct[]
+            | [];
         if (id != null) {
             const product: IProduct | undefined = products.find(
                 (product) => product.id == id
@@ -28,7 +30,9 @@ export class FSProducts implements DBProductsClass {
         }
     }
     async add(newProduct: INew_Product): Promise<CUDResponse> {
-        const products: IProduct[] = await utils.readFS(productsFile);
+        const products: IProduct[] = (await utils.readFS(productsFile)) as
+            | IProduct[]
+            | [];
         const product: IProduct = {
             ...newProduct,
             id: utils.generateID(),

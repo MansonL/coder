@@ -1,7 +1,13 @@
 import { readFile, writeFile } from 'fs/promises';
 import { v4 as uuid } from 'uuid';
-import { INew_Product, IProduct, IQuery } from '../models/products.interface';
+import {
+    ICartProduct,
+    INew_Product,
+    IProduct,
+    IQuery,
+} from '../models/products.interface';
 import { productsFile } from '../models/DAOs/FS/products';
+import { cartFile } from '../models/DAOs/FS/cart';
 
 class Utils {
     /**
@@ -56,11 +62,16 @@ class Utils {
      * Read JSON files from FS and returning a JS Object.
      *
      */
-    readFS = async (filePath: string): Promise<IProduct[]> => {
+    readFS = async (filePath: string): Promise<IProduct[] | ICartProduct[]> => {
         const stringFile = await readFile(filePath, 'utf-8');
         if (stringFile == '') return [];
-        const product: IProduct[] | [] = JSON.parse(stringFile);
-        return product;
+        if (filePath === cartFile) {
+            const product: ICartProduct[] | [] = JSON.parse(stringFile);
+            return product;
+        } else {
+            const product: IProduct[] | [] = JSON.parse(stringFile);
+            return product;
+        }
     };
 
     /**
@@ -68,7 +79,10 @@ class Utils {
      * Stringify JS Objects and write to JSON.
      *
      */
-    writeFS = async (product: IProduct[], filePath: string) => {
+    writeFS = async (
+        product: IProduct[] | ICartProduct[],
+        filePath: string
+    ) => {
         const result = await writeFile(
             filePath,
             JSON.stringify(product, null, `\t`)

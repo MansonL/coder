@@ -18,9 +18,11 @@ export async function up(knex: Knex): Promise<void> {
     if (!existsCart) {
         await knex.schema.createTable('cart', (cart) => {
             cart.increments('id');
+            cart.integer('product_id').unsigned().notNullable();
+            cart.foreign('product_id').references('id').inTable('products');
             cart.timestamp('timestamp').defaultTo(knex.fn.now());
             cart.string('title').notNullable();
-            cart.string('description').notNullable();
+            cart.text('description', 'longText').notNullable();
             cart.string('code').notNullable();
             cart.string('img').notNullable();
             cart.decimal('price', 6, 2).unsigned().notNullable();
@@ -31,4 +33,5 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
     await knex.schema.dropTable('products');
+    await knex.schema.dropTable('cart');
 }

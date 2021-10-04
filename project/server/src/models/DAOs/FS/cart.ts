@@ -1,38 +1,60 @@
 import { promises as fsPromises } from 'fs';
 import path from 'path';
-import { CUDResponse, DBCartClass } from '../../../models/products.interface';
+import {
+    CUDResponse,
+    DBCartClass,
+    ICartProduct,
+} from '../../../models/products.interface';
 import { IProduct } from '../../../models/products.interface';
 import { utils } from '../../../utils/utils';
+import { mockProducts } from '../mockProducts';
+import { productsPath } from './mockProducts';
+import { addingProperties } from './mockProducts';
 
-const cartFile = path.resolve(__dirname, '../../cart.json');
-
+export const cartFile = path.resolve(__dirname, '../../cart.json');
 export class FSCart implements DBCartClass {
-    async get(id?: string | undefined): Promise<IProduct[] | []> {
-        const products: IProduct[] | [] = await utils.readFS(cartFile);
+    async get(id?: string | undefined): Promise<ICartProduct[] | []> {
+        const products: ICartProduct[] = (await utils.readFS(cartFile)) as
+            | ICartProduct[]
+            | [];
         if (id != null) {
-            const product: IProduct | undefined = products.find(
-                (product) => product.id == id
+            const product: ICartProduct | undefined = products.find(
+                (product) => product.product_id == id
             );
             if (product) return [product];
             return [];
         } else {
             return products;
         }
+        this.init();
+    }
+    async init(): Promise<void> {
+        let FSProducts: IProduct[] = utils.mockDataForFS(mockProducts);
+        FSProducts = addingProperties(FSProducts);
+        await utils.writeFS(FSProducts, productsPath);
     }
     async add(product: IProduct): Promise<CUDResponse> {
-        const products: IProduct[] = await utils.readFS(cartFile);
-        products.push(product);
+        const products: ICartProduct[] = (await utils.readFS(cartFile)) as
+            | ICartProduct[]
+            | [];
+        const { id, ...restOfProduct } = product;
+        const cartProduct = { product_id: id, ...restOfProduct };
+        products.push(cartProduct);
         await utils.writeFS(products, cartFile);
         return { message: `Product successfully saved.`, data: product };
     }
     async delete(id: string): Promise<CUDResponse> {
-        const products: IProduct[] = await utils.readFS(cartFile);
-        console.log(products);
+        const products: ICartProduct[] = (await utils.readFS(cartFile)) as
+            | ICartProduct[]
+            | [];
         const deletedID: number = products.findIndex(
-            (product) => product.id === id
+            (product) => product.product_id === id
         );
-        console.log(deletedID);
-        const deleted: IProduct = products.splice(deletedID, 1)[0];
+        const { product_id, ...restOfProduct } = products.splice(
+            deletedID,
+            1
+        )[0];
+        const deleted: IProduct = { id: product_id, ...restOfProduct };
         await utils.writeFS(products, cartFile);
         return { message: `Product successfully deleted.`, data: deleted };
     }

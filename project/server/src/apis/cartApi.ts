@@ -1,7 +1,12 @@
 import { storage } from '.';
-import { CUDResponse, IProduct } from '../models/products.interface';
+import {
+    CUDResponse,
+    ICartProduct,
+    IProduct,
+} from '../models/products.interface';
 import { FSCart } from '../models/DAOs/FS/cart';
 import { CartFactory } from '../models/cart.factory';
+import { SQLCart } from '../models/DAOs/SQL/MySQL/cart';
 /**
  *
  * ApiProducts Class: here we are receiving the type of storage
@@ -9,16 +14,16 @@ import { CartFactory } from '../models/cart.factory';
  *
  */
 class CartApi {
-    private products: FSCart; // Ir cambiando tipo de clase cuando se agreguen más persistencias
+    private products: FSCart | SQLCart; // Ir cambiando tipo de clase cuando se agreguen más persistencias
     constructor() {
         this.products = CartFactory.get(storage);
     }
-    async getProduct(id?: string | undefined): Promise<IProduct[] | []> {
+    async getProduct(id?: string | undefined): Promise<ICartProduct[] | []> {
         if (id != null) {
-            const product: IProduct[] | [] = await this.products.get(id);
+            const product: ICartProduct[] | [] = await this.products.get(id);
             return product;
         } else {
-            const product: IProduct[] | [] = await this.products.get();
+            const product: ICartProduct[] | [] = await this.products.get();
             return product;
         }
     }

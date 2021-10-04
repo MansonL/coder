@@ -49,7 +49,7 @@ export class SQLProducts implements DBProductsClass {
             const product: IProduct[] | [] = await this.db<IProduct>(
                 'products'
             ).where({
-                id: id,
+                id: Number(id),
             });
             if (product.length > 0) return product;
             return [];
@@ -74,7 +74,7 @@ export class SQLProducts implements DBProductsClass {
         console.log(`Updating product...`);
         const result = await this.db<IProduct>('products')
             .update(data)
-            .where({ id: id });
+            .where({ id: Number(id) });
         const product = await this.get(id);
         console.log(result);
         console.log(product);
@@ -84,7 +84,7 @@ export class SQLProducts implements DBProductsClass {
         console.log(`Deleting product...`);
         const deleted = await this.get(id);
         const result = await this.db<IProduct>('products')
-            .where({ id: id })
+            .where({ id: Number(id) })
             .del();
         console.log(result);
         console.log(deleted);

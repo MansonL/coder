@@ -1,11 +1,13 @@
 import Joi from 'joi';
+import { MemoryType } from '../models/products.factory';
+import { storage } from '../apis/index';
 import { INew_Product, IQuery, IUpdate } from '../models/products.interface';
 
 class Validations {
     newProduct: Joi.ObjectSchema<INew_Product>;
     update: Joi.ObjectSchema<IUpdate>;
     query: Joi.ObjectSchema<IQuery>;
-    id: Joi.StringSchema;
+    id: Joi.StringSchema | Joi.NumberSchema;
     constructor() {
         /**
          * JOI Schema to validate the objects to be saved from the frontend
@@ -43,7 +45,11 @@ class Validations {
         /**
          * Simple JOI Schema to validate ids used to update or query products
          */
-        this.id = Joi.string().min(2).required();
+        if (storage === MemoryType.MySQL || storage === MemoryType.SQLITE3) {
+            this.id = Joi.number().min(1).required();
+        } else {
+            this.id = Joi.string().min(2).required();
+        }
     }
 }
 export const validator = new Validations();

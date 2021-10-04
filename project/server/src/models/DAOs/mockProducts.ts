@@ -1,5 +1,15 @@
 import { INew_Product, IProduct } from '../products.interface';
 
+const randomNumber = (type: string): number => {
+    if (type === 'price') {
+        return Number(
+            (Math.random() * (5000.0 - 100.0 + 1) + 100.0).toFixed(2)
+        );
+    } else {
+        return Number((Math.random() * (1000 - 0 + 1) + 0).toFixed(0));
+    }
+};
+
 export const mockProducts: INew_Product[] = [
     {
         title: 'Beef Choice Angus Rump Roast, 2.25 - 3.87 lb',
@@ -91,4 +101,8 @@ export const mockProducts: INew_Product[] = [
         price: 0,
         stock: 0,
     },
-];
+].map((product) => {
+    product.price = randomNumber('price');
+    product.stock = randomNumber('stock');
+    return product;
+});
