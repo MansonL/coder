@@ -10,6 +10,7 @@ import {
     IMongoProduct,
 } from '../models/products.interface';
 import { storage } from '.';
+import { MongoProducts } from '../models/DAOs/Mongo/products';
 
 /**
  *
@@ -18,7 +19,7 @@ import { storage } from '.';
  *
  */
 class ProductsApi {
-    private products: FSProducts | SQLProducts; // Ir cambiando tipo de clase cuando se agreguen más persistencias
+    private products: FSProducts | SQLProducts | MongoProducts; // Ir cambiando tipo de clase cuando se agreguen más persistencias
     constructor() {
         this.products = ProductsFactory.get(storage);
     }

@@ -9,11 +9,12 @@ import {
 } from '../models/products.interface';
 import { productsFile } from '../models/DAOs/FS/products';
 import { cartFile } from '../models/DAOs/FS/cart';
+import { any } from 'joi';
 
 class Utils {
     /**
      * Product code different than DB id.
-     * @returns code
+     * @returns String code.
      */
 
     generateCode = (): string => {
@@ -90,6 +91,22 @@ class Utils {
         );
     };
 
+    /**
+     * 
+     * Cleaning FS Cart.
+     * 
+     */
+    cleanCartFS = async (): Promise<void> => {
+        await writeFile(cartFile, '');
+        console.log(`Cart cleaned.`)
+    }
+
+    /**
+     * 
+     * @param type: string 
+     * 
+     * @returns : Max price or stock of products.
+     */
     getMaxStockPrice = async (type: string): Promise<number> => {
         const products = await this.readFS(productsFile);
         if (type === 'price') {
@@ -105,7 +122,7 @@ class Utils {
      * Method for queries. Filtering the array data coming from the database with specific values from the front.
      *
      */
-    query = (products: IProduct[], options: IQuery): IProduct[] | [] => {
+    query = (products: IProduct[], options: IQuery): IProduct[]  | [] => {
         const titleRegex =
             options.title === ''
                 ? new RegExp(`.*`)
@@ -137,6 +154,15 @@ class Utils {
     isSQL = (product: any): product is IProduct => {
         return 'id' in product;
     };
+    extractMongoDocs = (documents: any): IMongoProduct[] => {
+            const products : IMongoProduct[] = documents.map((document: any): IMongoProduct => {
+                const {_id, timestamp, title, description, code, img, stock, price} = document;
+                const product : IMongoProduct = {_id, timestamp, title, description, code, img, stock, price};
+                return product
+            })
+            return products
+        
+    }
 }
 
 export const utils = new Utils();

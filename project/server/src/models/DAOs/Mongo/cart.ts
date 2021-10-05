@@ -6,15 +6,13 @@ import {
     INew_Product,
     IProduct,
 } from '../../../models/products.interface';
-import { connect, Model, Query, Document } from 'mongoose';
+import { connect, Model} from 'mongoose';
 import { models, atlasURI, mongoURI } from './models';
 
-class MongoCart implements DBCartClass {
-    private products: Model<INew_Product>;
+export class MongoCart implements DBCartClass {
     private cart: Model<ICartProduct>;
     private uri: string;
     constructor(type: string) {
-        this.products = models.products;
         this.cart = models.cart;
         if (type === 'Atlas') {
             this.uri = atlasURI;
@@ -42,8 +40,9 @@ class MongoCart implements DBCartClass {
         }
     }
     async add(id: string, product: INew_Product): Promise<CUDResponse> {
-        const cartProduct = { product_id: id, ...product };
-        await this.cart.insertMany(cartProduct);
+        console.log(product)
+        const cartProduct = { product_id: id, product};
+        await this.cart.create(cartProduct);
         return {
             message: `Product successfully added.`,
             data: { _id: id, ...product },

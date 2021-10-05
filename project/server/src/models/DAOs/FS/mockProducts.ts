@@ -17,7 +17,7 @@ export const productsPath = path.resolve(__dirname + '../../../products.json');
 export const addingProperties = (mockProducts: IProduct[]): IProduct[] => {
     mockProducts.forEach((product: IProduct) => {
         product.id = utils.generateID();
-        product.timestamp = moment().format('LLL');
+        product.timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
         product.code = uuidv4();
         product.price = randomNumber('price');
         product.stock = randomNumber('stock');

@@ -6,4 +6,4 @@ import { MemoryType } from '../models/products.factory';
  *  @type string
  */
 
-export const storage = MemoryType.MySQL;
+export const storage = MemoryType.MongoAtlas;

@@ -4,6 +4,7 @@ import {
     INew_Product,
     IUpdate,
     IQuery,
+    IMongoProduct,
 } from '../models/products.interface';
 import { productsApi } from '../apis/productsApi';
 import { EErrors } from '../common/EErrors';
@@ -23,10 +24,11 @@ class ProductController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const products: IProduct[] | [] = await productsApi.getProduct();
+        const products: IProduct[] | IMongoProduct[] | [] = await productsApi.getProduct();
         console.log(`[PATH] Inside controller.`);
-        if (products.length > 0) res.status(200).send(products);
+        if (products.length > 0){res.status(200).send(products);}else{
         next(ApiError.notFound(EErrors.NoProducts));
+        }
     }
     async getOne(
         req: Request,
@@ -36,10 +38,19 @@ class ProductController {
         const id: string = req.params.id;
         console.log(`[PATH] Inside controller.`);
         const { error } = validator.id.validate(id);
-        if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
-        const product: IProduct[] | [] = await productsApi.getProduct(id);
-        if (product.length > 0) res.status(200).send(product);
-        next(ApiError.notFound(EErrors.ProductNotFound));
+        if (error){
+            next(ApiError.badRequest(EErrors.IdIncorrect));
+        }else{
+            const product: IProduct[] | IMongoProduct[] | [] = await productsApi.getProduct(id);
+            if (product.length > 0){
+                res.status(200).send(product);
+            }else{
+                next(ApiError.notFound(EErrors.ProductNotFound));
+            }
+        
+        }
+
+        
     }
     async saveProduct(
         req: Request,
@@ -65,9 +76,8 @@ class ProductController {
         if (resultID.error) next(ApiError.badRequest(EErrors.IdIncorrect));
         if (resultProps.error)
             next(ApiError.badRequest(EErrors.PropertiesIncorrect));
-        const product: IProduct[] | [] = await productsApi.getProduct(id);
+        const product: IProduct[] | IMongoProduct[] | [] = await productsApi.getProduct(id);
         if (product.length > 0) {
-            product[0].timestamp = moment().format('MM/D/YYYY HH:mm:ss');
             const result = await productsApi.updateProduct(id, newProperties);
             res.status(200).send(result);
         } else {
@@ -85,7 +95,7 @@ class ProductController {
         console.log(`[PATH] Inside controller.`);
         const { error } = validator.id.validate(id);
         if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
-        const product: IProduct[] | [] = await productsApi.getProduct(id);
+        const product: IProduct[] | IMongoProduct[] | [] = await productsApi.getProduct(id);
         if (product.length > 0) {
             const result = await productsApi.deleteProduct(id);
             res.status(200).send(result);
@@ -131,7 +141,7 @@ class ProductController {
         if (error) {
             next(ApiError.badRequest(error.message)); // This is just for checking if there's an error in the query implementatio
         } else {
-            const result: IProduct[] | [] = await productsApi.query(options);
+            const result: IMongoProduct[] | IProduct[] | [] = await productsApi.query(options);
             if (result.length > 0) {
                 res.status(200).send(result);
             } else {

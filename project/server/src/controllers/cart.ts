@@ -55,26 +55,29 @@ class CartController {
         if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
         const product: IProduct[] | IMongoProduct[] | [] =
             await productsApi.getProduct(productID);
-        if (utils.isMongo(product[0])) {
-            const { _id, ...restOfProduct } = product[0];
-            if (product.length > 0) {
-                const results = await cartApi.addProduct(_id, restOfProduct);
-                res.status(200).send(results);
-            } else {
-                next(ApiError.notFound(EErrors.ProductNotFound));
-            }
-        } else {
-            const { id, ...restOfProduct } = product[0];
-            if (product.length > 0) {
-                const results = await cartApi.addProduct(
-                    id.toString(),
-                    restOfProduct
-                );
-                res.status(200).send(results);
-            } else {
-                next(ApiError.notFound(EErrors.ProductNotFound));
-            }
-        }
+        console.log(product)
+        if(product.length > 0){
+            if (utils.isMongo(product[0])) {
+                delete product[0]?._id
+            const results = await cartApi.addProduct(product[0]._id, product[0]);
+            res.status(200).send(results);
+        
+    } else {
+        delete product[0]?.id
+        const results = await cartApi.addProduct(
+                product[0].id.toString(),
+                product[0]
+            );
+        res.status(200).send(results);
+    }
+}else{
+            next(ApiError.notFound(EErrors.ProductNotFound));
+        }    
+        
+            
+                
+            
+        
     }
 
     async deleteFromCart(

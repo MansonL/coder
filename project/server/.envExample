@@ -1,3 +1,5 @@
 DB_USER = Here your database user
 DB_PASS = Here your database password
-DB_NAME = Her your database name 
+DB_NAME = Here your database name 
+DB_ATLAS_USER = Here your Atlas user
+DB_ATLAS_PASS = Here your Atlas password 

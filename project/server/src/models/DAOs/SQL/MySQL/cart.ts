@@ -38,6 +38,11 @@ export class SQLCart implements DBCartClass {
                 console.log(`Cart table created.`);
             })
             .catch((e) => console.log(e));
+             this.init();
+    }
+    async init(): Promise<void> {
+        await this.db<ICartProduct>('cart').del();
+        console.log(`Cart cleaned.`)
     }
     async get(id?: string | undefined): Promise<ICartProduct[] | []> {
         if (id != null) {

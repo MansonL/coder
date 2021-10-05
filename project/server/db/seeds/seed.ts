@@ -9,11 +9,7 @@ export async function seed(knex: Knex): Promise<void> {
 
     // Inserts seed entries
     await knex('products').insert(
-        mockProducts.map((product) => {
-            product.timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
-            product.code = utils.generateCode();
-            return product;
-        })
+        mockProducts
     );
     console.log(`Mock data inserted!`);
 }

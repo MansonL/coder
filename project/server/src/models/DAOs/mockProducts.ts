@@ -1,4 +1,6 @@
-import { INew_Product, IProduct } from '../products.interface';
+import { INew_Product} from '../products.interface';
+import moment from 'moment';
+import { utils } from '../../utils/utils'
 
 const randomNumber = (type: string): number => {
     if (type === 'price') {
@@ -104,5 +106,7 @@ export const mockProducts: INew_Product[] = [
 ].map((product) => {
     product.price = randomNumber('price');
     product.stock = randomNumber('stock');
+    product.timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
+    product.code = utils.generateCode();
     return product;
 });

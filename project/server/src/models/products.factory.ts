@@ -1,4 +1,5 @@
 import { FSProducts } from './DAOs/FS/products';
+import { MongoProducts } from './DAOs/Mongo/products';
 import { SQLProducts } from './DAOs/SQL/MySQL/products';
 
 /**
@@ -28,7 +29,7 @@ export enum MemoryType {
  */
 
 export class ProductsFactory {
-    static get(type: MemoryType): FSProducts | SQLProducts {
+    static get(type: MemoryType): FSProducts | SQLProducts | MongoProducts {
         switch (type) {
             case MemoryType.FileSystem:
                 console.log(`Using FILESYSTEM`);
@@ -39,6 +40,12 @@ export class ProductsFactory {
             case MemoryType.SQLITE3:
                 console.log(`Using SQLITE3`);
                 return new SQLProducts('SQLITE3');
+            case MemoryType.MongoAtlas:
+                console.log(`Using ATLAS`);
+                return new MongoProducts('Atlas');
+            case MemoryType.LocalMongo:
+                console.log(`Using Local Mongo`);
+                return new MongoProducts('local')
             default:
                 console.log(`USING DEFAULT: MEMORY`);
                 return new FSProducts();

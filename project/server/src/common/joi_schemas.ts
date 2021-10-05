@@ -45,11 +45,11 @@ class Validations {
         /**
          * Simple JOI Schema to validate ids used to update or query products
          */
-        if (storage === MemoryType.MySQL || storage === MemoryType.SQLITE3) {
-            this.id = Joi.number().min(1).required();
-        } else {
+        //if (storage === 'MySQL' || storage === 'SQLite') {
+          //  this.id = Joi.number().min(1).required();
+        //} else {
             this.id = Joi.string().min(2).required();
-        }
+        //}
     }
 }
 export const validator = new Validations();

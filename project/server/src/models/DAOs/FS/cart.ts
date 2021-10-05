@@ -8,12 +8,13 @@ import {
 } from '../../../models/products.interface';
 import { IProduct } from '../../../models/products.interface';
 import { utils } from '../../../utils/utils';
-import { mockProducts } from '../mockProducts';
-import { productsPath } from './mockProducts';
-import { addingProperties } from './mockProducts';
+
 
 export const cartFile = path.resolve(__dirname, '../../cart.json');
 export class FSCart implements DBCartClass {
+    constructor(){
+        this.init();
+    }
     async get(id?: string | undefined): Promise<ICartProduct[] | []> {
         const products: ICartProduct[] = (await utils.readFS(cartFile)) as
             | ICartProduct[]
@@ -27,12 +28,9 @@ export class FSCart implements DBCartClass {
         } else {
             return products;
         }
-        this.init();
     }
-    async init(): Promise<void> {
-        let FSProducts: IProduct[] = utils.mockDataForFS(mockProducts);
-        FSProducts = addingProperties(FSProducts);
-        await utils.writeFS(FSProducts, productsPath);
+    async init () : Promise<void> {
+        await utils.cleanCartFS();
     }
     async add(id: string, product: INew_Product): Promise<CUDResponse> {
         const products: ICartProduct[] = (await utils.readFS(cartFile)) as

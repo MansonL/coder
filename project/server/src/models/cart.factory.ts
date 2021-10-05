@@ -1,4 +1,5 @@
 import { FSCart } from './DAOs/FS/cart';
+import { MongoCart } from './DAOs/Mongo/cart';
 import { SQLCart } from './DAOs/SQL/MySQL/cart';
 import { MemoryType } from './products.factory';
 
@@ -13,7 +14,7 @@ import { MemoryType } from './products.factory';
  */
 
 export class CartFactory {
-    static get(type: MemoryType): FSCart | SQLCart {
+    static get(type: MemoryType): FSCart | SQLCart | MongoCart{
         switch (type) {
             case MemoryType.FileSystem:
                 console.log(`Using FILESYSTEM`);
@@ -24,6 +25,12 @@ export class CartFactory {
             case MemoryType.SQLITE3:
                 console.log(`Using SQLITE3`);
                 return new SQLCart('SQLITE3');
+            case MemoryType.MongoAtlas:
+                console.log(`Using ATLAS`);
+                return new MongoCart('Atlas');
+            case MemoryType.LocalMongo:
+                console.log(`Using Local Mongo`);
+                return new MongoCart('local')
             default:
                 console.log(`USING DEFAULT: MEMORY`);
                 return new FSCart();

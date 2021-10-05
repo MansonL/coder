@@ -98,6 +98,7 @@ export interface CUDResponse {
  *
  */
 export interface DBProductsClass {
+    init?(): Promise<void>;
     get(id?: string | undefined): Promise<IProduct[] | IMongoProduct[] | []>;
     add(newProduct: INew_Product): Promise<CUDResponse>;
     update(id: string | number, data: IUpdate): Promise<CUDResponse>;

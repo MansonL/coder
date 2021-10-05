@@ -8,6 +8,7 @@ import {
 import { FSCart } from '../models/DAOs/FS/cart';
 import { CartFactory } from '../models/cart.factory';
 import { SQLCart } from '../models/DAOs/SQL/MySQL/cart';
+import { MongoCart } from '../models/DAOs/Mongo/cart';
 /**
  *
  * ApiProducts Class: here we are receiving the type of storage
@@ -15,7 +16,7 @@ import { SQLCart } from '../models/DAOs/SQL/MySQL/cart';
  *
  */
 class CartApi {
-    private products: FSCart | SQLCart; // Ir cambiando tipo de clase cuando se agreguen más persistencias
+    private products: FSCart | SQLCart | MongoCart; // Ir cambiando tipo de clase cuando se agreguen más persistencias
     constructor() {
         this.products = CartFactory.get(storage);
     }

@@ -8,6 +8,9 @@ import {
     IQuery,
 } from '../../../models/products.interface';
 import { IProduct } from '../../../models/products.interface';
+import { mockProducts } from '../mockProducts';
+import { productsPath } from './mockProducts';
+import { addingProperties } from './mockProducts';
 
 export const productsFile: string = path.resolve(
     __dirname,
@@ -15,6 +18,9 @@ export const productsFile: string = path.resolve(
 );
 
 export class FSProducts implements DBProductsClass {
+    constructor(){
+        this.init();
+    }
     async get(id?: string | undefined): Promise<IProduct[] | []> {
         const products: IProduct[] | [] = (await utils.readFS(productsFile)) as
             | IProduct[]
@@ -28,6 +34,12 @@ export class FSProducts implements DBProductsClass {
         } else {
             return products;
         }
+    }
+    async init(): Promise<void> {
+        let FSProducts: IProduct[] = utils.mockDataForFS(mockProducts);
+        FSProducts = addingProperties(FSProducts);
+        await utils.writeFS(FSProducts, productsPath);
+        console.log(`Mock data inserted.`)
     }
     async add(newProduct: INew_Product): Promise<CUDResponse> {
         const products: IProduct[] = (await utils.readFS(productsFile)) as
