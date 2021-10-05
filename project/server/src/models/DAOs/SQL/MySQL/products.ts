@@ -4,6 +4,7 @@ import {
     INew_Product,
     IProduct,
     IQuery,
+    IUpdate,
 } from '../../../products.interface';
 import dbConfig from '../../../../../knexfile';
 import { IKnex } from '../../../../common/interfaces';
@@ -70,7 +71,7 @@ export class SQLProducts implements DBProductsClass {
         console.log(result2);
         return { message: `Product added successfully.`, data: result2[0] };
     }
-    async update(id: string, data: INew_Product): Promise<CUDResponse> {
+    async update(id: string, data: IUpdate): Promise<CUDResponse> {
         console.log(`Updating product...`);
         const result = await this.db<IProduct>('products')
             .update(data)

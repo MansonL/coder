@@ -3,6 +3,7 @@ import {
     CUDResponse,
     DBCartClass,
     ICartProduct,
+    INew_Product,
 } from '../../../products.interface';
 import dbConfig from '../../../../../knexfile';
 import { IKnex } from '../../../../common/interfaces';
@@ -53,12 +54,16 @@ export class SQLCart implements DBCartClass {
             return products;
         }
     }
-    async add(product: IProduct): Promise<CUDResponse> {
-        const { id, ...restOfProduct } = product;
-        const cartProduct: ICartProduct = { product_id: id, ...restOfProduct };
-        const result = await this.db<ICartProduct>('cart').insert(cartProduct);
-        console.log(result);
-        return { message: `Product successfully added.`, data: product };
+    async add(id: string, product: INew_Product): Promise<CUDResponse> {
+        const cartProduct: ICartProduct = {
+            product_id: Number(id),
+            ...product,
+        };
+        await this.db<ICartProduct>('cart').insert(cartProduct);
+        return {
+            message: `Product successfully added.`,
+            data: { id: Number(id), ...product },
+        };
     }
     async delete(id: string): Promise<CUDResponse> {
         const product: IProduct[] = await this.db<IProduct>('products').where({

@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'fs/promises';
 import { v4 as uuid } from 'uuid';
 import {
     ICartProduct,
+    IMongoProduct,
     INew_Product,
     IProduct,
     IQuery,
@@ -129,6 +130,12 @@ class Utils {
             const FSProduct = { id: '', ...product };
             return FSProduct;
         });
+    };
+    isMongo = (product: any): product is IMongoProduct => {
+        return '_id' in product;
+    };
+    isSQL = (product: any): product is IProduct => {
+        return 'id' in product;
     };
 }
 

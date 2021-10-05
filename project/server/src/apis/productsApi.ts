@@ -1,4 +1,5 @@
 import { FSProducts } from '../models/DAOs/FS/products';
+import { SQLProducts } from '../models/DAOs/SQL/MySQL/products';
 import { ProductsFactory } from '../models/products.factory';
 import {
     INew_Product,
@@ -6,6 +7,7 @@ import {
     IProduct,
     IQuery,
     IUpdate,
+    IMongoProduct,
 } from '../models/products.interface';
 import { storage } from '.';
 
@@ -16,11 +18,13 @@ import { storage } from '.';
  *
  */
 class ProductsApi {
-    private products: FSProducts; // Ir cambiando tipo de clase cuando se agreguen más persistencias
+    private products: FSProducts | SQLProducts; // Ir cambiando tipo de clase cuando se agreguen más persistencias
     constructor() {
         this.products = ProductsFactory.get(storage);
     }
-    async getProduct(id?: string | undefined): Promise<IProduct[] | []> {
+    async getProduct(
+        id?: string | undefined
+    ): Promise<IProduct[] | IMongoProduct[] | []> {
         if (id != null) {
             const result = await this.products.get(id);
             return result;
@@ -41,7 +45,7 @@ class ProductsApi {
         const result = await this.products.delete(id);
         return result;
     }
-    async query(options: IQuery): Promise<IProduct[] | []> {
+    async query(options: IQuery): Promise<IProduct[] | IMongoProduct[] | []> {
         const result = await this.products.query(options);
         return result;
     }

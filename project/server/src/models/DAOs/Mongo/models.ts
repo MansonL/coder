@@ -5,10 +5,9 @@ import {
     IProduct,
 } from '../../../models/products.interface';
 
-interface INewMongo_Product extends Document, INew_Product {}
-interface IMongoCartProduct extends Document, INew_Product {
-    product_id: string;
-}
+export const atlasURI = `mongodb+srv://${process.env.DB_ATLAS_USER}:${process.env.DB_ATLAS_PASS}@project.lofof.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+
+export const mongoURI = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@localhost:27018/${process.env.DB_NAME}`;
 
 const productSchema = new Schema({
     timestamp: { type: String, required: true },

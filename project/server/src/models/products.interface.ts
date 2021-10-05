@@ -6,7 +6,16 @@ import { StringSchema } from 'joi';
  *
  */
 export interface IProduct extends INew_Product {
-    id: string | number;
+    id: number | string;
+}
+
+/**
+ *
+ * Type of Product to be stored and query from Mongo
+ *
+ */
+export interface IMongoProduct extends INew_Product {
+    _id: string;
 }
 
 /**
@@ -80,7 +89,7 @@ export interface IQuery {
 
 export interface CUDResponse {
     message: string;
-    data: IProduct | [];
+    data: IProduct | IMongoProduct | [];
 }
 
 /**
@@ -89,11 +98,11 @@ export interface CUDResponse {
  *
  */
 export interface DBProductsClass {
-    get(id?: string | undefined): Promise<IProduct[] | []>;
+    get(id?: string | undefined): Promise<IProduct[] | IMongoProduct[] | []>;
     add(newProduct: INew_Product): Promise<CUDResponse>;
     update(id: string | number, data: IUpdate): Promise<CUDResponse>;
     delete(id: string | number): Promise<CUDResponse>;
-    query(options: IQuery): Promise<IProduct[] | []>;
+    query(options: IQuery): Promise<IProduct[] | IMongoProduct[] | []>;
 }
 
 /**

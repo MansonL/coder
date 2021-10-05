@@ -1,10 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 import { EErrors } from '../common/EErrors';
-import { ICartProduct, IProduct } from '../models/products.interface';
+import {
+    ICartProduct,
+    IMongoProduct,
+    INew_Product,
+    IProduct,
+} from '../models/products.interface';
 import { cartApi } from '../apis/cartApi';
 import { validator } from '../common/joi_schemas';
 import { productsApi } from '../apis/productsApi';
 import { ApiError } from '../common/ApiError';
+import { utils } from '../utils/utils';
 /**
  *
  * Cart Controller Class
@@ -43,16 +49,31 @@ class CartController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const id: string = req.params.id;
+        const productID: string = req.params.id;
         console.log(`[PATH] Inside controller.`);
-        const { error } = await validator.id.validate(id);
+        const { error } = await validator.id.validate(productID);
         if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
-        const product: IProduct[] | [] = await productsApi.getProduct(id);
-        if (product.length > 0) {
-            const results = await cartApi.addProduct(product[0]);
-            res.status(200).send(results);
+        const product: IProduct[] | IMongoProduct[] | [] =
+            await productsApi.getProduct(productID);
+        if (utils.isMongo(product[0])) {
+            const { _id, ...restOfProduct } = product[0];
+            if (product.length > 0) {
+                const results = await cartApi.addProduct(_id, restOfProduct);
+                res.status(200).send(results);
+            } else {
+                next(ApiError.notFound(EErrors.ProductNotFound));
+            }
         } else {
-            next(ApiError.notFound(EErrors.ProductNotFound));
+            const { id, ...restOfProduct } = product[0];
+            if (product.length > 0) {
+                const results = await cartApi.addProduct(
+                    id.toString(),
+                    restOfProduct
+                );
+                res.status(200).send(results);
+            } else {
+                next(ApiError.notFound(EErrors.ProductNotFound));
+            }
         }
     }
 
@@ -65,7 +86,8 @@ class CartController {
         console.log(`[PATH] Inside controller.`);
         const { error } = await validator.id.validate(id);
         if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
-        const product: IProduct[] | [] = await productsApi.getProduct(id);
+        const product: IProduct[] | IMongoProduct[] | [] =
+            await productsApi.getProduct(id);
         if (product.length > 0) {
             const result = await cartApi.deleteProduct(id);
             res.status(200).send(result);

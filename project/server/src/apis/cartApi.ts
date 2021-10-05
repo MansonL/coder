@@ -2,6 +2,7 @@ import { storage } from '.';
 import {
     CUDResponse,
     ICartProduct,
+    INew_Product,
     IProduct,
 } from '../models/products.interface';
 import { FSCart } from '../models/DAOs/FS/cart';
@@ -27,8 +28,8 @@ class CartApi {
             return product;
         }
     }
-    async addProduct(product: IProduct): Promise<CUDResponse> {
-        const result = await this.products.add(product);
+    async addProduct(id: string, product: INew_Product): Promise<CUDResponse> {
+        const result = await this.products.add(id, product);
         return result;
     }
     async deleteProduct(id: string): Promise<CUDResponse> {

@@ -4,6 +4,7 @@ import {
     CUDResponse,
     DBCartClass,
     ICartProduct,
+    INew_Product,
 } from '../../../models/products.interface';
 import { IProduct } from '../../../models/products.interface';
 import { utils } from '../../../utils/utils';
@@ -33,15 +34,17 @@ export class FSCart implements DBCartClass {
         FSProducts = addingProperties(FSProducts);
         await utils.writeFS(FSProducts, productsPath);
     }
-    async add(product: IProduct): Promise<CUDResponse> {
+    async add(id: string, product: INew_Product): Promise<CUDResponse> {
         const products: ICartProduct[] = (await utils.readFS(cartFile)) as
             | ICartProduct[]
             | [];
-        const { id, ...restOfProduct } = product;
-        const cartProduct = { product_id: id, ...restOfProduct };
+        const cartProduct = { product_id: id, ...product };
         products.push(cartProduct);
         await utils.writeFS(products, cartFile);
-        return { message: `Product successfully saved.`, data: product };
+        return {
+            message: `Product successfully saved.`,
+            data: { id: id, ...product },
+        };
     }
     async delete(id: string): Promise<CUDResponse> {
         const products: ICartProduct[] = (await utils.readFS(cartFile)) as

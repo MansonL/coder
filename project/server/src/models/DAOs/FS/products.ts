@@ -44,11 +44,11 @@ export class FSProducts implements DBProductsClass {
     async update(id: string, data: IUpdate): Promise<CUDResponse> {
         const products: IProduct[] | [] = await this.get();
         const product: IProduct = products.find(
-            (product) => product.id == id
+            (product) => product.id === Number(id)
         ) as IProduct;
 
         const productID: number = products.findIndex(
-            (product) => product.id == id
+            (product) => product.id === Number(id)
         );
         const newProduct: IProduct = {
             ...product,
@@ -64,7 +64,7 @@ export class FSProducts implements DBProductsClass {
     async delete(id: string): Promise<CUDResponse> {
         const products: IProduct[] | [] = await this.get();
         const deletedID: number = products.findIndex(
-            (product) => product.id == id
+            (product) => product.id === Number(id)
         );
         const deleted: IProduct = products.splice(deletedID, 1)[0];
         await utils.writeFS(products, productsFile);

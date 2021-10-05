@@ -2,17 +2,14 @@ import {
     CUDResponse,
     DBCartClass,
     ICartProduct,
+    IMongoProduct,
     INew_Product,
     IProduct,
 } from '../../../models/products.interface';
 import { connect, Model, Query, Document } from 'mongoose';
-import { models } from './models';
+import { models, atlasURI, mongoURI } from './models';
 
-const atlasURI = `mongodb+srv://${process.env.DB_ATLAS_USER}:${process.env.DB_ATLAS_PASS}@project.lofof.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
-
-const mongoURI = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@localhost:27018/${process.env.DB_NAME}`;
-
-class Cart implements DBCartClass {
+class MongoCart implements DBCartClass {
     private products: Model<INew_Product>;
     private cart: Model<ICartProduct>;
     private uri: string;
@@ -44,9 +41,24 @@ class Cart implements DBCartClass {
             return [];
         }
     }
-    async add(product: IProduct): Promise<CUDResponse> {
-        
+    async add(id: string, product: INew_Product): Promise<CUDResponse> {
+        const cartProduct = { product_id: id, ...product };
+        await this.cart.insertMany(cartProduct);
+        return {
+            message: `Product successfully added.`,
+            data: { _id: id, ...product },
+        };
     }
-    async delete(id: string): Promise<CUDResponse> {}
+    async delete(id: string): Promise<CUDResponse> {
+        const deleted: ICartProduct[] | [] = await this.get(id);
+        const { product_id, ...rest } = deleted[0];
+        const product: IMongoProduct = { _id: product_id.toString(), ...rest };
+        const result = await this.cart.deleteOne({ _id: id });
+        console.log(result);
+        return {
+            message: `Product successfully deleted.`,
+            data: product,
+        };
+    }
 }
 //{ useNewUrlParser: true, useUnifiedTopology: true };
