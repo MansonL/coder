@@ -24,10 +24,13 @@ class ProductController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const products: IProduct[] | IMongoProduct[] | [] = await productsApi.getProduct();
+        const products: IProduct[] | IMongoProduct[] | [] =
+            await productsApi.getProduct();
         console.log(`[PATH] Inside controller.`);
-        if (products.length > 0){res.status(200).send(products);}else{
-        next(ApiError.notFound(EErrors.NoProducts));
+        if (products.length > 0) {
+            res.status(200).send(products);
+        } else {
+            next(ApiError.notFound(EErrors.NoProducts));
         }
     }
     async getOne(
@@ -38,19 +41,17 @@ class ProductController {
         const id: string = req.params.id;
         console.log(`[PATH] Inside controller.`);
         const { error } = validator.id.validate(id);
-        if (error){
+        if (error) {
             next(ApiError.badRequest(EErrors.IdIncorrect));
-        }else{
-            const product: IProduct[] | IMongoProduct[] | [] = await productsApi.getProduct(id);
-            if (product.length > 0){
+        } else {
+            const product: IProduct[] | IMongoProduct[] | [] =
+                await productsApi.getProduct(id);
+            if (product.length > 0) {
                 res.status(200).send(product);
-            }else{
+            } else {
                 next(ApiError.notFound(EErrors.ProductNotFound));
             }
-        
         }
-
-        
     }
     async saveProduct(
         req: Request,
@@ -60,9 +61,13 @@ class ProductController {
         const product: INew_Product = req.body;
         console.log(`[PATH] Inside controller.`);
         const { error } = validator.newProduct.validate(product);
-        if (error) next(ApiError.badRequest(EErrors.PropertiesIncorrect));
-        const result = await productsApi.addProduct(product);
-        res.status(200).send(result);
+        console.log(error);
+        if (error) {
+            next(ApiError.badRequest(EErrors.PropertiesIncorrect));
+        } else {
+            const result = await productsApi.addProduct(product);
+            res.status(200).send(result);
+        }
     }
     async updateProduct(
         req: Request,
@@ -76,7 +81,8 @@ class ProductController {
         if (resultID.error) next(ApiError.badRequest(EErrors.IdIncorrect));
         if (resultProps.error)
             next(ApiError.badRequest(EErrors.PropertiesIncorrect));
-        const product: IProduct[] | IMongoProduct[] | [] = await productsApi.getProduct(id);
+        const product: IProduct[] | IMongoProduct[] | [] =
+            await productsApi.getProduct(id);
         if (product.length > 0) {
             const result = await productsApi.updateProduct(id, newProperties);
             res.status(200).send(result);
@@ -95,7 +101,8 @@ class ProductController {
         console.log(`[PATH] Inside controller.`);
         const { error } = validator.id.validate(id);
         if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
-        const product: IProduct[] | IMongoProduct[] | [] = await productsApi.getProduct(id);
+        const product: IProduct[] | IMongoProduct[] | [] =
+            await productsApi.getProduct(id);
         if (product.length > 0) {
             const result = await productsApi.deleteProduct(id);
             res.status(200).send(result);
@@ -113,40 +120,52 @@ class ProductController {
             code: req.query.code as string,
         };
         let { minPrice, maxPrice, minStock, maxStock } = req.query;
-        title = title != null ? title : '';
-        code = code != null ? code : '';
-        minPrice = minPrice != null ? minPrice : '0.01';
-        maxPrice =
-            maxPrice != null
-                ? maxPrice
-                : (await utils.getMaxStockPrice('price')).toString();
-        minStock = minStock != null ? minStock : '0';
-        maxStock =
-            maxStock != null
-                ? maxStock
-                : (await utils.getMaxStockPrice('stock')).toString();
-        const options: IQuery = {
-            title: title,
-            code: code,
-            price: {
-                minPrice: Number(minPrice),
-                maxPrice: Number(maxPrice),
-            },
-            stock: {
-                minStock: Number(minStock),
-                maxStock: Number(maxStock),
-            },
-        };
-        const { error } = validator.query.validate(options);
-        if (error) {
-            next(ApiError.badRequest(error.message)); // This is just for checking if there's an error in the query implementatio
-        } else {
-            const result: IMongoProduct[] | IProduct[] | [] = await productsApi.query(options);
-            if (result.length > 0) {
-                res.status(200).send(result);
+        const products: IProduct[] | IMongoProduct[] | [] =
+            await productsApi.getProduct();
+        if (products.length > 0) {
+            title = title != null ? title : '';
+            code = code != null ? code : '';
+            minPrice = minPrice != null ? minPrice : '0.01';
+            maxPrice =
+                maxPrice != null
+                    ? maxPrice
+                    : (
+                          await utils.getMaxStockPrice(products, 'price')
+                      ).toString();
+            minStock = minStock != null ? minStock : '0';
+            maxStock =
+                maxStock != null
+                    ? maxStock
+                    : (
+                          await utils.getMaxStockPrice(products, 'stock')
+                      ).toString();
+            const options: IQuery = {
+                title: title,
+                code: code,
+                price: {
+                    minPrice: Number(minPrice),
+                    maxPrice: Number(maxPrice),
+                },
+                stock: {
+                    minStock: Number(minStock),
+                    maxStock: Number(maxStock),
+                },
+            };
+            console.log(options);
+            const { error } = validator.query.validate(options);
+            if (error) {
+                next(ApiError.badRequest(error.message)); // This is just for checking if there's an error in the query implementatio
             } else {
-                next(ApiError.notFound(EErrors.NoProducts));
+                const result: IMongoProduct[] | IProduct[] | [] =
+                    await productsApi.query(options);
+                if (result.length > 0) {
+                    res.status(200).send(result);
+                } else {
+                    next(ApiError.notFound(EErrors.NoProducts));
+                }
             }
+        } else {
+            next(ApiError.notFound(EErrors.NoProducts));
         }
     }
 }

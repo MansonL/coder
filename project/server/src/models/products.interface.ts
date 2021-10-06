@@ -20,6 +20,15 @@ export interface IMongoProduct extends INew_Product {
 
 /**
  *
+ * Type of Cart Product to be stored and query from Mongo
+ *
+ */
+export interface IMongoCartProduct extends ICartProduct {
+    _id: string;
+}
+
+/**
+ *
  * Cart data obtained from Cart Table
  *
  */
@@ -89,7 +98,7 @@ export interface IQuery {
 
 export interface CUDResponse {
     message: string;
-    data: IProduct | IMongoProduct | [];
+    data: IProduct | IMongoProduct | IMongoCartProduct | [];
 }
 
 /**
@@ -113,7 +122,9 @@ export interface DBProductsClass {
  */
 export interface DBCartClass {
     init?(): Promise<void>;
-    get(id?: string | undefined): Promise<ICartProduct[] | []>;
+    get(
+        id?: string | undefined
+    ): Promise<ICartProduct[] | IMongoCartProduct[] | []>;
     add(id: string, product: INew_Product): Promise<CUDResponse>;
     delete(id: string): Promise<CUDResponse>;
 }

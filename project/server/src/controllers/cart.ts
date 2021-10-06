@@ -3,7 +3,7 @@ import { EErrors } from '../common/EErrors';
 import {
     ICartProduct,
     IMongoProduct,
-    INew_Product,
+    IMongoCartProduct,
     IProduct,
 } from '../models/products.interface';
 import { cartApi } from '../apis/cartApi';
@@ -53,31 +53,27 @@ class CartController {
         console.log(`[PATH] Inside controller.`);
         const { error } = await validator.id.validate(productID);
         if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
-        const product: IProduct[] | IMongoProduct[] | [] =
+        const products: IProduct[] | IMongoProduct[] | [] =
             await productsApi.getProduct(productID);
-        console.log(product)
-        if(product.length > 0){
-            if (utils.isMongo(product[0])) {
-                delete product[0]?._id
-            const results = await cartApi.addProduct(product[0]._id, product[0]);
-            res.status(200).send(results);
-        
-    } else {
-        delete product[0]?.id
-        const results = await cartApi.addProduct(
-                product[0].id.toString(),
-                product[0]
-            );
-        res.status(200).send(results);
-    }
-}else{
+        if (products.length > 0) {
+            if (utils.isMongo(products[0])) {
+                const { _id, ...product } = products[0];
+                const results = await cartApi.addProduct(
+                    _id.toString(),
+                    product
+                );
+                res.status(200).send(results);
+            } else {
+                const { id, ...product } = products[0];
+                const results = await cartApi.addProduct(
+                    id.toString(),
+                    product
+                );
+                res.status(200).send(results);
+            }
+        } else {
             next(ApiError.notFound(EErrors.ProductNotFound));
-        }    
-        
-            
-                
-            
-        
+        }
     }
 
     async deleteFromCart(
@@ -89,8 +85,8 @@ class CartController {
         console.log(`[PATH] Inside controller.`);
         const { error } = await validator.id.validate(id);
         if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
-        const product: IProduct[] | IMongoProduct[] | [] =
-            await productsApi.getProduct(id);
+        const product: ICartProduct[] | IMongoCartProduct[] | [] =
+            await cartApi.getProduct(id);
         if (product.length > 0) {
             const result = await cartApi.deleteProduct(id);
             res.status(200).send(result);

@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'fs/promises';
 import { v4 as uuid } from 'uuid';
 import {
     ICartProduct,
+    IMongoCartProduct,
     IMongoProduct,
     INew_Product,
     IProduct,
@@ -92,23 +93,25 @@ class Utils {
     };
 
     /**
-     * 
+     *
      * Cleaning FS Cart.
-     * 
+     *
      */
     cleanCartFS = async (): Promise<void> => {
         await writeFile(cartFile, '');
-        console.log(`Cart cleaned.`)
-    }
+        console.log(`Cart cleaned.`);
+    };
 
     /**
-     * 
-     * @param type: string 
-     * 
+     *
+     * @param type: string
+     *
      * @returns : Max price or stock of products.
      */
-    getMaxStockPrice = async (type: string): Promise<number> => {
-        const products = await this.readFS(productsFile);
+    getMaxStockPrice = async (
+        products: IMongoProduct[] | IProduct[],
+        type: string
+    ): Promise<number> => {
         if (type === 'price') {
             const prices = products.map((product) => product.price);
             return Math.max(...prices);
@@ -122,7 +125,7 @@ class Utils {
      * Method for queries. Filtering the array data coming from the database with specific values from the front.
      *
      */
-    query = (products: IProduct[], options: IQuery): IProduct[]  | [] => {
+    query = (products: IProduct[], options: IQuery): IProduct[] | [] => {
         const titleRegex =
             options.title === ''
                 ? new RegExp(`.*`)
@@ -155,14 +158,46 @@ class Utils {
         return 'id' in product;
     };
     extractMongoDocs = (documents: any): IMongoProduct[] => {
-            const products : IMongoProduct[] = documents.map((document: any): IMongoProduct => {
-                const {_id, timestamp, title, description, code, img, stock, price} = document;
-                const product : IMongoProduct = {_id, timestamp, title, description, code, img, stock, price};
-                return product
-            })
-            return products
-        
-    }
+        const products: IMongoProduct[] = documents.map(
+            (document: any): IMongoProduct => {
+                const {
+                    _id,
+                    timestamp,
+                    title,
+                    description,
+                    code,
+                    img,
+                    stock,
+                    price,
+                } = document;
+                const product: IMongoProduct = {
+                    _id,
+                    timestamp,
+                    title,
+                    description,
+                    code,
+                    img,
+                    stock,
+                    price,
+                };
+                return product;
+            }
+        );
+        return products;
+    };
+    extractMongoCartDocs = (documents: any): IMongoCartProduct[] => {
+        const productsIds = documents.map((document: any) => {
+            const { product_id } = document;
+            return product_id;
+        });
+        const products: IMongoProduct[] = this.extractMongoDocs(documents);
+        const cartProducts: IMongoCartProduct[] = products.map(
+            (product: IMongoProduct, idx: number) => {
+                return { product_id: productsIds[idx], ...product };
+            }
+        );
+        return cartProducts;
+    };
 }
 
 export const utils = new Utils();

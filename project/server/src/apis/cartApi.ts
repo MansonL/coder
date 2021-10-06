@@ -2,6 +2,7 @@ import { storage } from '.';
 import {
     CUDResponse,
     ICartProduct,
+    IMongoCartProduct,
     INew_Product,
     IProduct,
 } from '../models/products.interface';
@@ -20,7 +21,9 @@ class CartApi {
     constructor() {
         this.products = CartFactory.get(storage);
     }
-    async getProduct(id?: string | undefined): Promise<ICartProduct[] | []> {
+    async getProduct(
+        id?: string | undefined
+    ): Promise<ICartProduct[] | IMongoCartProduct[] | []> {
         if (id != null) {
             const product: ICartProduct[] | [] = await this.products.get(id);
             return product;

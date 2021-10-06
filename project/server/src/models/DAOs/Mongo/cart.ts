@@ -3,11 +3,12 @@ import {
     DBCartClass,
     ICartProduct,
     IMongoProduct,
+    IMongoCartProduct,
     INew_Product,
-    IProduct,
 } from '../../../models/products.interface';
-import { connect, Model} from 'mongoose';
+import { connect, Model } from 'mongoose';
 import { models, atlasURI, mongoURI } from './models';
+import { utils } from '../../../utils/utils';
 
 export class MongoCart implements DBCartClass {
     private cart: Model<ICartProduct>;
@@ -26,22 +27,31 @@ export class MongoCart implements DBCartClass {
         console.log(`Mongo Connected`);
         await this.cart.deleteMany({});
     }
-    async get(id?: string | undefined): Promise<ICartProduct[] | []> {
+    async get(id?: string | undefined): Promise<IMongoCartProduct[] | []> {
         if (id != null) {
-            const product: ICartProduct[] | [] = await this.cart.find({
-                _id: id,
+            const doc = await this.cart.find({
+                product_id: id,
             });
-            if (product.length > 0) return product;
-            return [];
+            if (doc.length > 0) {
+                const products: IMongoCartProduct[] =
+                    utils.extractMongoCartDocs(doc);
+                return products;
+            } else {
+                return [];
+            }
         } else {
-            const product: ICartProduct[] | [] = await this.cart.find({});
-            if (product.length > 0) return product;
-            return [];
+            const doc = await this.cart.find({ product_id: id });
+            if (doc.length > 0) {
+                const products: IMongoCartProduct[] =
+                    utils.extractMongoCartDocs(doc);
+                return products;
+            } else {
+                return [];
+            }
         }
     }
     async add(id: string, product: INew_Product): Promise<CUDResponse> {
-        console.log(product)
-        const cartProduct = { product_id: id, product};
+        const cartProduct = { product_id: id, ...product };
         await this.cart.create(cartProduct);
         return {
             message: `Product successfully added.`,
@@ -49,15 +59,13 @@ export class MongoCart implements DBCartClass {
         };
     }
     async delete(id: string): Promise<CUDResponse> {
-        const deleted: ICartProduct[] | [] = await this.get(id);
-        const { product_id, ...rest } = deleted[0];
-        const product: IMongoProduct = { _id: product_id.toString(), ...rest };
-        const result = await this.cart.deleteOne({ _id: id });
+        const deleted: IMongoCartProduct = (await this.get(id))[0];
+        const result = await this.cart.deleteOne({ product_id: id });
         console.log(result);
         return {
             message: `Product successfully deleted.`,
-            data: product,
+            data: deleted,
         };
     }
 }
-//{ useNewUrlParser: true, useUnifiedTopology: true };
+
