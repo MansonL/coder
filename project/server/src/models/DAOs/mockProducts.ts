@@ -1,6 +1,6 @@
-import { INew_Product} from '../products.interface';
+import { INew_Product } from '../products.interface';
 import moment from 'moment';
-import { utils } from '../../utils/utils'
+import { utils } from '../../utils/utils';
 
 const randomNumber = (type: string): number => {
     if (type === 'price') {

@@ -1,5 +1,3 @@
-import { StringSchema } from 'joi';
-
 /**
  *
  * Type of Product to be stored to and query from the DB.

@@ -18,7 +18,7 @@ export const productsFile: string = path.resolve(
 );
 
 export class FSProducts implements DBProductsClass {
-    constructor(){
+    constructor() {
         this.init();
     }
     async get(id?: string | undefined): Promise<IProduct[] | []> {
@@ -39,7 +39,7 @@ export class FSProducts implements DBProductsClass {
         let FSProducts: IProduct[] = utils.mockDataForFS(mockProducts);
         FSProducts = addingProperties(FSProducts);
         await utils.writeFS(FSProducts, productsPath);
-        console.log(`Mock data inserted.`)
+        console.log(`Mock data inserted.`);
     }
     async add(newProduct: INew_Product): Promise<CUDResponse> {
         const products: IProduct[] = (await utils.readFS(productsFile)) as

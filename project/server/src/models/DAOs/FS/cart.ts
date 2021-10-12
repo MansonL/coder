@@ -9,10 +9,9 @@ import {
 import { IProduct } from '../../../models/products.interface';
 import { utils } from '../../../utils/utils';
 
-
 export const cartFile = path.resolve(__dirname, '../../cart.json');
 export class FSCart implements DBCartClass {
-    constructor(){
+    constructor() {
         this.init();
     }
     async get(id?: string | undefined): Promise<ICartProduct[] | []> {
@@ -29,7 +28,7 @@ export class FSCart implements DBCartClass {
             return products;
         }
     }
-    async init () : Promise<void> {
+    async init(): Promise<void> {
         await utils.cleanCartFS();
     }
     async add(id: string, product: INew_Product): Promise<CUDResponse> {

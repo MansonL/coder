@@ -115,11 +115,14 @@ class ProductController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        let { title, code } = {
+        let { title, code, minPrice, maxPrice, minStock, maxStock } = {
             title: req.query.title as string,
             code: req.query.code as string,
+            minPrice: req.query.minPrice as string,
+            maxPrice: req.query.maxPrice as string,
+            minStock: req.query.minStock as string,
+            maxStock: req.query.maxStock as string,
         };
-        let { minPrice, maxPrice, minStock, maxStock } = req.query;
         const products: IProduct[] | IMongoProduct[] | [] =
             await productsApi.getProduct();
         if (products.length > 0) {
@@ -170,4 +173,4 @@ class ProductController {
     }
 }
 
-export const p_controller = new ProductController();
+export const product_controller = new ProductController();

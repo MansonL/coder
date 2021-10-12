@@ -40,15 +40,15 @@ class Validations {
             stock: Joi.number().min(0),
         });
         this.query = Joi.object<IQuery>({
-            title: Joi.string().alphanum().allow(''),
-            code: Joi.string().alphanum().allow(''),
+            title: Joi.string().alphanum().allow('').optional(),
+            code: Joi.string().alphanum().allow('').optional(),
             price: {
-                minPrice: Joi.number().min(0.01).max(Infinity),
-                maxPrice: Joi.number().min(0).max(Infinity),
+                minPrice: Joi.number().min(0.01).optional(),
+                maxPrice: Joi.number().min(0).optional(),
             },
             stock: {
-                minStock: Joi.number().min(0).max(Infinity),
-                maxStock: Joi.number().min(0).max(Infinity),
+                minStock: Joi.number().min(0).optional(),
+                maxStock: Joi.number().min(0).optional(),
             },
         });
         /**
