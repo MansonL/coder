@@ -1,3 +1,4 @@
+import { FireProducts } from './DAOs/Firebase/products';
 import { FSProducts } from './DAOs/FS/products';
 import { MongoProducts } from './DAOs/Mongo/products';
 import { SQLProducts } from './DAOs/SQL/MySQL/products';
@@ -29,7 +30,7 @@ export enum MemoryType {
  */
 
 export class ProductsFactory {
-    static get(type: MemoryType): FSProducts | SQLProducts | MongoProducts {
+    static get(type: MemoryType): FSProducts | SQLProducts | MongoProducts | FireProducts {
         switch (type) {
             case MemoryType.FileSystem:
                 console.log(`Using FILESYSTEM`);
@@ -46,6 +47,9 @@ export class ProductsFactory {
             case MemoryType.LocalMongo:
                 console.log(`Using Local Mongo`);
                 return new MongoProducts('local')
+            case MemoryType.FireBase:
+                console.log(`Using FireStore`);
+                return new FireProducts();
             default:
                 console.log(`USING DEFAULT: MEMORY`);
                 return new FSProducts();

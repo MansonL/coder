@@ -168,7 +168,7 @@ class ProductController {
                 }
             }
         } else {
-            next(ApiError.notFound(EErrors.NoProducts));
+            next(ApiError.notFound(`No products matching the query`));
         }
     }
 }

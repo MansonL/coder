@@ -55,7 +55,7 @@ class CartController {
         if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
         const products: IProduct[] | IMongoProduct[] | [] =
             await productsApi.getProduct(productID);
-        if (products.length > 0) {
+            if (products.length > 0) {
             if (utils.isMongo(products[0])) {
                 const { _id, ...product } = products[0];
                 const results = await cartApi.addProduct(
@@ -84,7 +84,8 @@ class CartController {
         const id: string = req.params.id;
         console.log(`[PATH] Inside controller.`);
         const { error } = await validator.id.validate(id);
-        if (error) next(ApiError.badRequest(EErrors.IdIncorrect));
+        if (error){next(ApiError.badRequest(EErrors.IdIncorrect));
+        }else{
         const product: ICartProduct[] | IMongoCartProduct[] | [] =
             await cartApi.getProduct(id);
         if (product.length > 0) {
@@ -94,6 +95,7 @@ class CartController {
             next(ApiError.notFound(EErrors.ProductNotFound));
         }
     }
+}
 }
 
 export const c_controller = new CartController();

@@ -1,3 +1,4 @@
+import { FireCart } from './DAOs/Firebase/cart';
 import { FSCart } from './DAOs/FS/cart';
 import { MongoCart } from './DAOs/Mongo/cart';
 import { SQLCart } from './DAOs/SQL/MySQL/cart';
@@ -14,7 +15,7 @@ import { MemoryType } from './products.factory';
  */
 
 export class CartFactory {
-    static get(type: MemoryType): FSCart | SQLCart | MongoCart{
+    static get(type: MemoryType): FSCart | SQLCart | MongoCart | FireCart{
         switch (type) {
             case MemoryType.FileSystem:
                 console.log(`Using FILESYSTEM`);
@@ -30,7 +31,10 @@ export class CartFactory {
                 return new MongoCart('Atlas');
             case MemoryType.LocalMongo:
                 console.log(`Using Local Mongo`);
-                return new MongoCart('local')
+                return new MongoCart('local');
+            case MemoryType.FireBase: 
+                console.log(`Using FireStore`);
+                return new FireCart();
             default:
                 console.log(`USING DEFAULT: MEMORY`);
                 return new FSCart();

@@ -129,11 +129,11 @@ class Utils {
         const titleRegex =
             options.title === ''
                 ? new RegExp(`.*`)
-                : new RegExp(`(${options.title})`);
+                : new RegExp(`(${options.title})`,'i');
         const codeRegex =
             options.code === ''
                 ? new RegExp(`.*`)
-                : new RegExp(`(${options.code})`);
+                : new RegExp(`(${options.code})`,'i');
         const results: IProduct[] | [] = products.filter(
             (product) =>
                 titleRegex.test(product.title) &&
