@@ -30,11 +30,6 @@ const cartProductSchema = new Schema({
     stock: { type: Number, required: true },
     price: { type: Number, required: true },
 });
-productSchema.set('toJSON', { virtuals: true });
-cartProductSchema.set('toJSON', { virtuals: true });
-//export interface IMongoProduct extends Omit<IProduct, 'id'> {
-//    _id: string;
-//}
 
 export const models = {
     products: model<INew_Product, Model<INew_Product>>(
