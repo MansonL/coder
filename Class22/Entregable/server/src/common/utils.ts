@@ -1,4 +1,4 @@
-import { IMongoProduct, IMongoMessage } from '../interfaces/interfaces';
+import { IMongoProduct, IMongoMessage, IMongoUser } from '../interfaces/interfaces';
 
 class Utils {
     /**
@@ -53,6 +53,20 @@ class Utils {
         );
         return messages;
     };
+    extractMongoUsers = (documents: any): IMongoUser[] => {
+        const users: IMongoUser[] = documents.map(
+            (document: any): IMongoUser => {
+                const { _id, timestamp, user } = document;
+                const mongoUser : IMongoUser = {
+                    _id,
+                    timestamp,
+                    user
+                }
+                return mongoUser
+            }
+        )
+        return users
+    }
 }
 
 export const utils = new Utils();

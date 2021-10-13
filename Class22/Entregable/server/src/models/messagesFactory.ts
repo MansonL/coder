@@ -11,7 +11,7 @@ import { MongoMessages } from './DAOs/Mongo/messages';
  *
  */
 
-export class MessageFactory {
+export class MessagesFactory {
     static get(type: MemoryType): MongoMessages {
         switch (type) {
             case MemoryType.MongoAtlas:

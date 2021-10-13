@@ -8,4 +8,5 @@ export enum EProductsErrors {
 
 export enum EUsersErrors {
     RepeatedUser = `The username is already picked. Try with another...`,
+    NoUsers = `There's no users registered...`
 }

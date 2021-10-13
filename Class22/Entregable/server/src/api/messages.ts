@@ -5,12 +5,12 @@ import {
 } from '../interfaces/interfaces';
 import { storage } from './products';
 import { MongoMessages } from '../models/DAOs/Mongo/messages';
-import { MessageFactory } from '../models/messagesFactory';
+import { MessagesFactory } from '../models/messagesFactory';
 
-class MessagesApi {
+export class MessagesApi {
     private messages: MongoMessages;
     constructor() {
-        this.messages = MessageFactory.get(storage);
+        this.messages = MessagesFactory.get(storage);
     }
     async getMsg(): Promise<IMongoMessage[] | []> {
         const result = await this.messages.get();

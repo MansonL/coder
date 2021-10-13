@@ -15,7 +15,7 @@ import { MongoProducts } from '../models/DAOs/Mongo/products';
  */
 export const storage = MemoryType.MongoAtlas;
 
-class ProductsApi {
+export class ProductsApi {
     private products: MongoProducts;
     constructor() {
         this.products = ProductsFactory.get(storage);

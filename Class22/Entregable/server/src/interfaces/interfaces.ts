@@ -83,7 +83,7 @@ export interface IUpdate {
 
 export interface CUDResponse {
     message: string;
-    data: IMongoProduct | IMongoMessage | [];
+    data: IMongoProduct | IMongoMessage | IMongoUser | [];
 }
 
 /**
@@ -109,4 +109,15 @@ export interface DBMessagesClass {
     init?(): Promise<void>;
     get(): Promise<IMongoMessage[] | []>;
     add(msg: INew_Message): Promise<CUDResponse>;
+}
+
+/**
+ * 
+ * Users Storage Classes structure
+ * 
+ */
+export interface DBUsersClass{
+    init?(): Promise<void>;
+    get(id?: string | undefined): Promise<IMongoUser[] | []>;
+    add(user: INew_User): Promise<CUDResponse>;
 }
