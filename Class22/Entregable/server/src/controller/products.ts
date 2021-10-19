@@ -46,6 +46,10 @@ class ProductController {
             }
         }
     }
+    async getTest(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const quantity = req.params.qty;
+        
+    }
     async save(req: Request, res: Response, next: NextFunction): Promise<void> {
         const product: INew_Product = req.body;
         console.log(`[PATH] Inside controller.`);

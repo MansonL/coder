@@ -28,19 +28,26 @@ export function Main () {
         <Link to="/products">
         <button>DB Products</button>
       </Link>
+      <hr className='hr-menu'/>
+      <Link to="/cart">
+        <button>DB Cart</button>
+      </Link>
       </div>
       </div>
   </div><hr/>
   <div className="body">
     <Switch>
-      <Route path="/randomProducts">
-        <Products type="random"/>
-      </Route>
       <Route path="/messages">
         <Messages />
       </Route>
+      <Route path="/randomProducts">
+        <Products type="random"/>
+      </Route>
       <Route path="/products">
         <Products type="normal"/>
+      </Route>
+      <Route path="/cart">
+        <Products type="cart"/>
       </Route>
       <Route path="/form">
         <Form />

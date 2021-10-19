@@ -1,6 +1,9 @@
+import { useState } from 'react'
 import './messages.css'
+
 export function Messages(){
-    return (
+  const [email, setEmail] = useState('');
+  return (
         <>
         <header>
     <div className="title">
