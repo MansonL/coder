@@ -1,4 +1,4 @@
-import * as socket from 'socket.io'
+import * as socket from 'socket.io';
 import { server } from '..';
 
 const io = new socket.Server(server);
@@ -10,7 +10,7 @@ export const socketConnection = () => {
             io.sockets.emit('products');
         });
         socket.on('randomProducts', () => {
-            console.log('Updating random products...')
+            console.log('Updating random products...');
             io.sockets.emit('randomProducts');
         });
         socket.on('cart', () => {
@@ -20,10 +20,10 @@ export const socketConnection = () => {
         socket.on('messages', () => {
             console.log('Updating chat messages...');
             io.sockets.emit('messages');
-        })
+        });
         socket.on('users', () => {
             console.log('Updating chat users...');
-            io.sockets.emit('users')
-        })
+            io.sockets.emit('users');
+        });
     });
-}
+};

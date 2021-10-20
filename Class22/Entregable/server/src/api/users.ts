@@ -1,7 +1,7 @@
-import { INew_User, CUDResponse, IMongoUser } from "../interfaces/interfaces";
-import { storage } from "./products";
-import { UsersFactory } from "../models/usersFactory";
-import { MongoUsers } from "../models/DAOs/Mongo/users";
+import { INew_User, CUDResponse, IMongoUser } from '../interfaces/interfaces';
+import { storage } from './products';
+import { UsersFactory } from '../models/usersFactory';
+import { MongoUsers } from '../models/DAOs/Mongo/users';
 
 export class UsersApi {
     private users: MongoUsers;
@@ -9,15 +9,15 @@ export class UsersApi {
         this.users = UsersFactory.get(storage);
     }
     async getUser(id: string): Promise<IMongoUser[] | []> {
-        const result : IMongoUser[] | [] = await this.users.get(id);
+        const result: IMongoUser[] | [] = await this.users.get(id);
         return result;
     }
     async getUsers(): Promise<IMongoUser[] | []> {
         const result: IMongoUser[] | [] = await this.users.get();
-        return result
+        return result;
     }
     async addUser(message: INew_User): Promise<CUDResponse> {
-        const result : CUDResponse= await this.users.add(message);
+        const result: CUDResponse = await this.users.add(message);
         return result;
     }
 }

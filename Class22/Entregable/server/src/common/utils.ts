@@ -1,4 +1,9 @@
-import { IMongoProduct, IMongoMessage, IMongoUser } from '../interfaces/interfaces';
+import {
+    IMongoProduct,
+    IMongoMessage,
+    IMongoUser,
+    IMongoCartProduct,
+} from '../interfaces/interfaces';
 
 class Utils {
     /**
@@ -57,16 +62,29 @@ class Utils {
         const users: IMongoUser[] = documents.map(
             (document: any): IMongoUser => {
                 const { _id, timestamp, user } = document;
-                const mongoUser : IMongoUser = {
+                const mongoUser: IMongoUser = {
                     _id,
                     timestamp,
-                    user
-                }
-                return mongoUser
+                    user,
+                };
+                return mongoUser;
             }
-        )
-        return users
-    }
+        );
+        return users;
+    };
+    extractMongoCartDocs = (documents: any): IMongoCartProduct[] => {
+        const productsIds = documents.map((document: any) => {
+            const { product_id } = document;
+            return product_id;
+        });
+        const products: IMongoProduct[] = this.extractMongoProducts(documents);
+        const cartProducts: IMongoCartProduct[] = products.map(
+            (product: IMongoProduct, idx: number) => {
+                return { product_id: productsIds[idx], ...product };
+            }
+        );
+        return cartProducts;
+    };
 }
 
 export const utils = new Utils();

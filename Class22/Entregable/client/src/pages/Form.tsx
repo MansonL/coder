@@ -1,6 +1,25 @@
+import moment from 'moment'
+import { INew_Product } from '../../../server/src/interfaces/interfaces'
 import './form.css'
 export function Form() {
-    return (
+    
+  const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => { 
+    const values : INew_Product = {
+      timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
+      title: '',
+      description: '',
+      img: '',
+      code: '',
+      stock: 0,
+      price: 0
+    }
+    $('input').each(function(){
+      const name = $(this).attr('name') as string;
+      
+    })
+  }
+
+  return (
         <>
         <header>
     <div className="title">
@@ -14,29 +33,29 @@ export function Form() {
       <span className="form-border"/>
     </div>
     <div className="row-form">
-      <input type="text"/>
+      <input type="text" id="description"/>
       <label htmlFor="description">Description</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="text"/>
+    <div className="row-form"><input type="text" id="image"/>
       <label htmlFor="img">Image link</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="text"/>
+    <div className="row-form"><input type="text" id="code"/>
       <label htmlFor="code">Code</label>
       <span className="form-border"/>
     </div>
     <div className="row-form">
-      <input type="number"/>
+      <input type="number" id="stock"/>
       <label htmlFor="stock">Stock</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="number"/>
+    <div className="row-form"><input type="number" id="price"/>
       <label htmlFor="price">Price</label>
       <span className="form-border"/>
     </div>
     <div className="row-form" id="submit">
-      <button className="submit-form" type="submit">Save</button>
+      <button className="submit-form" type="submit" onSubmit={handleSubmit}>Save</button>
     </div>
   </form>
 </>

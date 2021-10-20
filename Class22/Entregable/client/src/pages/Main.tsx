@@ -4,9 +4,37 @@ import { Products } from './Products';
 import { Messages } from './Messages';
 import { Form } from './Form';
 import { Home } from './Home';
+import { socket } from '../lib/socket';
 
 
 export function Main () {
+   
+  /**
+   * We are emitting the respective events for requesting to the backend the necessary resources through sockets
+   * @param e  
+   * 
+   */
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const whichMenu = e.currentTarget.innerHTML;
+    switch(whichMenu){
+      case 'Messages': 
+          socket.emit('messages');
+          socket.emit('users');
+          break;
+      case 'DB Products':
+          socket.emit('products');
+          break;
+      case 'DB Cart':
+          socket.emit('cart');
+          break;
+      case 'Random Generated':
+          socket.emit('randomProducts');
+          break;
+      }
+  }
+  
   return (
     <Router>
         <div className="container">
@@ -22,7 +50,7 @@ export function Main () {
         </Link>
         <hr className="hr-menu"/>
         <Link to="/form">
-        <button>Form</button>
+        <button onClick={handleClick}>Form</button>
         </Link>
         <hr className="hr-menu"/>
         <Link to="/products">

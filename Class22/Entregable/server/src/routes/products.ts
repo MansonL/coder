@@ -5,7 +5,7 @@ export const productsRouter: e.Router = Router();
 
 productsRouter.get('/list', products_controller.getAll);
 productsRouter.get('/list/?:id', products_controller.getOne);
-productsRouter.get('/test-view/?:qty', products_controller.getTest)
+productsRouter.get('/test-view/?:qty', products_controller.getTest);
 productsRouter.post('/save', products_controller.save);
 productsRouter.put('/update/?:id', products_controller.update);
 productsRouter.delete('/delete/?:id', products_controller.delete);

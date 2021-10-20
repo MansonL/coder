@@ -32,7 +32,7 @@ class ProductController {
     ): Promise<void> {
         const id: string = req.params.id;
         console.log(`[PATH] Inside controller.`);
-        const { error } = validator.id.validate(id);
+        const { error } = await validator.id.validateAsync(id);
         if (error) {
             next(ApiError.badRequest(EProductsErrors.IdIncorrect));
         } else {
@@ -46,14 +46,17 @@ class ProductController {
             }
         }
     }
-    async getTest(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getTest(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
         const quantity = req.params.qty;
-        
     }
     async save(req: Request, res: Response, next: NextFunction): Promise<void> {
         const product: INew_Product = req.body;
         console.log(`[PATH] Inside controller.`);
-        const { error } = validator.newProduct.validate(product);
+        const { error } = await validator.newProduct.validateAsync(product);
         console.log(error);
         if (error) {
             next(ApiError.badRequest(EProductsErrors.PropertiesIncorrect));
@@ -69,8 +72,8 @@ class ProductController {
     ): Promise<void> {
         const id: string = req.params.id;
         const newProperties: IUpdate = req.body;
-        const resultID = validator.id.validate(id);
-        const resultProps = validator.update.validate(newProperties);
+        const resultID = await validator.id.validateAsync(id);
+        const resultProps = await validator.update.validateAsync(newProperties);
         if (resultID.error)
             next(ApiError.badRequest(EProductsErrors.IdIncorrect));
         if (resultProps.error)
@@ -92,7 +95,7 @@ class ProductController {
     ): Promise<void> {
         const id = req.params.id;
         console.log(`[PATH] Inside controller.`);
-        const { error } = validator.id.validate(id);
+        const { error } = await validator.id.validateAsync(id);
         if (error) next(ApiError.badRequest(EProductsErrors.IdIncorrect));
         const product: IMongoProduct[] | [] = await productsApi.getProduct(id);
         if (product.length > 0) {
@@ -116,8 +119,7 @@ class ProductController {
             minStock: req.query.minStock as string,
             maxStock: req.query.maxStock as string,
         };
-        const products:  IMongoProduct[] | [] =
-            await productsApi.getProduct();
+        const products: IMongoProduct[] | [] = await productsApi.getProduct();
         if (products.length > 0) {
             title = title != null ? title : '';
             code = code != null ? code : '';
@@ -148,12 +150,13 @@ class ProductController {
                 },
             };
             console.log(options);
-            const { error } = validator.query.validate(options);
+            const { error } = validator.query.validateAsync(options);
             if (error) {
                 next(ApiError.badRequest(error.message)); // This is just for checking if there's an error in the query implementatio
             } else {
-                const result: IMongoProduct[] |  [] =
-                    await productsApi.query(options);
+                const result: IMongoProduct[] | [] = await productsApi.query(
+                    options
+                );
                 if (result.length > 0) {
                     res.status(200).send(result);
                 } else {

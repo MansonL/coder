@@ -1,5 +1,6 @@
 import { Model, model, Schema } from 'mongoose';
 import {
+    ICartProduct,
     INew_Message,
     INew_Product,
     INew_User,
@@ -14,6 +15,17 @@ export const atlasURI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_P
 export const mongoURI = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@localhost:27018/${process.env.DB_NAME}`;
 
 const productSchema = new Schema({
+    timestamp: { type: String, required: true },
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    code: { type: String, required: true },
+    img: { type: String, required: true },
+    stock: { type: Number, required: true },
+    price: { type: Number, required: true },
+});
+
+const cartProductSchema = new Schema({
+    product_id: { type: String, required: true },
     timestamp: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
@@ -39,6 +51,7 @@ export const models = {
         'products',
         productSchema
     ),
+    cart: model<ICartProduct, Model<ICartProduct>>('cart', cartProductSchema),
     messages: model<INew_Message, Model<INew_Message>>(
         'messages',
         messagesSchema

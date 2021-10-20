@@ -1,15 +1,40 @@
 import { useState } from 'react'
 import './products.css'
-import { IMongoProduct } from '../../../server/src/interfaces/interfaces'
+import { IMongoCartProduct, IMongoProduct } from '../../../server/src/interfaces/interfaces'
 import { socket } from '../lib/socket'
+import axios from 'axios'
 
 interface ProductsProp {
     type: string
 }
 
 export function Products(props: ProductsProp) {
-    const [products, setProducts] = useState<IMongoProduct[]>([])
+    const [products, setProducts] = useState<IMongoProduct[] | IMongoCartProduct[]>([])
     
+    /**
+     * 
+     * The sockets were emitted at Main component.
+     * Here are the handlers for the backend sockets.
+     * 
+     */
+    
+    /* Need to modify the view for getting the number of products to be shown.
+    socket.on('randomProducts', async () => {
+      const products: IMongoProduct[] = await (await axios.get<IMongoProduct[]>('http://localhost:8080/products/list')).data
+    })
+    */
+    socket.on('products', async () => {
+      const products: IMongoProduct[] = await (await axios.get<IMongoProduct[]>('http://localhost:8080/products/list')).data
+    });
+    console.log(`Products received`);
+      setProducts(products)
+
+    socket.on('cart', async () => {
+      const cartProducts: IMongoCartProduct[] = await (await axios.get<IMongoCartProduct[]>('http://localhost:8080/cart/list')).data;
+      console.log(`Cart Products received`);
+      setProducts(cartProducts)
+    })
+
     return (
         <>
         <header>

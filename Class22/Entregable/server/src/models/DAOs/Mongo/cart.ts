@@ -1,14 +1,13 @@
+import { connect, Model } from 'mongoose';
+import { utils } from '../../../common/utils';
 import {
     CUDResponse,
     DBCartClass,
     ICartProduct,
-    IMongoProduct,
     IMongoCartProduct,
     INew_Product,
-} from '../../../models/products.interface';
-import { connect, Model } from 'mongoose';
-import { models, atlasURI, mongoURI } from './models';
-import { utils } from '../../../utils/utils';
+} from '../../../interfaces/interfaces';
+import { models, mongoURI, atlasURI } from './models';
 
 export class MongoCart implements DBCartClass {
     private cart: Model<ICartProduct>;

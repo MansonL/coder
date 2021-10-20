@@ -9,6 +9,23 @@ export interface IMongoProduct extends INew_Product {
 
 /**
  *
+ * Type of Cart Product to be query from Mongo
+ *
+ */
+export interface IMongoCartProduct extends ICartProduct {
+    _id: string;
+}
+
+/**
+ * Type of Cart Product to be stored to Mongo DB
+ *
+ */
+export interface ICartProduct extends INew_Product {
+    product_id: string;
+}
+
+/**
+ *
  * Type of Product Object we are receiving from the frontend.
  *
  */
@@ -102,6 +119,20 @@ export interface DBProductsClass {
 
 /**
  *
+ * Cart Storage Classes structure.
+ *
+ */
+export interface DBCartClass {
+    init?(): Promise<void>;
+    get(
+        id?: string | undefined
+    ): Promise<ICartProduct[] | IMongoCartProduct[] | []>;
+    add(id: string, product: INew_Product): Promise<CUDResponse>;
+    delete(id: string): Promise<CUDResponse>;
+}
+
+/**
+ *
  * Message Storage Classes structure
  *
  */
@@ -112,11 +143,11 @@ export interface DBMessagesClass {
 }
 
 /**
- * 
+ *
  * Users Storage Classes structure
- * 
+ *
  */
-export interface DBUsersClass{
+export interface DBUsersClass {
     init?(): Promise<void>;
     get(id?: string | undefined): Promise<IMongoUser[] | []>;
     add(user: INew_User): Promise<CUDResponse>;
