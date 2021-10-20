@@ -37,9 +37,12 @@ export function Products(props: ProductsProp) {
 
     return (
         <>
-        <header>
+        <header className="products-header">
+      <div className="filters">
+        <button className="filter-btn">Filters</button>
+      </div>
       <div className="title">
-        <h4>{props.type === 'cart' ? 'Cart List' : 'Products List'}</h4>
+        <h4>Products List</h4>
       </div>
     </header>
     <div className="products-body">
