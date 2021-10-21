@@ -1,11 +1,10 @@
-import React, {  useState } from 'react'
-import './messages.css'
+import React, {  useState } from 'react';
 import { IMongoUser, IMongoMessage, INew_Message, INew_User } from '../../../server/src/interfaces/interfaces';
 import { validation } from '../joi/schemas';
 import { socket } from '../lib/socket';
 import axios from 'axios';
 import moment from 'moment'
-
+import './messages.css';
 export function Messages(){
   const [email, setEmail] = useState('');
   const [users, setUsers] = useState<IMongoUser[]>([]);
@@ -49,16 +48,16 @@ export function Messages(){
    * 
    */
 
-  const textarea = $('textarea')
+  //const textarea = $('textarea') Need to change this with useRef
 
   const handleMessage = async (e: React.FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const { error } = validation.message.validate(textarea.val());
+    e.preventDefault(); 
+    const { error } = validation.message.validate(textarea.val()); // Need to change this with a useRef method
     if(!error){
       const message : INew_Message= {
         timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
         user: email,
-        message: textarea.val() as string
+        message: textarea.val() as string // Need to change this with a useRef method
       }
       await axios.post('http://localhost:8080/messages/save', message);
       socket.emit('message');

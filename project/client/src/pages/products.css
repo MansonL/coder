@@ -1,0 +1,82 @@
+.upper-body {
+  display:flex;
+  justify-content: space-between;
+  margin: 0 4rem 0 3rem;
+}
+.filters{
+  position:relative;
+}
+.filter-btn {
+  border: none;
+  border-radius: 0.8rem;
+  background-color: #faf0dc; 
+}
+.filter-dropdown {
+  z-index:1;
+  display: none;
+  position:absolute;
+  background-color: #faf0dc;
+  border-radius: 0.8rem;
+  text-align: center;
+}
+.filter-label {
+  margin-top: 0.3rem;
+}
+.price{
+  display: flex;
+}
+.stock{
+  display: flex;
+}
+.number-input {
+  width: 50%;
+  text-align: center;
+}
+.number-input::placeholder {
+  color: black;
+}
+.filter-input, .number-input {
+    border: 1.5px solid white;
+    border-radius: 0.4rem;
+    background-color: transparent;
+ }
+.products-title {
+  margin-right: 5rem;
+}
+.products-body {
+  margin:auto;
+  margin-top: 1rem;
+  padding: 0.2rem;
+  border-radius: 0.8rem;
+  border: 3px solid #faf0dc;
+  width: 95%;
+  max-height: 100vw;
+  overflow-y: scroll;
+}
+.products-hr{
+  border: 1px solid grey;
+  width: 97%;
+  margin:auto;
+  margin-bottom: 1rem;
+}
+.product {
+  display: flex;
+  gap: 3px;
+  padding: 0.2rem;
+}
+img {
+  width: 600px;
+  max-width: 35%; 
+  height: auto;
+}
+.product-description {
+  text-align: left;
+}
+.product-title{
+  font-size: 0.9rem;
+}
+.product-price {
+  font-size: 1.5rem;
+  margin-left: 0.2rem;
+  margin-top: 0.8rem;
+}

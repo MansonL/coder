@@ -3,9 +3,30 @@ import {
     IMongoMessage,
     IMongoUser,
     IMongoCartProduct,
+    IQuery,
 } from '../interfaces/interfaces';
 
 class Utils {
+    
+    /**
+     *
+     * @param type: string
+     *
+     * @returns : Max price or stock of products.
+     */
+     getMaxStockPrice = async (
+        products: IMongoProduct[] ,
+        type: string
+    ): Promise<number> => {
+        if (type === 'price') {
+            const prices = products.map((product) => product.price);
+            return Math.max(...prices);
+        } else {
+            const stocks = products.map((product) => product.stock);
+            return Math.max(...stocks);
+        }
+    };
+    
     /**
      * Product code different than DB id.
      * @returns String code.

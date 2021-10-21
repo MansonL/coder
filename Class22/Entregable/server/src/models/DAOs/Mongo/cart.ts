@@ -7,24 +7,17 @@ import {
     IMongoCartProduct,
     INew_Product,
 } from '../../../interfaces/interfaces';
-import { models, mongoURI, atlasURI } from './models';
+import { models } from './models';
 
 export class MongoCart implements DBCartClass {
     private cart: Model<ICartProduct>;
-    private uri: string;
     constructor(type: string) {
         this.cart = models.cart;
-        if (type === 'Atlas') {
-            this.uri = atlasURI;
-        } else {
-            this.uri = mongoURI;
-        }
         this.init();
     }
     async init(): Promise<void> {
-        await connect(this.uri);
-        console.log(`Mongo Connected`);
         await this.cart.deleteMany({});
+        console.log(`Cart cleaned`)
     }
     async get(id?: string | undefined): Promise<IMongoCartProduct[] | []> {
         if (id != null) {

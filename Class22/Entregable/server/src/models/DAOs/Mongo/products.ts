@@ -6,6 +6,7 @@ import {
     IMongoProduct,
     CUDResponse,
     IUpdate,
+    IQuery,
 } from '../../../interfaces/interfaces';
 import { mockProducts } from '../../mockProducts';
 import moment from 'moment';
@@ -79,7 +80,7 @@ export class MongoProducts implements DBProductsClass {
             data: deletedProduct,
         };
     }
-    /*
+    
     async query(options: IQuery): Promise<IMongoProduct[] | []> {
         const titleRegex =
             options.title === ''
@@ -109,5 +110,4 @@ export class MongoProducts implements DBProductsClass {
             return [];
         }
     }
-    */
 }

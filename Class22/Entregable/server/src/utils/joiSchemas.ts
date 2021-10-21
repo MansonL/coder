@@ -1,10 +1,10 @@
 import Joi from 'joi';
-import { INew_Product, IUpdate } from '../interfaces/interfaces';
+import { INew_Product, IQuery, IUpdate } from '../interfaces/interfaces';
 
 class Validations {
     newProduct: Joi.ObjectSchema<INew_Product>;
     update: Joi.ObjectSchema<IUpdate>;
-    //query: Joi.ObjectSchema<IQuery>;
+    query: Joi.ObjectSchema<IQuery>;
     id: Joi.StringSchema | Joi.NumberSchema;
     constructor() {
         /**
@@ -37,7 +37,7 @@ class Validations {
             price: Joi.number().min(0.01),
             stock: Joi.number().min(0),
         });
-        /*
+        
         this.query = Joi.object<IQuery>({
             title: Joi.string().alphanum().allow('').optional(),
             code: Joi.string().alphanum().allow('').optional(),
@@ -51,7 +51,7 @@ class Validations {
             },
         });
 
-        */
+        
         this.id = Joi.string().min(2).required();
     }
 }

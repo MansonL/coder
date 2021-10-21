@@ -94,6 +94,25 @@ export interface IUpdate {
 
 /**
  *
+ * Type of the possible Query Object properties in a query request.
+ *
+ */
+ export interface IQuery {
+    title: string;
+    code: string;
+    stock: {
+        minStock: number;
+        maxStock: number;
+    };
+    price: {
+        minPrice: number;
+        maxPrice: number;
+    };
+}
+
+
+/**
+ *
  * Response type of adding, deleting & updating products from storage.
  *
  */

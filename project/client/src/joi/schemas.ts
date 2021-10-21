@@ -5,7 +5,7 @@ class Validations {
     public message: Joi.StringSchema
 
     constructor(){
-        this.email = Joi.string().email({tlds: {allow: true}});
+        this.email = Joi.string().email({tlds: {allow: false}});
         this.message = Joi.string().min(1)
     }
 }

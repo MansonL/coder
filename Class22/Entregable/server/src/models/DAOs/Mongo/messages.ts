@@ -11,21 +11,14 @@ import { utils } from '../../../common/utils';
 
 export class MongoMessages implements DBMessagesClass {
     private messages: Model<INew_Message>;
-    private uri: string;
     constructor(type: string) {
         this.messages = models.messages;
-        if (type === 'atlas') {
-            this.uri = atlasURI;
-        } else {
-            this.uri = mongoURI;
-        }
         this.init();
     }
     async init() {
-        await connect(this.uri);
-        console.log(`Mongo Connected`);
         await this.messages.deleteMany({});
         await WelcomeMessage.save();
+        console.log(`Messages initialized`);
     }
     async get(): Promise<IMongoMessage[] | []> {
         const docs = await this.messages.find({});

@@ -4,6 +4,7 @@ import {
     CUDResponse,
     IUpdate,
     IMongoProduct,
+    IQuery,
 } from '../interfaces/interfaces';
 import { MongoProducts } from '../models/DAOs/Mongo/products';
 
@@ -41,12 +42,12 @@ export class ProductsApi {
         const result = await this.products.delete(id);
         return result;
     }
-    /*
-        async query(options: IQuery): Promise<IProduct[] | IMongoProduct[] | []> {
+    
+        async query(options: IQuery): Promise<IMongoProduct[] | []> {
         const result = await this.products.query(options);
         return result;
     }
-    */
+    
 }
 
 export const productsApi = new ProductsApi();

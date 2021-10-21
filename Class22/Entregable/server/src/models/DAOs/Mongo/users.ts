@@ -7,21 +7,14 @@ import { DBUsersClass } from "../../../interfaces/interfaces";
 
 export class MongoUsers implements DBUsersClass {
     private users: Model<INew_User>;
-    private uri: string;
     constructor(type: string) {
         this.users = models.users;
-        if (type === 'atlas') {
-            this.uri = atlasURI;
-        } else {
-            this.uri = mongoURI;
-        }
         this.init();
     }
     async init() {
-        await connect(this.uri);
-        console.log(`Mongo Connected`);
         await this.users.deleteMany({});
         await WelcomeBot.save();
+        console.log(`Users initialized`)
     }
     async get(id?: string | undefined): Promise<IMongoUser[] | []> {
         if(id != null){

@@ -1,14 +1,14 @@
-import './main.css';
+
 import { BrowserRouter as Router, Switch, Link, Route } from 'react-router-dom';
 import { Products } from './Products';
 import { Messages } from './Messages';
 import { Form } from './Form';
 import { Home } from './Home';
 import { socket } from '../lib/socket';
-
+import './main.css';
 
 export function Main () {
-   
+
   /**
    * We are emitting the respective events for requesting to the backend the necessary resources through sockets
    * @param e  

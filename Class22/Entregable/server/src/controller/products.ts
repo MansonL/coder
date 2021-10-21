@@ -2,8 +2,9 @@ import { Request, NextFunction, Response } from 'express';
 import { ApiError } from '../utils/errorApi';
 import { EProductsErrors } from '../common/EErrors';
 import { productsApi } from '../api/products';
-import { IMongoProduct, INew_Product, IUpdate } from '../interfaces/interfaces';
+import { IMongoProduct, INew_Product, IQuery, IUpdate } from '../interfaces/interfaces';
 import { validator } from '../utils/joiSchemas';
+import { utils } from '../common/utils';
 
 /**
  *
@@ -105,7 +106,7 @@ class ProductController {
             next(ApiError.notFound(EProductsErrors.ProductNotFound));
         }
     }
-    /*
+
     async query(
         req: Request,
         res: Response,
@@ -150,9 +151,9 @@ class ProductController {
                 },
             };
             console.log(options);
-            const { error } = validator.query.validateAsync(options);
+            const { error } = await validator.query.validateAsync(options);
             if (error) {
-                next(ApiError.badRequest(error.message)); // This is just for checking if there's an error in the query implementatio
+                next(ApiError.badRequest(error.message)); // This is just for checking if there's an error in the query implementation
             } else {
                 const result: IMongoProduct[] | [] = await productsApi.query(
                     options
@@ -167,7 +168,7 @@ class ProductController {
             next(ApiError.notFound(`No products matching the query`));
         }
     }
-    */
+    
 }
 
 export const products_controller = new ProductController();
