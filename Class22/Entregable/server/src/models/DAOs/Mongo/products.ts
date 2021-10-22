@@ -1,5 +1,5 @@
 import { connect, Model } from 'mongoose';
-import { models, atlasURI, mongoURI } from './models';
+import { models} from './models';
 import {
     DBProductsClass,
     INew_Product,
@@ -14,19 +14,11 @@ import { utils } from '../../../common/utils';
 
 export class MongoProducts implements DBProductsClass {
     private products: Model<INew_Product>;
-    private uri: string;
     constructor(type: string) {
         this.products = models.products;
-        if (type === 'Atlas') {
-            this.uri = atlasURI;
-        } else {
-            this.uri = mongoURI;
-        }
         this.init();
     }
     async init(): Promise<void> {
-        await connect(this.uri);
-        console.log(`Mongo Connected`);
         await this.products.deleteMany({});
         await this.products.insertMany(mockProducts);
         console.log(`Mock data inserted `);
