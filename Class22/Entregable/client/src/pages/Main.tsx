@@ -6,9 +6,17 @@ import { Form } from './Form';
 import { Home } from './Home';
 import { socket } from '../lib/socket';
 import './main.css';
-
+import { useEffect, useRef } from 'react';
 export function Main () {
-
+  const dropdownMenu = useRef(null);
+  const dropdownBtn = useRef(null);
+  /*
+  useEffect(() => {
+    document.addEventListener('click', (ev: MouseEvent) => {
+        dropdownMenu.current
+    })
+  })
+  */
   /**
    * We are emitting the respective events for requesting to the backend the necessary resources through sockets
    * @param e  
@@ -43,8 +51,8 @@ export function Main () {
     <button className="top-buttons">Messages</button>
     </Link>
     <div className="products-menu">
-    <button className="top-buttons" id="product-menu-button">Products</button>
-      <div className="products-dropdown">
+    <button className="top-buttons" id="product-menu-button" ref={dropdownBtn}>Products</button>
+      <div className="products-dropdown" ref={dropdownMenu}>
         <Link to='/randomProducts'>
         <button>Random Generated</button>
         </Link>

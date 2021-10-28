@@ -23,7 +23,7 @@ export function Messages(){
    * @param e just for preventing default submit action
    * 
    */
-
+  /*
   const handleEmail = async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       const { error } = validation.email.validate(email);
@@ -40,7 +40,7 @@ export function Messages(){
         socket.emit('users');
       }
   }
-  
+  */
   /**
    * 
    * Message submit handler
@@ -49,7 +49,7 @@ export function Messages(){
    */
 
   //const textarea = $('textarea') Need to change this with useRef
-
+  /*
   const handleMessage = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault(); 
     const { error } = validation.message.validate(textarea.val()); // Need to change this with a useRef method
@@ -63,7 +63,7 @@ export function Messages(){
       socket.emit('message');
     }
   }
-
+  */
   /**
    * 
    * Sockets
@@ -97,7 +97,7 @@ export function Messages(){
       <span className="form-border"></span>
     </div>
     <div className="submit-btn">
-      <button id="submit" onClick={handleEmail}>Submit</button>
+      <button id="submit" >Submit</button>
     </div>
   </div>
   <section className="msg-card">
@@ -119,7 +119,7 @@ export function Messages(){
     </div>
     <form className="msg-bottom">
       <textarea name="" id="" cols={90} rows={1} disabled={inputDisabled}></textarea>
-      <button type="submit" onSubmit={handleMessage} className="msg-btn">Send</button>
+      <button type="submit"  className="msg-btn">Send</button>
     </form>
   </section>
 </>

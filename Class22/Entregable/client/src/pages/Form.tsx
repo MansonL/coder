@@ -9,7 +9,7 @@ export function Form() {
   const imgInput = $('#image')[0];
   const codeInput = $('#code')[0];
   const stockInput = $('#stock')[0];
-  const priceInput = $('#price')[0]; Need to change this with useRef*/
+  const priceInput = $('#price')[0]; Need to change this with useRef
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => { 
     const product : INew_Product = {
       timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -22,7 +22,7 @@ export function Form() {
     }
     await axios.post('http://localhost:8080/products/save', product)
   }
-
+*/
   return (
         <>
         <header>
@@ -59,7 +59,7 @@ export function Form() {
       <span className="form-border"/>
     </div>
     <div className="row-form" id="submit">
-      <button className="submit-form" type="submit" onSubmit={handleSubmit}>Save</button>
+      <button className="submit-form" type="submit" >Save</button>
     </div>
   </form>
 </>
