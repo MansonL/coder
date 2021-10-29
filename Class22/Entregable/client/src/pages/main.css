@@ -63,6 +63,7 @@ input ~ label {
   font-size: 0.9rem;
   position: absolute;
   left:0;
+  top: 0;
   width: 100%;
   transition: 0.3s;
   z-index:0;

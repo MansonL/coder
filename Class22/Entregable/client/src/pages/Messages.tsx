@@ -91,14 +91,17 @@ export function Messages(){
   </header>
   <div className="email-form">
     <h6>Input your email for sending messages:</h6>
+    <form>
     <div className="effect-input">
+      
       <input type="text" className="label-styled-input"id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
       <label>Email</label>
       <span className="form-border"></span>
     </div>
     <div className="submit-btn">
-      <button id="submit" >Submit</button>
+      <button id="submit" type="submit">Submit</button>
     </div>
+    </form>
   </div>
   <section className="msg-card">
     <div className="msg-body">

@@ -29,13 +29,13 @@
     display: flex;
     justify-content: center;
   }
-  .msg-btn {
+  .msg-btn, #submit {
     border: none;
     background-color: #faf0dc;
     border-radius: 0.8rem;
   }
   textarea {
-    border: 2px solid grey;
+    border: 1px solid grey;
     border-radius: 0.8rem;
   }
   .msg-body{
