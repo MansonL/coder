@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import { IMongoUser, IMongoMessage, INew_Message, INew_User } from '../../../server/src/interfaces/interfaces';
 import { validation } from '../joi/schemas';
 import { socket } from '../lib/socket';
@@ -6,15 +6,12 @@ import axios from 'axios';
 import moment from 'moment'
 import './messages.css';
 export function Messages(){
-  const [email, setEmail] = useState('');
-  const [users, setUsers] = useState<IMongoUser[]>([]);
-  const [messages, setMessages] = useState<IMongoMessage[]>([])
   
   /**
    * For showing error at email input.
    * For enabling input message once the user has typed a valid email.  
    */
-  
+  const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [inputDisabled, setInputDisabled] = useState(true);
 
@@ -23,10 +20,11 @@ export function Messages(){
    * @param e just for preventing default submit action
    * 
    */
-  /*
-  const handleEmail = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  
+  const handleEmail = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       const { error } = validation.email.validate(email);
+      
       if(error){
         setEmailError(true);
       }else{
@@ -40,7 +38,35 @@ export function Messages(){
         socket.emit('users');
       }
   }
-  */
+  
+  const errorExit = (ev: React.MouseEvent<HTMLButtonElement>) => {
+      setEmailError(false)
+  }
+
+  /**
+   * 
+   * For CSS changes at email label.
+   * 
+   */
+  const [hasContent, setHasContent] = useState(false);
+  const inputeLabelClass = `${hasContent ? 'hasContent' : ''}`;
+  /**
+   * 
+   * Email input FocusOut event listener.
+   * 
+   */
+  const focusOut = (e: React.FocusEvent<HTMLInputElement>) => {
+    if(email != ''){
+      setHasContent(true)
+    }else{
+      setHasContent(false);
+    }
+  }
+
+
+  
+  const [users, setUsers] = useState<IMongoUser[]>([]);
+  const [messages, setMessages] = useState<IMongoMessage[]>([])
   /**
    * 
    * Message submit handler
@@ -64,6 +90,8 @@ export function Messages(){
     }
   }
   */
+
+
   /**
    * 
    * Sockets
@@ -91,11 +119,11 @@ export function Messages(){
   </header>
   <div className="email-form">
     <h6>Input your email for sending messages:</h6>
-    <form>
+    <form onSubmit={handleEmail}>
     <div className="effect-input">
       
-      <input type="text" className="label-styled-input"id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
-      <label>Email</label>
+      <input type="email" className="label-styled-input" onBlur={focusOut} id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+      <label className={inputeLabelClass}>Email</label>
       <span className="form-border"></span>
     </div>
     <div className="submit-btn">
@@ -103,6 +131,15 @@ export function Messages(){
     </div>
     </form>
   </div>
+  {emailError && <div className="error-alert">
+      <div className="error-top">
+        <span className="error-header">Oops!</span> 
+        <button className="error-btn" onClick={errorExit}><i className="fas fa-times"></i></button>
+      </div>
+      <div className="error-msg">
+        Email incorrect.
+      </div>
+    </div>}
   <section className="msg-card">
     <div className="msg-body">
       {messages.map((message, idx) => {

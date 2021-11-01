@@ -32,6 +32,9 @@ body {
   display: none;
   white-space: nowrap;
 }
+.showMenu {
+  display:block;
+}
 .hr-menu {
   color: grey;
   border: 1px solid grey;
