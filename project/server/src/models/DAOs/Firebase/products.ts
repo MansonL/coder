@@ -6,46 +6,44 @@ import {
     IUpdate,
     IQuery,
 } from '../../../models/products.interface';
-import * as admin from 'firebase-admin';
-import serviceAccount from './firebase.json';
-import { ServiceAccount } from 'firebase-admin';
+import {
+    initializeApp,
+    ServiceAccount,
+    firestore,
+    credential,
+} from 'firebase-admin';
+import serviceAccount from './ecommerce-bfca0-firebase-adminsdk-lrcdg-4f02ec25d6.json';
 import { utils } from '../../../utils/utils';
 import { mockProducts } from '../mockProducts';
 
 export class FireProducts implements DBProductsClass {
     private products;
     constructor() {
-        admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount as ServiceAccount),
+        initializeApp({
+            credential: credential.cert(serviceAccount as ServiceAccount),
         });
-        const db = admin.firestore();
+        const db = firestore();
         this.products = db.collection('products');
-        this.products.get().then(oldData => {
-            const batch = db.batch();
-            oldData.forEach(data => batch.delete(data.ref))
-            batch.commit().then(() => console.log(`Products cleaned.`))
-        })
         this.get().then((product) => {
+            if (product.length > 0) {
                 const batch = db.batch();
-                mockProducts.forEach((mockProduct) => {
+                mockProducts.forEach((product) => {
                     const ref = this.products.doc();
-                    batch.set(ref, mockProduct);
+                    batch.set(ref, product);
                 });
                 batch
                     .commit()
                     .then(() => console.log(`Mock products inserted`));
-            
+            }
         });
     }
     async get(id?: string | undefined): Promise<IProduct[] | []> {
         if (id != null) {
-            const data = await this.products.doc(id).get();
-            const dataID = data.id;
-            const productData = data.data()
-            if (data.exists) {
+            const data = await (await this.products.doc(id).get()).data();
+            if (data) {
                 const product = {
-                    id: dataID as string,
-                    ...productData,
+                    id: data.id as string,
+                    ...data,
                 } as IProduct;
                 return [product];
             } else {
@@ -57,7 +55,7 @@ export class FireProducts implements DBProductsClass {
                 const products = data.map((data) => {
                     const product = data.data();
                     return {
-                        id: data.id as string,
+                        id: product.id,
                         ...product,
                     } as IProduct;
                 });
@@ -68,12 +66,12 @@ export class FireProducts implements DBProductsClass {
         }
     }
     async add(newProduct: INew_Product): Promise<CUDResponse> {
-        const resultSnapShot = await (await this.products.add(newProduct)).get();
-        const resultID = resultSnapShot.id;
-        const result = resultSnapShot.data()
+        const result = await (
+            await (await this.products.add(newProduct)).get()
+        ).data();
         if (result) {
             const data = {
-                id: resultID,
+                id: result.id,
                 ...result,
             } as IProduct;
             return {
@@ -123,16 +121,6 @@ export class FireProducts implements DBProductsClass {
         };
     }
     async query(options: IQuery): Promise<IProduct[] | []> {
-        const result = (await this.products.get()).docs;
-        const products = result.map(product => {
-            const data = product.data();
-            return {
-                id: product.id,
-                ...data
-            } as IProduct
-        });
-        const queryResult : IProduct[] | [] = utils.query(products, options)
-        console.log(queryResult)
-        return queryResult
+        const result = this.products.get()
     }
 }

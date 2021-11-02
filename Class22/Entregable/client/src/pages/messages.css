@@ -95,12 +95,27 @@
     margin-right: 0.4rem;
   }
   .users{
+    width: 85%;
+    margin: auto;
     margin-top: 1rem;
+    border-radius: 0.4rem;
+    border: 2px #faf0dc solid;
   }
   .users-header {
     position: sticky;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.3rem;
     top:0;
+    padding: 0.5rem;
+    background-color: #faf0dc;
+    align-content: center;
   }
+.online-users{
+  font-size: 0.9rem;
+}
   .users-list{
     padding: 0.5rem;
     max-height: 100vw;

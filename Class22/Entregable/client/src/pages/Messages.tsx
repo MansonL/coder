@@ -38,8 +38,12 @@ export function Messages(){
         socket.emit('users');
       }
   }
-  
-  const errorExit = (ev: React.MouseEvent<HTMLButtonElement>) => {
+  /**
+   * 
+   * Click on exit at error msg at email input.
+   * 
+   */
+  const errorExit = () => {
       setEmailError(false)
   }
 
@@ -50,12 +54,13 @@ export function Messages(){
    */
   const [hasContent, setHasContent] = useState(false);
   const inputeLabelClass = `${hasContent ? 'hasContent' : ''}`;
+
   /**
    * 
    * Email input FocusOut event listener.
    * 
    */
-  const focusOut = (e: React.FocusEvent<HTMLInputElement>) => {
+  const focusOut = () => {
     if(email != ''){
       setHasContent(true)
     }else{
@@ -67,29 +72,28 @@ export function Messages(){
   
   const [users, setUsers] = useState<IMongoUser[]>([]);
   const [messages, setMessages] = useState<IMongoMessage[]>([])
+  const [message, setMessage] = useState('');
   /**
    * 
    * Message submit handler
-   * Previous defined html element textarea for easy value accessing
+   * @param e just for preventing default submit action
    * 
    */
-
-  //const textarea = $('textarea') Need to change this with useRef
-  /*
-  const handleMessage = async (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); 
-    const { error } = validation.message.validate(textarea.val()); // Need to change this with a useRef method
+    const { error } = validation.message.validate(message); 
     if(!error){
-      const message : INew_Message= {
+      const msg : INew_Message= {
         timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
         user: email,
-        message: textarea.val() as string // Need to change this with a useRef method
+        message: message
       }
-      await axios.post('http://localhost:8080/messages/save', message);
+      await axios.post('http://localhost:8080/messages/save', msg);
+      setMessage('')
       socket.emit('message');
     }
   }
-  */
+  
 
 
   /**
@@ -122,7 +126,7 @@ export function Messages(){
     <form onSubmit={handleEmail}>
     <div className="effect-input">
       
-      <input type="email" className="label-styled-input" onBlur={focusOut} id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+      <input type="email" className="label-styled-input" onBlur={focusOut} id="email" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}/>
       <label className={inputeLabelClass}>Email</label>
       <span className="form-border"></span>
     </div>
@@ -142,7 +146,7 @@ export function Messages(){
     </div>}
   <section className="msg-card">
     <div className="msg-body">
-      {messages.map((message, idx) => {
+      {messages.map((message: IMongoMessage, idx: number): JSX.Element => {
         
         // Setting if it's a message from the current session user or not...
         
@@ -157,11 +161,26 @@ export function Messages(){
         
       })}
     </div>
-    <form className="msg-bottom">
-      <textarea name="" id="" cols={90} rows={1} disabled={inputDisabled}></textarea>
+    <form className="msg-bottom" onSubmit={handleMessage}>
+      <textarea name="" id="" cols={90} rows={1} disabled={inputDisabled} placeholder='Type your message...' onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}></textarea>
       <button type="submit"  className="msg-btn">Send</button>
     </form>
   </section>
+  <section className="users">
+      <div className="users-header">
+        <span>Users online <span className="online-users">{`(${users.length} active users).`}</span></span>
+      </div>
+      <div className="users-list">
+         
+         {users.map((user: IMongoUser, idx: number): JSX.Element => {
+              return (
+                <div key={idx}>
+                <i className="online-icon"></i><span>{user.user}</span><br/>
+              </div>
+              )
+         })}
+      </div>
+    </section>
 </>
     )
 }
