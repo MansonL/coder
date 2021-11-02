@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './products.css'
 import { IMongoCartProduct, IMongoProduct, IQuery } from '../../../server/src/interfaces/interfaces'
 import { socket } from '../lib/socket'
@@ -31,6 +31,29 @@ export function Products(props: ProductsProp) {
         });
     }
 
+    const [showFilters, setShowFilters] = useState(false);
+    const filterDropdown = useRef(null);
+    const filterBtn = useRef(null);
+    const filterDropdownClassName = showFilters ? 'filter-dropdown showMenu' : 'filter-dropdown';
+
+    const handleFilterClick = (ev: React.MouseEvent<HTMLButtonElement>) => {
+      if(showFilters){
+        setShowFilters(false);
+      }else{
+        setShowFilters(true)
+      }
+    }
+
+    useEffect(() => {
+      document.addEventListener('click', (ev: MouseEvent) => {
+        if(filterDropdown && filterBtn && ev.target){
+            if(ev.target != filterDropdown.current && ev.target != filterBtn.current){
+              if(showFilters) setShowFilters(false)
+            }
+          }
+      })
+    })
+
     /**
      * 
      * The sockets were emitted at Main component.
@@ -57,6 +80,7 @@ export function Products(props: ProductsProp) {
     })
 
     return (
+        /*
         <>
         <header>
       <div className="title">
@@ -103,5 +127,73 @@ export function Products(props: ProductsProp) {
       })}
     </div>
   </>
-    )
+    */
+   <>
+   <header>
+<div className="title">
+  <h4>Products List</h4>
+</div>
+</header>
+<div className="upper-body">
+<h6>Showing 0 results.</h6>
+<div className="filters">
+  <button className="filter-btn" ref={filterBtn} onClick={handleFilterClick}>Filters</button>
+  <div className={filterDropdownClassName} ref={filterDropdown}>
+
+    <label htmlFor="title" className="filter-label">Title</label><br/>
+    <input type="text" id="title" className="filter-input" onChange={handleChange} /><br/>
+
+    <label htmlFor="code" className="filter-label">Code</label><br/>
+    <input type="text" id="code" className="filter-input" onChange={handleChange} />
+    <br />
+    <label className=".filter-label">Price</label>
+    <div className="price">
+      <input type="number" min="0.1" step="0.05" id="minPrice" className="number-input" onChange={handleChange} placeholder="Min" />
+      <input type="number" min="0.1" step="0.05" id="maxPrice" className="number-input" onChange={handleChange} placeholder="Max" />
+    </div>
+    <label className="filter-label">Stock</label>
+    <div className="stock">
+      <input type="number" min="0" id="minStock" className="number-input" onChange={handleChange} placeholder="Min" /><input type="number" min="0" id="maxStock" className="number-input" onChange={handleChange} placeholder="Max" />
+    </div>
+    <div className="apply">
+      <button className="apply-filter"> Apply</button>
+    </div>
+  </div>
+</div>
+</div>
+<div className="products-body">
+      <div className="product">
+        <img src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
+        <div className="product-description">
+          <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
+          <span className="product-price">399.25</span>
+        </div>
+      </div><hr className="products-hr" />
+<div className="product">
+        <img src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
+        <div className="product-description">
+          <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
+          <span className="product-price">399.25</span>
+        </div>
+      </div><hr className="products-hr" />
+<div className="product">
+        <img src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
+        <div className="product-description">
+          <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
+          <span className="product-price">399.25</span>
+        </div>
+      </div><hr className="products-hr" />
+<div className="product">
+        <img src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
+        <div className="product-description">
+          <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
+          <span className="product-price">399.25</span>
+        </div>
+      </div><hr className="products-hr" />
+
+
+      </div>
+        </>
+  )
 }
+

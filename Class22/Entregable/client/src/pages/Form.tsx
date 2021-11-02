@@ -32,30 +32,30 @@ export function Form() {
   </header>
   <form className="form">
     <div className="row-form">
-      <input type="text" id="title" />
-      <label htmlFor="title">Title</label>
+      <input type="text" className="label-styled-input" id="title" />
+      <label className='label-styled' htmlFor="title">Title</label>
       <span className="form-border"/>
     </div>
     <div className="row-form">
-      <input type="text" id="description"/>
-      <label htmlFor="description">Description</label>
+      <input type="text" className="label-styled-input" id="description"/>
+      <label className='label-styled' htmlFor="description">Description</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="text" id="image"/>
-      <label htmlFor="img">Image link</label>
+    <div className="row-form"><input type="text" className="label-styled-input" id="image"/>
+      <label className='label-styled' htmlFor="img">Image link</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="text" id="code"/>
-      <label htmlFor="code">Code</label>
+    <div className="row-form"><input type="text" className="label-styled-input" id="code"/>
+      <label className='label-styled' htmlFor="code">Code</label>
       <span className="form-border"/>
     </div>
     <div className="row-form">
-      <input type="number" id="stock"/>
-      <label htmlFor="stock">Stock</label>
+      <input type="number" className="label-styled-input" id="stock"/>
+      <label className='label-styled' htmlFor="stock">Stock</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="number" id="price"/>
-      <label htmlFor="price">Price</label>
+    <div className="row-form"><input type="number" className="label-styled-input" id="price"/>
+      <label className='label-styled' htmlFor="price">Price</label>
       <span className="form-border"/>
     </div>
     <div className="row-form" id="submit">

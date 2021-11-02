@@ -33,7 +33,7 @@ body {
   white-space: nowrap;
 }
 .showMenu {
-  display:block;
+  display: block !important;
 }
 .hr-menu {
   color: grey;
@@ -51,7 +51,7 @@ body {
 .title, h6, h5, .submit-btn{
   text-align: center;
 }
-input {
+.label-styled-input {
   position: relative;
   z-index:1;
   width:100%;
@@ -59,10 +59,10 @@ input {
   background-color: transparent;
   border-bottom: 1px solid grey;
 }
-input:focus {
+.label-styled-input:focus {
   outline: none;
 }
-input ~ label {
+.label-styled {
   font-size: 0.9rem;
   position: absolute;
   left:0;
@@ -71,7 +71,7 @@ input ~ label {
   transition: 0.3s;
   z-index:0;
 }
-input:focus ~ label {
+.label-styled-input:focus ~ .label-styled {
   position: absolute;
   left: 0;
   bottom: 0;
@@ -80,7 +80,7 @@ input:focus ~ label {
   font-weight:700;
   transition: 0.3s;
 }
-input:focus {
+.label-styled-input:focus {
   border-bottom: none;
 }
 .hasContent{
