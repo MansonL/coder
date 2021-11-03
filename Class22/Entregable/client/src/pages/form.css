@@ -67,11 +67,15 @@
     background-color: transparent;
     border-radius: 0.8rem;
     font-size: 1.3rem;
+    cursor: pointer;
+    transition: 0.2s;
   }
-  .submit-form:hover {
-    background-color: #faf0dc;
-  }
-  #submit {
+  .submit-form:hover  {
+    background-color: white;
+    font-weight: 550;
+    transition: 0.2s;
+    }
+  .submit-row {
     display: flex;
     justify-content: center;
     width: 100%;

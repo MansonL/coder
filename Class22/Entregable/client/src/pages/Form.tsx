@@ -1,28 +1,61 @@
 import axios from 'axios';
 import moment from 'moment';
-import { INew_Product } from '../../../server/src/interfaces/interfaces';
+import React, { useState } from 'react';
+import { CUDResponse, INew_Product } from '../../../server/src/interfaces/interfaces';
+import { validation } from '../joi/schemas';
 import './form.css';
 export function Form() {
-  /*
-  const titleInput = $('#title')[0];
-  const descrInput = $('#description')[0];
-  const imgInput = $('#image')[0];
-  const codeInput = $('#code')[0];
-  const stockInput = $('#stock')[0];
-  const priceInput = $('#price')[0]; Need to change this with useRef
-  const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => { 
-    const product : INew_Product = {
-      timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
-      title: titleInput.innerHTML,
-      description: descrInput.innerHTML,
-      img: imgInput.innerHTML,
-      code: codeInput.innerHTML,
-      stock: Number(stockInput.innerHTML),
-      price: Number(priceInput.innerHTML)
+  
+  /**
+   * 
+   * State of the future new products & error at submitting the form with an invalid value.
+   * 
+   */
+  const [errorForm, setErrorForm] = useState(false);
+  const [successForm, setSuccessForm] = useState(false);
+  const [resultMessage, setResultMessage] = useState('');
+  const [newProduct, setNewProduct] = useState<INew_Product>({
+    timestamp: '',
+    title: '',
+    description: '',
+    code: '',
+    img: '',
+    price: 0,
+    stock: 0,
+  });
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { 
+    const { error } = validation.newProduct.validate(newProduct);
+    if(error){
+      if(!errorForm){
+        setErrorForm(true);
+        setSuccessForm(false);
+        setResultMessage(error.message)
+      }
+    }else{
+      const result = await (await axios.post<CUDResponse>('http://localhost:8080/products/save', newProduct)).data;
+      if(result.data){ // Here need to check if there's an instance of MongoProduct or an empty array (error);
+        setErrorForm(true);
+        setSuccessForm(false);
+        setResultMessage(result.message)
+      }else{
+        setErrorForm(false);
+        setSuccessForm(true)
+        setResultMessage(result.message)
+      }
     }
-    await axios.post('http://localhost:8080/products/save', product)
+    
   }
-*/
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const value : string | number = e.target.value
+    setNewProduct({
+      ...newProduct,
+      [e.target.name]: value
+    })
+  }
+
   return (
         <>
         <header>
@@ -30,36 +63,36 @@ export function Form() {
       <h4>Products Form</h4>
     </div>
   </header>
-  <form className="form">
+  <form className="form" onSubmit={handleSubmit}>
     <div className="row-form">
-      <input type="text" className="label-styled-input" id="title" />
+      <input type="text" className="label-styled-input" onChange={handleFormChange} id="title" />
       <label className='label-styled' htmlFor="title">Title</label>
       <span className="form-border"/>
     </div>
     <div className="row-form">
-      <input type="text" className="label-styled-input" id="description"/>
+      <input type="text" className="label-styled-input" onChange={handleFormChange} id="description"/>
       <label className='label-styled' htmlFor="description">Description</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="text" className="label-styled-input" id="image"/>
+    <div className="row-form"><input type="text" className="label-styled-input" onChange={handleFormChange} id="image"/>
       <label className='label-styled' htmlFor="img">Image link</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="text" className="label-styled-input" id="code"/>
+    <div className="row-form"><input type="text" className="label-styled-input" onChange={handleFormChange}  id="code"/>
       <label className='label-styled' htmlFor="code">Code</label>
       <span className="form-border"/>
     </div>
     <div className="row-form">
-      <input type="number" className="label-styled-input" id="stock"/>
+      <input type="number" className="label-styled-input" onChange={handleFormChange} id="stock"/>
       <label className='label-styled' htmlFor="stock">Stock</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="number" className="label-styled-input" id="price"/>
+    <div className="row-form"><input type="number" className="label-styled-input" onChange={handleFormChange} id="price"/>
       <label className='label-styled' htmlFor="price">Price</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form" id="submit">
-      <button className="submit-form" type="submit" >Save</button>
+    <div className="row-form submit-row">
+      <button className="submit-form" type="submit">Save</button>
     </div>
   </form>
 </>

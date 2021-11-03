@@ -31,6 +31,11 @@ export function Products(props: ProductsProp) {
         });
     }
 
+    const handleFilterApply = async (ev: React.MouseEvent<HTMLButtonElement>) => {
+        const products: IMongoProduct[] = (await axios.get<IMongoProduct[]>('http://localhost:8080/products/query', {data: filters})).data;
+        setProducts(products);
+    }
+
     const [showFilters, setShowFilters] = useState(false);
     const filterDropdown = useRef(null);
     const filterBtn = useRef(null);
@@ -116,7 +121,7 @@ export function Products(props: ProductsProp) {
           return (
             <div key={idx}>
             <div className="product">
-              <img src={product.img}/>
+              <img className='product-img' src={product.img}/>
               <div className="product-description">
                 <span className="product-title">{product.title}</span>
                 <span className="product-price">{product.price}</span>
@@ -156,43 +161,61 @@ export function Products(props: ProductsProp) {
       <input type="number" min="0" id="minStock" className="number-input" onChange={handleChange} placeholder="Min" /><input type="number" min="0" id="maxStock" className="number-input" onChange={handleChange} placeholder="Max" />
     </div>
     <div className="apply">
-      <button className="apply-filter"> Apply</button>
+      <button className="apply-filter" onClick={handleFilterApply}> Apply</button>
     </div>
   </div>
 </div>
 </div>
-<div className="products-body">
-      <div className="product">
-        <img src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
-        <div className="product-description">
-          <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
-          <span className="product-price">399.25</span>
+<ul className="products-body">
+            <li className="product">
+              <img className='product-img' src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
+              <div className="product-description">
+                <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
+                <span className="product-price">399.25</span>
+              </div>
+              <div className="add-remove-btns">
+        <button className="add-remove-icon"><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
+<button className="add-remove-icon"><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
         </div>
-      </div><hr className="products-hr" />
-<div className="product">
-        <img src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
-        <div className="product-description">
-          <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
-          <span className="product-price">399.25</span>
+            </li><hr className="products-hr" />
+      <li className="product">
+              <img className='product-img' src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
+              <div className="product-description">
+                <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
+                <span className="product-price">399.25</span>
+              </div>
+              <div className="add-remove-btns">
+        <button className="add-remove-icon"><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
+<button className="add-remove-icon"><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
         </div>
-      </div><hr className="products-hr" />
-<div className="product">
-        <img src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
-        <div className="product-description">
-          <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
-          <span className="product-price">399.25</span>
+            </li><hr className="products-hr" />
+      <li className="product">
+              <img className='product-img' src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
+              <div className="product-description">
+                <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
+                <span className="product-price">399.25</span>
+              </div>
+              
+        <div className="add-remove-btns">
+        <button className="add-remove-icon"><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
+<button className="add-remove-icon"><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
         </div>
-      </div><hr className="products-hr" />
-<div className="product">
-        <img src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
-        <div className="product-description">
-          <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
-          <span className="product-price">399.25</span>
+            </li><hr className="products-hr" />
+      <li className="product">
+              <img className='product-img' src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
+              <div className="product-description">
+                <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
+                <span className="product-price">399.25</span>
+              </div>
+              <div className="add-remove-btns">
+        <button className="add-remove-icon"><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
+<button className="add-remove-icon"><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
         </div>
-      </div><hr className="products-hr" />
-
-
-      </div>
+        
+            </li><hr className="products-hr" />
+      
+      
+            </ul>
         </>
   )
 }

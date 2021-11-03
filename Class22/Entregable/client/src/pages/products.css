@@ -8,6 +8,7 @@
   border: none;
   border-radius: 0.8rem;
   background-color: #faf0dc; 
+  cursor: pointer;
 }
 .filter-dropdown {
   z-index:1;
@@ -45,6 +46,7 @@
   background-color: white;
   border-radius: 0.4rem;
   transition: 0.2s;
+  cursor: pointer;
 }
 .apply-filter:hover{
   background-color: #faf0dc;
@@ -75,7 +77,7 @@
   gap: 3px;
   padding: 0.2rem;
 }
-img {
+.product-img {
   width: 600px;
   max-width: 35%; 
   height: auto;
@@ -90,4 +92,22 @@ img {
   font-size: 1.5rem;
   margin-left: 0.2rem;
   margin-top: 0.8rem;
+}
+.add-remove-btns {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.add-remove-icon{
+  background-color: transparent;
+  border: none;
+  margin:auto;
+  flex-grow: 1;
+  cursor: pointer;
+}
+.add-icon{
+  max-width: 10vw;
+}
+.remove-icon{
+  max-width: 8vw;
 }

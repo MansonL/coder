@@ -1,5 +1,5 @@
 
-import { BrowserRouter as Router, Switch, Link, Route } from 'react-router-dom';
+import { Switch, Link, Route, BrowserRouter } from 'react-router-dom';
 import { Products } from './Products';
 import { Messages } from './Messages';
 import { Form } from './Form';
@@ -28,7 +28,7 @@ export function Main () {
    * 
    */
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => { // Here we are going to need to implement different things due to React <Link> doens't work if there's an existing clickhandler 
     e.preventDefault();
     const whichMenu = e.currentTarget.innerHTML;
     switch(whichMenu){
@@ -55,9 +55,8 @@ export function Main () {
   }
 
   const menuClass = `products-dropdown ${showMenu ? 'showMenu' : ''}`;
-  console.log(menuClass)
   return (
-    <Router>
+    <BrowserRouter>
         <div className="container">
   <div className="top-bar">
     <Link to="/messages">
@@ -67,25 +66,29 @@ export function Main () {
     <button className="top-buttons" id="product-menu-button" ref={dropdownBtn} onClick={menuBtnHandleClick}>Products</button>
       <div className={menuClass} ref={dropdownMenu}>
         <Link to='/randomProducts'>
-        <button className='top-buttons' onClick={handleClick}>Random Generated</button>
+        <button className='top-buttons' >Random Generated</button>
         </Link>
         <hr className="hr-menu"/>
         <Link to="/form">
-        <button className='top-buttons' onClick={handleClick}>Form</button>
+        <button className='top-buttons' >Form</button>
         </Link>
         <hr className="hr-menu"/>
         <Link to="/products">
-        <button className='top-buttons' onClick={handleClick}>DB Products</button>
+        <button className='top-buttons' >DB Products</button>
       </Link>
       <hr className='hr-menu'/>
       <Link to="/cart">
-        <button className='top-buttons' onClick={handleClick}>DB Cart</button>
+        <button className='top-buttons' >DB Cart</button>
       </Link>
       </div>
       </div>
   </div><hr/>
   <div className="body">
+  
     <Switch>
+    <Route exact path="/">
+        <Home />
+      </Route>
       <Route path="/messages">
         <Messages />
       </Route>
@@ -101,12 +104,11 @@ export function Main () {
       <Route path="/form">
         <Form />
       </Route>
-      <Route path="/">
-        <Home />
-      </Route>
+      
     </Switch>
+    
 </div>
 </div>
-</Router>
+</BrowserRouter>
     )
 }
