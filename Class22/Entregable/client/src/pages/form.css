@@ -80,3 +80,37 @@
     justify-content: center;
     width: 100%;
   }
+  .form-error, .form-success {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    margin: auto;
+    border-radius: 0.8rem;
+    padding: 0.5rem;
+  }
+  .form-error {
+    border: 2px red solid;
+    background-color: #F9B3BB;
+  }
+  .form-success {
+    border: 2px green solid;
+    background-color: #B9D39C;
+  }
+  .result-top {
+    display: flex;
+  }
+  .result-header {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.5rem;
+  }
+  .result-btn {
+    background-color: transparent;
+      border: none;
+      margin-right: 1rem;
+      margin-top: 0.3rem;
+  }
+  .result-message {
+    margin: 0.5rem 0rem 0.2rem 0.4rem;
+  }
+  

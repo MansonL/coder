@@ -49,6 +49,14 @@ export function Products(props: ProductsProp) {
       }
     }
 
+    const handleAddProduct = () => {
+
+    }
+
+    const handleRemoveProduct = () => {
+
+    }
+
     useEffect(() => {
       document.addEventListener('click', (ev: MouseEvent) => {
         if(filterDropdown && filterBtn && ev.target){
@@ -120,14 +128,18 @@ export function Products(props: ProductsProp) {
       {products.map((product, idx) => {
           return (
             <div key={idx}>
-            <div className="product">
-              <img className='product-img' src={product.img}/>
-              <div className="product-description">
+            <li className="product">
+              <li><img className='product-img' src={product.img}/></li>
+              <li className="product-description">
                 <span className="product-title">{product.title}</span>
                 <span className="product-price">{product.price}</span>
-              </div>
-            </div><hr className="products-hr" />
-            </div>
+              </li>
+              <li className="add-remove-btns">
+        <button className="add-remove-icon" onClick={(e) => handleAddProduct()}><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
+<button className="add-remove-icon" onClick={(e) => handleRemoveProduct()}><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
+        </li>
+            </li><hr className="products-hr" />
+            </li>
           )
       })}
     </div>
@@ -166,56 +178,56 @@ export function Products(props: ProductsProp) {
   </div>
 </div>
 </div>
-<ul className="products-body">
+<div className="products-body">
             <li className="product">
               <img className='product-img' src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
-              <div className="product-description">
+              <li className="product-description">
                 <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
                 <span className="product-price">399.25</span>
-              </div>
-              <div className="add-remove-btns">
-        <button className="add-remove-icon"><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
-<button className="add-remove-icon"><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
-        </div>
+              </li>
+              <li className="add-remove-btns">
+        <button className="add-remove-icon" onClick={(e) => handleAddProduct()}><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
+<button className="add-remove-icon" onClick={(e) => handleRemoveProduct()}><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button> 
+        </li>
             </li><hr className="products-hr" />
       <li className="product">
               <img className='product-img' src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
-              <div className="product-description">
+              <li className="product-description">
                 <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
                 <span className="product-price">399.25</span>
-              </div>
-              <div className="add-remove-btns">
-        <button className="add-remove-icon"><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
-<button className="add-remove-icon"><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
-        </div>
+              </li>
+              <li className="add-remove-btns">
+        <button className="add-remove-icon" onClick={(e) => handleAddProduct()}><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
+<button className="add-remove-icon" onClick={(e) => handleRemoveProduct()}><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
+        </li>
             </li><hr className="products-hr" />
       <li className="product">
               <img className='product-img' src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
-              <div className="product-description">
+              <li className="product-description">
                 <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
                 <span className="product-price">399.25</span>
-              </div>
+              </li>
               
-        <div className="add-remove-btns">
-        <button className="add-remove-icon"><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
-<button className="add-remove-icon"><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
-        </div>
+        <li className="add-remove-btns">
+        <button className="add-remove-icon" onClick={(e) => handleAddProduct()}><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
+<button className="add-remove-icon" onClick={(e) => handleRemoveProduct()}><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
+        </li>
             </li><hr className="products-hr" />
       <li className="product">
               <img className='product-img' src='https://i5.walmartimages.com/asr/31be53bc-c0cc-411d-83fe-b564abf44c28.016f3ba5bc2487abce159acf6051b27b.png?odnWidth=undefined&odnHeight=undefined&odnBg=ffffff'/>
-              <div className="product-description">
+              <li className="product-description">
                 <span className="product-title">Beef Choice Angus Rump Roast, 2.25 - 3.87 lb</span><br/>
                 <span className="product-price">399.25</span>
-              </div>
-              <div className="add-remove-btns">
-        <button className="add-remove-icon"><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
-<button className="add-remove-icon"><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
-        </div>
+              </li>
+              <li className="add-remove-btns">
+        <button className="add-remove-icon" onClick={(e) => handleAddProduct()}><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
+<button className="add-remove-icon" onClick={(e) => handleRemoveProduct()}><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
+        </li>
         
             </li><hr className="products-hr" />
       
       
-            </ul>
+            </div>
         </>
   )
 }

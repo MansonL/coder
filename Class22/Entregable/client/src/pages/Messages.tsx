@@ -13,6 +13,7 @@ export function Messages(){
    */
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
+  const [emailSuccess, setEmailSuccess] = useState(false);
   const [inputDisabled, setInputDisabled] = useState(true);
 
   /**
@@ -24,11 +25,12 @@ export function Messages(){
   const handleEmail = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       const { error } = validation.email.validate(email);
-      
       if(error){
         setEmailError(true);
+        setEmailSuccess(false);
       }else{
         if(emailError === true) setEmailError(false);
+        setEmailSuccess(true);
         setInputDisabled(false);
         const user: INew_User = {
           user: email,
@@ -135,13 +137,22 @@ export function Messages(){
     </div>
     </form>
   </div>
-  {emailError && <div className="error-alert">
-      <div className="error-top">
-        <span className="error-header">Oops!</span> 
-        <button className="error-btn" onClick={errorExit}><i className="fas fa-times"></i></button>
+  {emailError && <div className="form-error">
+      <div className="result-top">
+        <span className="result-header">Oops!</span> 
+        <button className="result-btn" onClick={errorExit}><i className="fas fa-times"></i></button>
       </div>
-      <div className="error-msg">
+      <div className="result-msg">
         Email incorrect.
+      </div>
+    </div>}
+    {emailSuccess && <div className="form-success">
+      <div className="result-top">
+        <span className="result-header">Successful!</span> 
+        <button className="result-btn" onClick={errorExit}><i className="fas fa-times"></i></button>
+      </div>
+      <div className="result-msg">
+        Email submitted. Now you can chat.
       </div>
     </div>}
   <section className="msg-card">

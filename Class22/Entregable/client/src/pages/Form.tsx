@@ -25,6 +25,10 @@ export function Form() {
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { 
+    setNewProduct({
+      ...newProduct,
+      timestamp: moment().format('YYYY-MM-DD HH:mm:ss')
+    })
     const { error } = validation.newProduct.validate(newProduct);
     if(error){
       if(!errorForm){
@@ -65,29 +69,29 @@ export function Form() {
   </header>
   <form className="form" onSubmit={handleSubmit}>
     <div className="row-form">
-      <input type="text" className="label-styled-input" onChange={handleFormChange} id="title" />
+      <input type="text" name='title' className="label-styled-input" onChange={handleFormChange} id="title" />
       <label className='label-styled' htmlFor="title">Title</label>
       <span className="form-border"/>
     </div>
     <div className="row-form">
-      <input type="text" className="label-styled-input" onChange={handleFormChange} id="description"/>
+      <input type="text" name='description' className="label-styled-input" onChange={handleFormChange} id="description"/>
       <label className='label-styled' htmlFor="description">Description</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="text" className="label-styled-input" onChange={handleFormChange} id="image"/>
+    <div className="row-form"><input type="text" name='img' className="label-styled-input" onChange={handleFormChange} id="image"/>
       <label className='label-styled' htmlFor="img">Image link</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="text" className="label-styled-input" onChange={handleFormChange}  id="code"/>
+    <div className="row-form"><input type="text" name='code' className="label-styled-input" onChange={handleFormChange}  id="code"/>
       <label className='label-styled' htmlFor="code">Code</label>
       <span className="form-border"/>
     </div>
     <div className="row-form">
-      <input type="number" className="label-styled-input" onChange={handleFormChange} id="stock"/>
+      <input type="number" name='stock' className="label-styled-input" onChange={handleFormChange} id="stock"/>
       <label className='label-styled' htmlFor="stock">Stock</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="number" className="label-styled-input" onChange={handleFormChange} id="price"/>
+    <div className="row-form"><input type="number"  name='price' className="label-styled-input" onChange={handleFormChange} id="price"/>
       <label className='label-styled' htmlFor="price">Price</label>
       <span className="form-border"/>
     </div>
@@ -95,6 +99,24 @@ export function Form() {
       <button className="submit-form" type="submit">Save</button>
     </div>
   </form>
+  {successForm && <div className="form-success">
+      <div className="result-top">
+        <span className="result-header">Successful!</span>
+        <button className="result-btn"><i className="fas fa-times"></i></button>
+      </div>
+      <div className="result-message">
+        <span>{resultMessage}</span>
+      </div>
+    </div>}
+  {errorForm && <div className="form-error">
+      <div className="result-top">
+        <span className="result-header">Oops!</span>
+        <button className="result-btn"><i className="fas fa-times"></i></button>
+      </div>
+      <div className="result-message">
+        <span>{resultMessage}</span>
+      </div>
+    </div>}
 </>
     )
 }
