@@ -145,14 +145,18 @@ export function Products(props: ProductsProp) {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [saveCode, setCode] = useState('');
 
-    const handleAddProduct = (code: string) => {
+    const handleAddProduct = async (code: string) => {
       setCode(code);
-      
+      const result : CUDResponse = await (await axios.post<CUDResponse>(`http://localhost:8080/cart/add/${saveCode}`)).data
     }
 
     const handleRemoveProduct = (code: string) => {
       setCode(code);
       setShowConfirmation(true);
+    }
+
+    const handleCancel = () => {
+      setShowConfirmation(false);
     }
 
     const handleDelete = async () => {
@@ -202,7 +206,7 @@ export function Products(props: ProductsProp) {
   <div className="alert">
     <div className="alert-header">
       <h3 className="alert-title">Warning!</h3>
-      <button className="result-btn"><i className="fas fa-times"></i>
+      <button className="result-btn" onClick={handleCancel}><i className="fas fa-times"></i>
       </button>
     </div>
     <div className="alert-body">
@@ -221,7 +225,7 @@ export function Products(props: ProductsProp) {
       </div>
     </header>
     <div className="upper-body">
-      <h6>{`Showing ${products.length} results.`}</h6>
+      <h6>{`Showing ${mockProducts.length} results.`}</h6>
       <div className="filters">
         <button className="filter-btn">Filters</button>
         <div className="filter-dropdown">

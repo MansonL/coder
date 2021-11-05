@@ -1,6 +1,7 @@
 .upper-body {
   display:flex;
   justify-content: space-between;
+  align-items: center;
   margin: 0 3rem 0 3rem;
   position: relative;
 }
@@ -131,8 +132,9 @@
   flex-direction: column;
   background-color: white;
   position: relative;
-  width: 50%;
+  width: 80%;
   border-radius: 1rem;
+  transition: 0.3s;
 }
 .alert-header, .alert-bottom {
   display: flex;
@@ -158,4 +160,5 @@
 .alert-btn {
   font-size: 1.2rem;
   transition: 0.2s;
+  cursor: pointer;
 }

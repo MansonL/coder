@@ -46,7 +46,8 @@ export function Messages(){
    * 
    */
   const errorExit = () => {
-      setEmailError(false)
+      setEmailError(false);
+      setEmailSuccess(false);
   }
 
   /**
