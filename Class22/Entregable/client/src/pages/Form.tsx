@@ -25,11 +25,14 @@ export function Form() {
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { 
+    e.preventDefault();
     setNewProduct({
       ...newProduct,
       timestamp: moment().format('YYYY-MM-DD HH:mm:ss')
-    })
+    });
+    console.log(newProduct)
     const { error } = validation.newProduct.validate(newProduct);
+    console.log(error)
     if(error){
       if(!errorForm){
         setErrorForm(true);
