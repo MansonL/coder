@@ -63,6 +63,14 @@ export function Form() {
     })
   }
 
+  /**
+   * 
+   * For CSS changes at email label.
+   * 
+   */
+  const focusOut = (ev: React.FocusEvent<HTMLInputElement>) => {
+  }
+
   return (
         <>
         <header>
@@ -72,30 +80,30 @@ export function Form() {
   </header>
   <form className="form" onSubmit={handleSubmit}>
     <div className="row-form">
-      <input type="text" name='title' className="label-styled-input" onChange={handleFormChange} id="title" />
-      <label className='label-styled' htmlFor="title">Title</label>
+      <input type="text" name='title' className="label-styled-input" onBlur={focusOut} onChange={handleFormChange} id="title" />
+      <label className={newProduct.title != '' ? 'hasContent ' : 'label-styled'} htmlFor="title">Title</label>
       <span className="form-border"/>
     </div>
     <div className="row-form">
-      <input type="text" name='description' className="label-styled-input" onChange={handleFormChange} id="description"/>
-      <label className='label-styled' htmlFor="description">Description</label>
+      <input type="text" name='description' className="label-styled-input" onBlur={focusOut} onChange={handleFormChange} id="description"/>
+      <label className={newProduct.description != '' ? 'hasContent ' : 'label-styled'} htmlFor="description">Description</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="text" name='img' className="label-styled-input" onChange={handleFormChange} id="image"/>
-      <label className='label-styled' htmlFor="img">Image link</label>
+    <div className="row-form"><input type="text" name='img' className="label-styled-input" onBlur={focusOut} onChange={handleFormChange} id="image"/>
+      <label className={newProduct.img != '' ? 'hasContent ' : 'label-styled'} htmlFor="img">Image link</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="text" name='code' className="label-styled-input" onChange={handleFormChange}  id="code"/>
-      <label className='label-styled' htmlFor="code">Code</label>
+    <div className="row-form"><input type="text" name='code' className="label-styled-input" onBlur={focusOut} onChange={handleFormChange}   id="code"/>
+      <label className={newProduct.code != '' ? 'hasContent ' : 'label-styled'} htmlFor="code">Code</label>
       <span className="form-border"/>
     </div>
     <div className="row-form">
-      <input type="number" name='stock' className="label-styled-input" onChange={handleFormChange} id="stock"/>
-      <label className='label-styled' htmlFor="stock">Stock</label>
+      <input type="number" name='stock' className="label-styled-input" onBlur={focusOut} onChange={handleFormChange} id="stock"/>
+      <label className={newProduct.stock ? 'hasContent ' : 'label-styled'} htmlFor="stock">Stock</label>
       <span className="form-border"/>
     </div>
-    <div className="row-form"><input type="number"  name='price' className="label-styled-input" onChange={handleFormChange} id="price"/>
-      <label className='label-styled' htmlFor="price">Price</label>
+    <div className="row-form"><input type="number"  name='price' className="label-styled-input" onBlur={focusOut} onChange={handleFormChange} id="price"/>
+      <label className={newProduct.price ? 'hasContent ' : 'label-styled'} htmlFor="price">Price</label>
       <span className="form-border"/>
     </div>
     <div className="row-form submit-row">

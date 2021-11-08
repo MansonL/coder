@@ -30,6 +30,7 @@ export interface ICartProduct extends INew_Product {
  *
  */
 export interface INew_Product {
+    [key: string]: number | string; 
     title: string;
     description: string;
     timestamp: string; // Will have this type after the controller set product's

@@ -162,12 +162,14 @@ export function Products(props: ProductsProp) {
     const handleDelete = async () => {
       const result : CUDResponse = await (await axios.delete<CUDResponse>(`http://localhost:8080/products/delete/${saveCode}`)).data;
       
+      
     }
 
     useEffect(() => {
       document.addEventListener('click', (ev: MouseEvent) => {
+        console.log(ev.target)
         if(filterDropdown && filterBtn && ev.target){
-            if(ev.target != filterDropdown.current && ev.target != filterBtn.current){
+            if(ev.target != filterDropdown.current && ev.target != filterBtn.current && filterDropdown.current){
               if(showFilters) setShowFilters(false)
             }
           }
@@ -227,13 +229,13 @@ export function Products(props: ProductsProp) {
     <div className="upper-body">
       <h6>{`Showing ${mockProducts.length} results.`}</h6>
       <div className="filters">
-        <button className="filter-btn">Filters</button>
-        <div className="filter-dropdown">
+        <button className="filter-btn" onClick={handleFilterClick} ref={filterBtn}>Filters</button>
+        <div className={filterDropdownClassName} ref={filterDropdown}>
 
-          <label htmlFor="title" className="filter-label">Title</label>
+          <label htmlFor="title" className="filter-label">Title</label><br/>
           <input type="text" id="title" className="filter-input" onChange={handleChange} />
-
-          <label htmlFor="code" className="filter-label">Code</label>
+          <br/>
+          <label htmlFor="code" className="filter-label">Code</label><br/>
           <input type="text" id="code" className="filter-input" onChange={handleChange} />
           <br />
           <label className=".filter-label">Price</label>

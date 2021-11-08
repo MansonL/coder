@@ -5,6 +5,7 @@ import { socket } from '../lib/socket';
 import axios from 'axios';
 import moment from 'moment'
 import './messages.css';
+
 export function Messages(){
   
   /**
@@ -56,7 +57,7 @@ export function Messages(){
    * 
    */
   const [hasContent, setHasContent] = useState(false);
-  const inputeLabelClass = `${hasContent ? 'hasContent ' : 'label-styled'}`;
+  const inputLabelClass = `${hasContent ? 'hasContent ' : 'label-styled'}`;
 
   /**
    * 
@@ -130,7 +131,7 @@ export function Messages(){
     <div className="effect-input">
       
       <input type="email" className="label-styled-input" onBlur={focusOut} id="email" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}/>
-      <label className={inputeLabelClass} >Email</label>
+      <label className={inputLabelClass} >Email</label>
       <span className="form-border"></span>
     </div>
     <div className="submit-btn">
