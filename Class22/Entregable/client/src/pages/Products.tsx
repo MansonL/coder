@@ -130,8 +130,8 @@ export function Products(props: ProductsProp) {
     }
 
     const [showFilters, setShowFilters] = useState(false);
-    const filterDropdown = useRef(null);
-    const filterBtn = useRef(null);
+    const filterDropdown = React.createRef<HTMLDivElement>();
+    const filterBtn = React.createRef<HTMLButtonElement>();
     const filterDropdownClassName = showFilters ? 'filter-dropdown showMenu' : 'filter-dropdown';
 
     const handleFilterClick = (ev: React.MouseEvent<HTMLButtonElement>) => {
@@ -167,9 +167,8 @@ export function Products(props: ProductsProp) {
 
     useEffect(() => {
       document.addEventListener('click', (ev: MouseEvent) => {
-        console.log(ev.target)
-        if(filterDropdown && filterBtn && ev.target){
-            if(ev.target != filterDropdown.current && ev.target != filterBtn.current && filterDropdown.current){
+        if(filterDropdown.current && filterBtn.current && ev.target){
+            if(ev.target != filterBtn.current && filterDropdown.current.contains(ev.target)){
               if(showFilters) setShowFilters(false)
             }
           }
