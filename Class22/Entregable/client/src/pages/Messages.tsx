@@ -1,6 +1,6 @@
 import React, {  useEffect, useState } from 'react';
 import { IMongoUser, IMongoMessage, INew_Message, INew_User } from '../../../server/src/interfaces/interfaces';
-import { validation } from '../joi/schemas';
+import { validation } from '../utils/joiSchemas';
 import { socket } from '../lib/socket';
 import axios from 'axios';
 import moment from 'moment'

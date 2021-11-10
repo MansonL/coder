@@ -3,6 +3,7 @@ import './products.css'
 import { CUDResponse, IMongoCartProduct, IMongoProduct, IQuery } from '../../../server/src/interfaces/interfaces'
 import { socket } from '../lib/socket'
 import axios from 'axios'
+import { hasProductOrEmpty } from '../utils/utilities'
 
 interface ProductsProp {
     type: string
@@ -130,8 +131,8 @@ export function Products(props: ProductsProp) {
     }
 
     const [showFilters, setShowFilters] = useState(false);
-    const filterDropdown = React.createRef<HTMLDivElement>();
-    const filterBtn = React.createRef<HTMLButtonElement>();
+    const filterDropdown = useRef<HTMLDivElement>(null);
+    const filterBtn = useRef<HTMLButtonElement>(null);
     const filterDropdownClassName = showFilters ? 'filter-dropdown showMenu' : 'filter-dropdown';
 
     const handleFilterClick = (ev: React.MouseEvent<HTMLButtonElement>) => {
@@ -143,11 +144,22 @@ export function Products(props: ProductsProp) {
     }
 
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const [showOperationResult, setShowOperationResult] = useState(false);
+    const [resultMessage, setResultMessage] = useState('');
+    const [operationType, setOperationType] = useState('');
     const [saveCode, setCode] = useState('');
+
+    const resultOperationStyle = operationType === 'failure' ? 'resultError' : 'resultSuccess';
 
     const handleAddProduct = async (code: string) => {
       setCode(code);
-      const result : CUDResponse = await (await axios.post<CUDResponse>(`http://localhost:8080/cart/add/${saveCode}`)).data
+      const result : CUDResponse = await (await axios.post<CUDResponse>(`http://localhost:8080/cart/add/${saveCode}`)).data;
+      setShowOperationResult(true);
+      if(hasProductOrEmpty(result.data as IMongoProduct | [])){
+          setOperationType('success');
+      }else{
+          setOperationType('failure');
+      }
     }
 
     const handleRemoveProduct = (code: string) => {
@@ -160,15 +172,27 @@ export function Products(props: ProductsProp) {
     }
 
     const handleDelete = async () => {
-      const result : CUDResponse = await (await axios.delete<CUDResponse>(`http://localhost:8080/products/delete/${saveCode}`)).data;
-      
+      /**
+       * 
+       * Here we check if we are showing the cart products or the products on the DB,
+       * and based on that condition we are going to delete products from the cart or from the DB
+       * 
+       */
+      const url = props.type === 'cart' ? `http://localhost:8080/cart/delete/${saveCode}` : `http://localhost:8080/products/delete/${saveCode}`;
+      const result : CUDResponse = await (await axios.delete<CUDResponse>(url)).data;
+      setShowOperationResult(true);
+      if(hasProductOrEmpty(result.data as IMongoProduct | [])){
+          setOperationType('success');
+      }else{
+          setOperationType('failure');
+      }
       
     }
 
     useEffect(() => {
       document.addEventListener('click', (ev: MouseEvent) => {
         if(filterDropdown.current && filterBtn.current && ev.target){
-            if(ev.target != filterBtn.current && filterDropdown.current.contains(ev.target)){
+            if(ev.target != filterBtn.current && !filterDropdown.current.contains(ev.target as Node)){
               if(showFilters) setShowFilters(false)
             }
           }

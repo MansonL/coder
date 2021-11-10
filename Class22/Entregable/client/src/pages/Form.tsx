@@ -2,7 +2,7 @@ import axios from 'axios';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { CUDResponse, INew_Product } from '../../../server/src/interfaces/interfaces';
-import { validation } from '../joi/schemas';
+import { validation } from '../utils/joiSchemas';
 import './form.css';
 export function Form() {
   
