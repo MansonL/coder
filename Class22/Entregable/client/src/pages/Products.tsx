@@ -149,7 +149,7 @@ export function Products(props: ProductsProp) {
     const [operationType, setOperationType] = useState('');
     const [saveCode, setCode] = useState('');
 
-    const resultOperationStyle = operationType === 'failure' ? 'resultError' : 'resultSuccess';
+    const resultOperationStyle = operationType === 'failure' ? 'result-error' : 'result-success';
 
     const handleAddProduct = async (code: string) => {
       setCode(code);
@@ -157,8 +157,10 @@ export function Products(props: ProductsProp) {
       setShowOperationResult(true);
       if(hasProductOrEmpty(result.data as IMongoProduct | [])){
           setOperationType('success');
+          setResultMessage(result.message)
       }else{
           setOperationType('failure');
+          setResultMessage(result.message)
       }
     }
 
@@ -183,10 +185,18 @@ export function Products(props: ProductsProp) {
       setShowOperationResult(true);
       if(hasProductOrEmpty(result.data as IMongoProduct | [])){
           setOperationType('success');
+          setResultMessage(result.message)
       }else{
           setOperationType('failure');
+          setResultMessage(result.message)
       }
       
+    }
+
+    const handleAlertEnd = (ev: React.AnimationEvent<HTMLDivElement>) => {
+      setShowOperationResult(false);
+      setResultMessage('');
+      setShowConfirmation(false);
     }
 
     useEffect(() => {
@@ -244,6 +254,14 @@ export function Products(props: ProductsProp) {
   </div>
   </div>
 }
+{
+  showOperationResult && <div className="alert-container">
+  <div className={resultOperationStyle} onAnimationEnd={handleAlertEnd}>
+  <span className="result-message">{operationType === 'failure' ?  'A problem occured!' : 'Successfully!'}</span>
+    <p className="result-code">{resultMessage}</p>
+</div>
+</div>
+}
         <header>
       <div className="title">
         <h4>Products List</h4>
@@ -274,7 +292,7 @@ export function Products(props: ProductsProp) {
     </div>
   </div>
     <div className="products-body">
-      {mockProducts.map((product, idx) => {
+      {products.map((product, idx) => {
           return (
             <div key={idx}>
             <div className="product">
@@ -284,13 +302,14 @@ export function Products(props: ProductsProp) {
                 <span className="product-price">{product.price}</span>
               </div>
               <div className="add-remove-btns">
-        <button className="add-remove-icon" onClick={(e) => handleAddProduct(product.code)}><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
-<button className="add-remove-icon" onClick={(e) => handleRemoveProduct(product.code)}><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
+        <button className="add-remove-icon" onClick={(e) => handleAddProduct(product._id)}><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
+<button className="add-remove-icon" onClick={(e) => handleRemoveProduct(product._id)}><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
         </div>
             </div><hr className="products-hr" />
             </div>
           )
-      })}
+      })
+      }
     </div>
   </>
     /*

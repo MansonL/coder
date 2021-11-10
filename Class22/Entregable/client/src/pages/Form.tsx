@@ -1,8 +1,10 @@
 import axios from 'axios';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { CUDResponse, INew_Product } from '../../../server/src/interfaces/interfaces';
+import { CUDResponse, IMongoProduct, INew_Product } from '../../../server/src/interfaces/interfaces';
+import { socket } from '../lib/socket';
 import { validation } from '../utils/joiSchemas';
+import { hasProductOrEmpty } from '../utils/utilities';
 import './form.css';
 export function Form() {
   
@@ -41,13 +43,14 @@ export function Form() {
       }
     }else{
       const result = await (await axios.post<CUDResponse>('http://localhost:8080/products/save', newProduct)).data;
-      if(result.data){ // Here need to check if there's an instance of MongoProduct or an empty array (error);
-        setErrorForm(true);
-        setSuccessForm(false);
-        setResultMessage(result.message)
-      }else{
+      if(hasProductOrEmpty(result.data as IMongoProduct | [])){ // Here need to check if there's an instance of MongoProduct or an empty array (error);
         setErrorForm(false);
         setSuccessForm(true)
+        setResultMessage(result.message);
+        socket.emit('products')
+      }else{
+        setErrorForm(true);
+        setSuccessForm(false);
         setResultMessage(result.message)
       }
     }

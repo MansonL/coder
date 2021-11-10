@@ -1,7 +1,8 @@
 import * as socket from 'socket.io';
 import { server } from '..';
 
-const io = new socket.Server(server);
+
+/*
 export const socketConnection = () => {
     io.on('connection', (socket) => {
         console.log('New client connected!');
@@ -27,3 +28,4 @@ export const socketConnection = () => {
         });
     });
 };
+*/

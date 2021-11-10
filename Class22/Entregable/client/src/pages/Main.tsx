@@ -60,25 +60,25 @@ export function Main () {
         <div className="container">
   <div className="top-bar">
     <Link to="/messages">
-    <button className="top-buttons">Messages</button>
+    <button className="top-buttons"  onClick={handleClick}>Messages</button>
     </Link>
     <div className="products-menu">
     <button className="top-buttons" id="product-menu-button" ref={dropdownBtn} onClick={menuBtnHandleClick}>Products</button>
       <div className={menuClass} ref={dropdownMenu}>
         <Link to='/randomProducts'>
-        <button className='top-buttons' >Random Generated</button>
+        <button className='top-buttons' onClick={handleClick}>Random Generated</button>
         </Link>
         <hr className="hr-menu"/>
         <Link to="/form">
-        <button className='top-buttons' >Form</button>
+        <button className='top-buttons' onClick={handleClick} >Form</button>
         </Link>
         <hr className="hr-menu"/>
         <Link to="/products">
-        <button className='top-buttons' >DB Products</button>
+        <button className='top-buttons' onClick={handleClick} >DB Products</button>
       </Link>
       <hr className='hr-menu'/>
       <Link to="/cart">
-        <button className='top-buttons' >DB Cart</button>
+        <button className='top-buttons'  onClick={handleClick}>DB Cart</button>
       </Link>
       </div>
       </div>
