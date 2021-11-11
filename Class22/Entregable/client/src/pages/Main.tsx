@@ -4,9 +4,12 @@ import { Products } from './Products';
 import { Messages } from './Messages';
 import { Form } from './Form';
 import { Home } from './Home';
-import { socket } from '../lib/socket';
 import './main.css';
 import React, { useEffect, useRef, useState } from 'react';
+import { whichUpdate } from '../utils/utilities';
+import { RandomProducts } from './randomProducts';
+import { DBProducts } from './DBProducts';
+import { Cart } from './Cart';
 export function Main () {
   const dropdownMenu = useRef(null);
   const dropdownBtn = useRef(null);
@@ -28,24 +31,11 @@ export function Main () {
    * 
    */
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => { // Here we are going to need to implement different things due to React <Link> doens't work if there's an existing clickhandler 
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => { // Here we are going to need to implement different things due to React <Link> doens't work if there's an existing clickhandler 
     e.preventDefault();
     const whichMenu = e.currentTarget.innerHTML;
-    switch(whichMenu){
-      case 'Messages': 
-          socket.emit('messages');
-          socket.emit('users');
-          break;
-      case 'DB Products':
-          socket.emit('products');
-          break;
-      case 'DB Cart':
-          socket.emit('cart');
-          break;
-      case 'Random Generated':
-          socket.emit('randomProducts');
-          break;
-      }
+     whichUpdate(whichMenu)
+    
   }
   
   const menuBtnHandleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -73,7 +63,7 @@ export function Main () {
         <button className='top-buttons' onClick={handleClick} >Form</button>
         </Link>
         <hr className="hr-menu"/>
-        <Link to="/products">
+        <Link to="/DBProducts">
         <button className='top-buttons' onClick={handleClick} >DB Products</button>
       </Link>
       <hr className='hr-menu'/>
@@ -93,13 +83,13 @@ export function Main () {
         <Messages />
       </Route>
       <Route path="/randomProducts">
-        <Products type="random"/>
+        <RandomProducts />
       </Route>
-      <Route path="/products">
-        <Products type="normal"/>
+      <Route path="/DBProducts">
+        <DBProducts />
       </Route>
       <Route path="/cart">
-        <Products type="cart"/>
+        <Cart />
       </Route>
       <Route path="/form">
         <Form />

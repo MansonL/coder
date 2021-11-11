@@ -32,11 +32,12 @@ export class MongoCart implements DBCartClass {
                 return [];
             }
         } else {
-            const doc = await this.cart.find({ product_id: id });
+            const doc = await this.cart.find({});
             if (doc.length > 0) {
                 const products: IMongoCartProduct[] =
                     utils.extractMongoCartDocs(doc);
-                return products;
+                console.log(products)
+                    return products;
             } else {
                 return [];
             }

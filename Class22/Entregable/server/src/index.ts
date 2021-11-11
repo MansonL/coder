@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
         console.log('Updating cart products...');
         io.sockets.emit('cart');
     });
-    socket.on('messages', () => {
+    socket.on('message', () => {
         console.log('Updating chat messages...');
         io.sockets.emit('messages');
     });

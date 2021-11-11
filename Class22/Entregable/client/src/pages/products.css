@@ -165,7 +165,7 @@
 .result-error, .result-success{
   position: absolute;
   top: 35%;
-  animation: 2s linear 4s alert-faded;
+  animation: 2s linear 3s alert-faded;
   padding: 1rem;
   text-align: center;
   border-radius: 0.7rem;

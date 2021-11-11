@@ -167,7 +167,7 @@ export function Messages(){
         return (
           <div key={idx}>
           <div className={sentOrReceived}>
-          <span><span className="date">{message.timestamp}</span><span className="username">{message.user}</span>{message.message}</span>
+          <span className="date">{message.timestamp}</span><span className="username">{message.user}</span><br/>{message.message}
           </div> <br/>
           </div>
         )

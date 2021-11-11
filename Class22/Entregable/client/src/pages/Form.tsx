@@ -28,12 +28,12 @@ export function Form() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { 
     e.preventDefault();
-    setNewProduct({
+    const product = {
       ...newProduct,
       timestamp: moment().format('YYYY-MM-DD HH:mm:ss')
-    });
-    console.log(newProduct)
-    const { error } = validation.newProduct.validate(newProduct);
+    }
+    console.log(product)
+    const { error } = validation.newProduct.validate(product);
     console.log(error)
     if(error){
       if(!errorForm){
@@ -42,7 +42,7 @@ export function Form() {
         setResultMessage(error.message)
       }
     }else{
-      const result = await (await axios.post<CUDResponse>('http://localhost:8080/products/save', newProduct)).data;
+      const result = await (await axios.post<CUDResponse>('http://localhost:8080/products/save', product)).data;
       if(hasProductOrEmpty(result.data as IMongoProduct | [])){ // Here need to check if there's an instance of MongoProduct or an empty array (error);
         setErrorForm(false);
         setSuccessForm(true)
