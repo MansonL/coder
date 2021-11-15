@@ -3,7 +3,7 @@ import path from 'path';
 import { app } from './services/app';
 import * as dotenv from 'dotenv';
 //import { socketConnection } from './services/socket';
-import  * as socket  from 'socket.io';
+import * as socket from 'socket.io';
 
 const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
@@ -11,7 +11,7 @@ export const server: http.Server = http.createServer(app);
 const PORT = process.env.PORT;
 server.listen(PORT, () => console.log(`Server hosted at PORT: ${PORT}`));
 //socketConnection();
-const io = new socket.Server(server)
+const io = new socket.Server(server);
 io.on('connection', (socket) => {
     console.log('New client connected!');
     socket.on('products', () => {

@@ -6,17 +6,18 @@ import { Products } from "./Products";
 
 export function DBProducts () {
     const [products, setProducts] = useState<IMongoProduct[]>([]);
-    const [noProducts, setNoProducts] = useState(false);
+    const [noProducts, setNoProducts] = useState(true);
 
     const updateProducts = (newProducts: IMongoProduct[] | IMongoCartProduct[]) => {
-      setProducts([...products, ...newProducts as IMongoProduct[]])
+      setProducts(newProducts);
+      if(newProducts.length > 0 && noProducts) setNoProducts(false)
     }
 
     socket.on('products', async () => {
-        const products: IMongoProduct[] = await (await axios.get<IMongoProduct[]>('http://localhost:8080/products/list')).data
+        const newProducts: IMongoProduct[] = await (await axios.get<IMongoProduct[]>('http://localhost:8080/products/list')).data
         console.log(`Products received`);
-        setProducts(products)
-        if(products.length === 0){
+        setProducts(newProducts)
+        if(newProducts.length === 0){
           setNoProducts(true);
         }else{
           setNoProducts(false);

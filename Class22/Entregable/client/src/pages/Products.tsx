@@ -3,7 +3,7 @@ import './products.css'
 import { CUDResponse, IMongoCartProduct, IMongoProduct, IQuery } from '../../../server/src/interfaces/interfaces'
 import { socket } from '../lib/socket'
 import axios from 'axios'
-import { hasProductOrEmpty, whichUpdate } from '../utils/utilities'
+import { hasProductOrEmpty } from '../utils/utilities'
 
 interface ProductsProp {
     products: IMongoProduct[] | IMongoCartProduct[];
@@ -67,7 +67,7 @@ export function Products(props: ProductsProp) {
       if(hasProductOrEmpty(result.data as IMongoProduct | [])){
           setOperationType('success');
           setResultMessage(result.message)
-          await whichUpdate(props.type)
+         socket.emit('cart')
       }else{
           setOperationType('failure');
           setResultMessage(result.message)
@@ -96,7 +96,11 @@ export function Products(props: ProductsProp) {
       if(hasProductOrEmpty(result.data as IMongoProduct | [])){
           setOperationType('success');
           setResultMessage(result.message);
-          await whichUpdate(props.type)
+          if(props.type === 'cart'){
+            socket.emit('cart');
+          }else{
+            socket.emit('products')
+          }
       }else{
           setOperationType('failure');
           setResultMessage(result.message)
@@ -113,11 +117,14 @@ export function Products(props: ProductsProp) {
     useEffect(() => {
       document.addEventListener('click', (ev: MouseEvent) => {
         if(filterDropdown.current && filterBtn.current && ev.target){
-            if(ev.target != filterBtn.current && !filterDropdown.current.contains(ev.target as Node)){
+            if(ev.target !== filterBtn.current && !filterDropdown.current.contains(ev.target as Node)){
               if(showFilters) setShowFilters(false)
             }
           }
       })
+      
+      
+
     })
 
     /**
@@ -165,7 +172,7 @@ export function Products(props: ProductsProp) {
 }
         <header>
       <div className="title">
-        <h4>Products List</h4>
+        <h4>{props.type === 'cart' ? 'Cart' : 'Products'} List</h4>
       </div>
     </header>
     <div className="upper-body">
@@ -206,8 +213,8 @@ export function Products(props: ProductsProp) {
                 <span className="product-price">{product.price}</span>
               </div>
               <div className="add-remove-btns">
-        <button className="add-remove-icon" onClick={(e) => handleAddProduct(product._id)}><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>
-<button className="add-remove-icon" onClick={(e) => handleRemoveProduct(product._id)}><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
+        {props.type !== 'cart' && <button className="add-remove-icon" onClick={(e) => handleAddProduct(product._id)}><img className='add-icon' src="https://cdn1.iconfinder.com/data/icons/user-interface-44/48/Add-512.png" alt="add-icon" /></button>}
+<button className="add-remove-icon" onClick={(e) => handleRemoveProduct(props.type !== 'cart' ? product._id : product.product_id as string)}><img className='remove-icon' src="https://icons-for-free.com/iconfiles/png/512/cercle+close+delete+dismiss+remove+icon-1320196712448219692.png" alt="remove-icon" /></button>
         </div>
             </div><hr className="products-hr" />
             </div>

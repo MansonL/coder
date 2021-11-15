@@ -6,10 +6,10 @@ import { Form } from './Form';
 import { Home } from './Home';
 import './main.css';
 import React, { useEffect, useRef, useState } from 'react';
-import { whichUpdate } from '../utils/utilities';
 import { RandomProducts } from './randomProducts';
 import { DBProducts } from './DBProducts';
 import { Cart } from './Cart';
+import { whichUpdate } from '../utils/utilities';
 export function Main () {
   const dropdownMenu = useRef(null);
   const dropdownBtn = useRef(null);
@@ -31,10 +31,11 @@ export function Main () {
    * 
    */
 
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => { // Here we are going to need to implement different things due to React <Link> doens't work if there's an existing clickhandler 
+  const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => { // Here we are going to need to implement different things due to React <Link> doens't work if there's an existing clickhandler 
     e.preventDefault();
-    const whichMenu = e.currentTarget.innerHTML;
-     whichUpdate(whichMenu)
+    const whichMenu = e.currentTarget.innerText;
+    console.log(whichMenu)
+    await whichUpdate(whichMenu)
     
   }
   
@@ -49,26 +50,26 @@ export function Main () {
     <BrowserRouter>
         <div className="container">
   <div className="top-bar">
-    <Link to="/messages">
-    <button className="top-buttons"  onClick={handleClick}>Messages</button>
+    <Link  onClick={handleClick} to="/messages">
+    <button className="top-buttons"  >Messages</button>
     </Link>
     <div className="products-menu">
     <button className="top-buttons" id="product-menu-button" ref={dropdownBtn} onClick={menuBtnHandleClick}>Products</button>
       <div className={menuClass} ref={dropdownMenu}>
-        <Link to='/randomProducts'>
-        <button className='top-buttons' onClick={handleClick}>Random Generated</button>
+        <Link  onClick={handleClick} to='/randomProducts'>
+        <button className='top-buttons' >Random Generated</button>
         </Link>
         <hr className="hr-menu"/>
-        <Link to="/form">
-        <button className='top-buttons' onClick={handleClick} >Form</button>
+        <Link  onClick={handleClick} to="/form">
+        <button className='top-buttons'  >Form</button>
         </Link>
         <hr className="hr-menu"/>
-        <Link to="/DBProducts">
-        <button className='top-buttons' onClick={handleClick} >DB Products</button>
+        <Link  onClick={handleClick} to="/DBProducts">
+        <button className='top-buttons'  >DB Products</button>
       </Link>
       <hr className='hr-menu'/>
-      <Link to="/cart">
-        <button className='top-buttons'  onClick={handleClick}>DB Cart</button>
+      <Link  onClick={handleClick} to="/cart">
+        <button className='top-buttons'  >DB Cart</button>
       </Link>
       </div>
       </div>

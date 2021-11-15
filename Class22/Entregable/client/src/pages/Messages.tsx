@@ -98,6 +98,9 @@ export function Messages(){
     }
   }
   
+  useEffect(() => {
+   
+  })
 
 
   /**
@@ -107,15 +110,15 @@ export function Messages(){
    */
 
   socket.on('messages', async () => {
-    const messages : IMongoMessage[] = await (await axios.get<IMongoMessage[]>('http://localhost:8080/messages/list')).data;
+    const newMessages : IMongoMessage[] = await (await axios.get<IMongoMessage[]>('http://localhost:8080/messages/list')).data;
     console.log(`Messages received`);
-    setMessages(messages);
+    setMessages(newMessages)
   });
 
   socket.on('users', async () => {
-    const users: IMongoUser[] = await (await (await axios.get<IMongoUser[]>('http://localhost:8080/users/list')).data);
+    const newUsers: IMongoUser[] = await (await (await axios.get<IMongoUser[]>('http://localhost:8080/users/list')).data);
     console.log(`Users received`);
-    setUsers(users)
+    setUsers(newUsers)
   });
 
   return (
@@ -175,7 +178,7 @@ export function Messages(){
       })}
     </div>
     <form className="msg-bottom" onSubmit={handleMessage}>
-      <textarea name="" id="" cols={90} rows={1} disabled={inputDisabled} placeholder='Type your message...' onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}></textarea>
+      <textarea name="" id="" cols={90} rows={1} disabled={inputDisabled} placeholder='Type your message...' onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)} value={message}></textarea>
       <button type="submit"  className="msg-btn">Send</button>
     </form>
   </section>

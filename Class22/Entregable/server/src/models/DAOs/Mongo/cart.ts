@@ -17,13 +17,14 @@ export class MongoCart implements DBCartClass {
     }
     async init(): Promise<void> {
         await this.cart.deleteMany({});
-        console.log(`Cart cleaned`)
+        console.log(`Cart cleaned`);
     }
     async get(id?: string | undefined): Promise<IMongoCartProduct[] | []> {
         if (id != null) {
             const doc = await this.cart.find({
                 product_id: id,
             });
+            console.log(doc);
             if (doc.length > 0) {
                 const products: IMongoCartProduct[] =
                     utils.extractMongoCartDocs(doc);
@@ -36,8 +37,7 @@ export class MongoCart implements DBCartClass {
             if (doc.length > 0) {
                 const products: IMongoCartProduct[] =
                     utils.extractMongoCartDocs(doc);
-                console.log(products)
-                    return products;
+                return products;
             } else {
                 return [];
             }
@@ -54,7 +54,6 @@ export class MongoCart implements DBCartClass {
     async delete(id: string): Promise<CUDResponse> {
         const deleted: IMongoCartProduct = (await this.get(id))[0];
         const result = await this.cart.deleteOne({ product_id: id });
-        console.log(result);
         return {
             message: `Product successfully deleted.`,
             data: deleted,
