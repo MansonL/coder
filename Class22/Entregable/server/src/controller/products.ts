@@ -6,6 +6,7 @@ import { IMongoProduct, INew_Product, IQuery, IUpdate } from '../interfaces/inte
 import { validator } from '../utils/joiSchemas';
 import { utils } from '../common/utils';
 
+
 /**
  *
  * Product Controller Class
@@ -52,7 +53,16 @@ class ProductController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const quantity = req.params.qty;
+        const qty = req.query.qty;
+        if(qty != null){
+            const quantity = Number(qty);
+            const randomProducts = utils.generateRandomProducts(quantity);
+            res.status(200).send(randomProducts);
+        }else{
+            const randomProducts = utils.generateRandomProducts(10);
+            res.status(200).send(randomProducts);
+        }
+        
     }
     async save(req: Request, res: Response, next: NextFunction): Promise<void> {
         const product: INew_Product = req.body;

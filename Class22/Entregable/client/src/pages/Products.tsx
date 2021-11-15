@@ -7,7 +7,7 @@ import { hasProductOrEmpty } from '../utils/utilities'
 
 interface ProductsProp {
     products: IMongoProduct[] | IMongoCartProduct[];
-    updateProducts: (products: IMongoProduct[] | IMongoCartProduct[]) => void
+    updateProducts: ((products: IMongoProduct[] | IMongoCartProduct[]) => void) | undefined
     type: string;
     noProducts: boolean;
 }
@@ -36,7 +36,8 @@ export function Products(props: ProductsProp) {
 
     const handleFilterApply = async (ev: React.MouseEvent<HTMLButtonElement>) => {
         const products: IMongoProduct[] = (await axios.get<IMongoProduct[]>('http://localhost:8080/products/query', {data: filters})).data;
-        props.updateProducts(products)
+        if(props.updateProducts) props.updateProducts(products)
+        
     }
 
     const [showFilters, setShowFilters] = useState(false);

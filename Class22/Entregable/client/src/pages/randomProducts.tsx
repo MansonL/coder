@@ -8,15 +8,26 @@ export function RandomProducts () {
     const [products, setProducts] = useState<IMongoProduct[] | IMongoCartProduct[]>([]);
     const [noProducts, setNoProducts] = useState(false);
 
-    const updateProducts = (products: IMongoProduct[] | IMongoCartProduct[]) => {
-        setProducts(products)
-    }
-
-    socket.on('randomProducts', async () => {
-        const products: IMongoProduct[] = await (await axios.get<IMongoProduct[]>('http://localhost:8080/products/list')).data
+    socket.on('randomProducts', async (qty: number | undefined) => {
+        try {
+            if(qty != null){
+                const newProducts: IMongoProduct[] = await (await axios.get<IMongoProduct[]>('http://localhost:8080/products/test-view', {data: qty})).data
+                console.log(`Products received`);
+                setProducts(newProducts)
+                setNoProducts(false);  
+            }else{
+                const newProducts: IMongoProduct[] = await (await axios.get<IMongoProduct[]>('http://localhost:8080/products/test-view')).data
+                console.log(`Products received`);
+                setProducts(newProducts)
+                setNoProducts(false);  
+            }
+          } catch (error) {
+            console.log(`Error produced ${error}`)
+            setNoProducts(true);
+          }  
       })
 
     return (
-        <Products updateProducts={updateProducts} products={products} type="cart" noProducts={noProducts}/>
+        <Products updateProducts={undefined} products={products} type="random" noProducts={noProducts}/>
     )
 }

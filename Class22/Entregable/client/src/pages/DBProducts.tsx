@@ -14,14 +14,15 @@ export function DBProducts () {
     }
 
     socket.on('products', async () => {
+      try {
         const newProducts: IMongoProduct[] = await (await axios.get<IMongoProduct[]>('http://localhost:8080/products/list')).data
         console.log(`Products received`);
         setProducts(newProducts)
-        if(newProducts.length === 0){
-          setNoProducts(true);
-        }else{
-          setNoProducts(false);
-        }
+        setNoProducts(false);  
+      } catch (error) {
+        console.log(`Error produced ${error}`)
+        setNoProducts(true);
+      }  
       })
 
       return (

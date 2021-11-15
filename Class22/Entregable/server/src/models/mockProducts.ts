@@ -2,7 +2,7 @@ import { INew_Product } from '../interfaces/interfaces';
 import moment from 'moment';
 import { utils } from '../common/utils';
 
-const randomNumber = (type: string): number => {
+export const randomNumber = (type: string): number => {
     if (type === 'price') {
         return Number(
             (Math.random() * (5000.0 - 100.0 + 1) + 100.0).toFixed(2)

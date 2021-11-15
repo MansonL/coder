@@ -4,7 +4,11 @@ import {
     IMongoUser,
     IMongoCartProduct,
     IQuery,
+    INew_Product,
 } from '../interfaces/interfaces';
+import faker from 'faker';
+import moment from 'moment';
+import { randomNumber } from '../models/mockProducts';
 
 class Utils {
     
@@ -36,6 +40,12 @@ class Utils {
         return `_${Math.random().toString(36).substr(2, 9)}`;
     };
 
+    /**
+     * Functions for extracting the needed data from the queried docs from MongoDB
+     * @param documents 
+     * 
+     * @returns 
+     */
     extractMongoProducts = (documents: any): IMongoProduct[] => {
         const products: IMongoProduct[] = documents.map(
             (document: any): IMongoProduct => {
@@ -106,6 +116,24 @@ class Utils {
         );
         return cartProducts;
     };
+    
+    generateRandomProducts = (qty: number): IMongoProduct[] => {
+        const randomProducts = [];
+        for (let i = 0; i < qty; i++) {
+            const randomProduct : IMongoProduct = {
+                _id: utils.generateCode(), // This line is just for not changing the frontend and simulating a real product from MongoDB
+                timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
+                title: faker.commerce.productName(),
+                description: faker.commerce.productDescription(),
+                img: faker.image.imageUrl(),
+                code: utils.generateCode(),
+                price: Number(faker.commerce.price(0.01)),
+                stock: randomNumber('stock')
+            };
+            randomProducts.push(randomProduct);
+        }
+        return randomProducts
+    }
 }
 
 export const utils = new Utils();

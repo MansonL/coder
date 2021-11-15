@@ -18,9 +18,9 @@ io.on('connection', (socket) => {
         console.log('Updating DB Products...');
         io.sockets.emit('products');
     });
-    socket.on('randomProducts', () => {
+    socket.on('randomProducts', (qty: number | undefined) => {
         console.log('Updating random products...');
-        io.sockets.emit('randomProducts');
+        io.sockets.emit('randomProducts', qty);
     });
     socket.on('cart', () => {
         console.log('Updating cart products...');

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { Axios, AxiosError } from "axios";
 import { useState } from "react";
 import { IMongoCartProduct, IMongoProduct } from "../../../server/src/interfaces/interfaces";
 import { socket } from "../lib/socket";
@@ -14,14 +14,16 @@ export function Cart () {
     }
 
     socket.on('cart', async () => {
+      try {
         const newProducts: IMongoCartProduct[] = await (await axios.get<IMongoCartProduct[]>('http://localhost:8080/cart/list')).data;
         console.log(`Cart Products received`);
         setProducts(newProducts);
-        if(newProducts.length === 0){
-          setNoProducts(true);
-        }else{
-          setNoProducts(false);
-        }
+        setNoProducts(false)
+      } catch (error) {
+        console.log(`Error produced ${error}`)
+        setNoProducts(true);       
+      }  
+      
       })
 
     return (
