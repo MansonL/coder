@@ -7,7 +7,7 @@ import { hasProductOrEmpty } from '../utils/utilities'
 
 interface ProductsProp {
     products: IMongoProduct[] | IMongoCartProduct[];
-    updateProducts: ((products: IMongoProduct[] | IMongoCartProduct[]) => void) | undefined
+    updateProducts: ((products: IMongoProduct[] | IMongoCartProduct[] | []) => void) | undefined
     type: string;
     noProducts: boolean;
 }
@@ -127,21 +127,22 @@ export function Products(props: ProductsProp) {
       
 
     })
-
+    
     /**
      * 
-     * The sockets were emitted at Main component.
-     * Here are the handlers for the backend sockets.
+     * This code is just in Random Products case.
      * 
      */
+    const [generateRandom, setGenerateRandom] = useState('');
     
+    const handleRandom = (ev: React.ChangeEvent<HTMLInputElement>) => {
+      setGenerateRandom(ev.target.value);
+    } 
     
-    
-    
-    
-    
-
-    
+    const handleRandomSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      socket.emit('randomProducts', generateRandom)
+    }
 
     return (
         
@@ -172,8 +173,20 @@ export function Products(props: ProductsProp) {
 </div>
 }
         <header>
-      <div className="title">
+      <div className="body-header">
         <h4>{props.type === 'cart' ? 'Cart' : 'Products'} List</h4>
+        {props.type !== 'random' ? '' : <div className="random-generate">
+  <form className='random-form' onSubmit={handleRandomSubmit}>
+      <div className="random-row">
+      <input className="label-styled-input" type="number" min="1" step="1" id="random-product" value={generateRandom} onChange={handleRandom}/>
+    <label className={generateRandom  ? 'hasContent' : 'label-styled'} htmlFor="random-product">Amount of Random Products</label>
+    <span className="form-border"/>
+    
+      </div>
+      <button className="random-submit" type="submit">Generate</button>
+  
+  </form>
+  </div>}
       </div>
     </header>
     <div className="upper-body">

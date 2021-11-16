@@ -16,22 +16,22 @@ io.on('connection', (socket) => {
     console.log('New client connected!');
     socket.on('products', () => {
         console.log('Updating DB Products...');
-        io.sockets.emit('products');
+        io.sockets.emit('productsUpdate');
     });
-    socket.on('randomProducts', (qty: number | undefined) => {
+    socket.on('randomProducts', (qty: string) => {
         console.log('Updating random products...');
-        io.sockets.emit('randomProducts', qty);
+        io.sockets.emit('randomProductsUpdate', qty);
     });
     socket.on('cart', () => {
         console.log('Updating cart products...');
-        io.sockets.emit('cart');
+        io.sockets.emit('cartUpdate');
     });
     socket.on('message', () => {
         console.log('Updating chat messages...');
-        io.sockets.emit('messages');
+        io.sockets.emit('messagesUpdate');
     });
     socket.on('users', () => {
         console.log('Updating chat users...');
-        io.sockets.emit('users');
+        io.sockets.emit('usersUpdate');
     });
 });

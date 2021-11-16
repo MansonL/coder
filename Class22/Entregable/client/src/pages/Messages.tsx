@@ -98,10 +98,6 @@ export function Messages(){
     }
   }
   
-  useEffect(() => {
-   
-  })
-
 
   /**
    * 
@@ -109,17 +105,28 @@ export function Messages(){
    * 
    */
 
-  socket.on('messages', async () => {
+  const messagesUpdateListener = async () => {
     const newMessages : IMongoMessage[] = await (await axios.get<IMongoMessage[]>('http://localhost:8080/messages/list')).data;
     console.log(`Messages received`);
     setMessages(newMessages)
-  });
+  }
 
-  socket.on('users', async () => {
+  const usersUpdateListener = async () => {
     const newUsers: IMongoUser[] = await (await (await axios.get<IMongoUser[]>('http://localhost:8080/users/list')).data);
     console.log(`Users received`);
     setUsers(newUsers)
-  });
+  }
+
+  useEffect(() => {
+    socket.on('messagesUpdate', messagesUpdateListener);
+    socket.on('usersUpdate', usersUpdateListener);
+
+    return () => {
+      socket.off('messagesUpdate', messagesUpdateListener);
+      socket.off('usersUpdate', usersUpdateListener)
+    }
+  })
+  
 
   return (
         <>

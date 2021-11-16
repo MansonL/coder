@@ -5,9 +5,10 @@
   .title, h6, h5, .submit-btn{
     text-align: center;
   }
-  .row-form {
+  .row-form, .random-row {
     position: relative;
     margin-bottom: 1.2rem;
+    text-align: left;
   }
   .label-styled-input {
     position: relative;
@@ -62,7 +63,7 @@
       font-weight:700;
       transition: 0.3s;
   }
-  .submit-form {
+  .submit-form, .random-submit {
     border: 0.1rem solid #faf0dc;
     background-color: transparent;
     border-radius: 0.8rem;
@@ -70,8 +71,7 @@
     cursor: pointer;
     transition: 0.2s;
   }
-  .submit-form:hover  {
-    background-color: white;
+  .submit-form:hover, .random-submit:hover {
     font-weight: 550;
     transition: 0.2s;
     }

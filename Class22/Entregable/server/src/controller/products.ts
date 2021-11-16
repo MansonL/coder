@@ -54,6 +54,7 @@ class ProductController {
         next: NextFunction
     ): Promise<void> {
         const qty = req.query.qty;
+        console.log(qty)
         if(qty != null){
             const quantity = Number(qty);
             const randomProducts = utils.generateRandomProducts(quantity);

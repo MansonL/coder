@@ -49,7 +49,7 @@ body {
 .menu-btn {
   font-size: 0.8rem;
 }
-.title, h6, h5, .submit-btn{
+.title, h6, h5, .submit-btn, .body-header{
   text-align: center;
 }
 .label-styled-input {
@@ -99,7 +99,7 @@ body {
   border-radius: 0.8rem;
   font-size: 1.3rem;
 }
-.submit-form:hover {
+.submit-form:hover, .random-submit:hover {
   background-color: #faf0dc;
 }
 #submit {
