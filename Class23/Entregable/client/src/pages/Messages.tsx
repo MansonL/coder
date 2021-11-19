@@ -172,12 +172,14 @@ export function Messages(){
         
         // Setting if it's a message from the current session user or not...
         
-        const sentOrReceived : string = message.user === email ? "sent-msg" : "received-msg";
+        const sentOrReceived : string = message.author.user === user.user ? "sent-msg" : "received-msg";
         return (
-          <div key={idx}>
+          <div key={idx} className="msg">
+          {sentOrReceived === "received-msg" && <div className="avatar-img"><img src={message.author.avatar}/></div>}
           <div className={sentOrReceived}>
-          <span className="date">{message.timestamp}</span><span className="username">{message.user}</span><br/>{message.message}
-          </div> <br/>
+          <span className="date">{message.timestamp}</span><span className="username">{user.avatar ? user.avatar : user.user}</span><br/>{message.message}
+          </div>
+          {sentOrReceived === "sent-msg" && <div className="avatar-img"><img src={message.author.avatar}/></div>}
           </div>
         )
         
