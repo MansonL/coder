@@ -12,9 +12,18 @@ export function Messages(){
    * For showing error at email input.
    * For enabling input message once the user has typed a valid email.  
    */
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState(false);
-  const [emailSuccess, setEmailSuccess] = useState(false);
+  const [user, setUser] = useState<INew_User>({
+      timestamp: '',
+      user: '',
+      name:'',
+      surname: '',
+      alias: '',
+      age: 10,
+      avatar: '',
+  })
+  const [dataError, setDataError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [dataSuccess, setDataSuccess] = useState(false);
   const [inputDisabled, setInputDisabled] = useState(true);
 
   /**
@@ -139,7 +148,7 @@ export function Messages(){
     <h6>Input your email for sending messages:</h6>
     
   </div>
-  {emailError && <div className="form-error">
+  {dataError && <div className="form-error">
       <div className="result-top">
         <span className="result-header">Oops!</span> 
         <button className="result-btn" onClick={errorExit}><i className="fas fa-times"></i></button>
@@ -148,7 +157,7 @@ export function Messages(){
         Email incorrect.
       </div>
     </div>}
-    {emailSuccess && <div className="form-success">
+    {dataSuccess && <div className="form-success">
       <div className="result-top">
         <span className="result-header">Successful!</span> 
         <button className="result-btn" onClick={errorExit}><i className="fas fa-times"></i></button>
