@@ -1,5 +1,5 @@
 
-import { Switch, Link, Route, BrowserRouter } from 'react-router-dom';
+import { Routes, Link, Route, Router, BrowserRouter } from 'react-router-dom';
 import { Products } from './Products';
 import { Messages } from './Messages';
 import { Form } from './Form';
@@ -47,8 +47,9 @@ export function Main () {
 
   const menuClass = `products-dropdown ${showMenu ? 'showMenu' : ''}`;
   return (
-    <BrowserRouter>
+        <BrowserRouter>
         <div className="container">
+          
   <div className="top-bar">
     <Link  onClick={handleClick} to="/messages">
     <button className="top-buttons"  >Messages</button>
@@ -76,27 +77,14 @@ export function Main () {
   </div><hr/>
   <div className="body">
   
-    <Switch>
-    <Route exact path="/">
-        <Home />
-      </Route>
-      <Route path="/messages">
-        <Messages />
-      </Route>
-      <Route path="/randomProducts">
-        <RandomProducts />
-      </Route>
-      <Route path="/DBProducts">
-        <DBProducts />
-      </Route>
-      <Route path="/cart">
-        <Cart />
-      </Route>
-      <Route path="/form">
-        <Form />
-      </Route>
-      
-    </Switch>
+    <Routes>
+    <Route path="/" element={<Home/>} />
+      <Route path="/messages" element={<Messages/>}/>
+      <Route path="/randomProducts" element={<RandomProducts/>} />
+      <Route path="/DBProducts" element={<DBProducts/>} />
+      <Route path="/cart" element={<Cart/>} />
+      <Route path="/form" element={<Form/>} />
+    </Routes>
     
 </div>
 </div>

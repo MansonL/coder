@@ -1,6 +1,6 @@
 import { INew_Product } from '../interfaces/interfaces';
 import moment from 'moment';
-import { utils } from '../common/utils';
+import { Utils } from '../common/utils';
 
 export const randomNumber = (type: string): number => {
     if (type === 'price') {
@@ -10,6 +10,10 @@ export const randomNumber = (type: string): number => {
     } else {
         return Number((Math.random() * (1000 - 0 + 1) + 0).toFixed(0));
     }
+};
+
+const generateCode = (): string => {
+    return `_${Math.random().toString(36).substr(2, 9)}`;
 };
 
 export const mockProducts: INew_Product[] = [
@@ -107,6 +111,6 @@ export const mockProducts: INew_Product[] = [
     product.price = randomNumber('price');
     product.stock = randomNumber('stock');
     product.timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
-    product.code = utils.generateCode();
+    product.code = generateCode();
     return product;
 });

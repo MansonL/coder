@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { IMongoCartProduct, IMongoProduct } from "../../../server/src/interfaces/interfaces";
 import { socket } from "../lib/socket";
 import { Products } from "./Products";
+import React from "react";
 
 export function DBProducts () {
     const [products, setProducts] = useState<IMongoProduct[]>([]);
@@ -31,7 +32,9 @@ export function DBProducts () {
     })
 
       return (
+        <React.Fragment>
         <Products updateProducts={updateProducts} products={products} type="normal" noProducts={noProducts}/>
+        </React.Fragment>
     )
 }
 

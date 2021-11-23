@@ -53,6 +53,42 @@
     margin: 0.5rem 0rem 0.2rem 0.4rem;
     font-size: small;
   }
+  .bar-container {
+    display: flex;
+    flex-direction: column;
+    background-color: grey;
+    border-radius: 0.8rem;
+    width: 75%;
+    padding: 1rem 0rem 1rem 0rem;
+    margin: auto;
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
+    position: relative;
+  }
+  .progress-bar {
+    display: block;
+    position: relative;
+    border-radius: 0.8rem;
+    height: 1rem;
+    background-color: white;
+    width: 85%;
+    margin: auto;
+    margin-bottom: 1rem;
+  }
+  .progress-bar:after {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 1rem;
+    border-radius: 0.8rem;
+    background-color: green;
+    width: 50%;
+  }
+  .percent {
+    margin: auto;
+    font-size: 1.5rem;
+    color: green;
+  }
   .msg-card {
     border-radius: 0.5rem;
     border-color: 3px solid #faf0dc;
@@ -80,6 +116,10 @@
     padding:1rem;
     max-height: 100vw;
     overflow-y: scroll;
+  }
+  .received-msg, .sent-msg {
+    display: flex;
+    column-gap: 0.4rem;
   }
   .received-msg, .sent-msg {
     margin-bottom: 0.6rem;

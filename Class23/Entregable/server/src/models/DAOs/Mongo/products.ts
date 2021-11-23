@@ -1,5 +1,5 @@
 import { connect, Model } from 'mongoose';
-import { models} from './models';
+import { models } from './models';
 import {
     DBProductsClass,
     INew_Product,
@@ -10,7 +10,7 @@ import {
 } from '../../../interfaces/interfaces';
 import { mockProducts } from '../../mockProducts';
 import moment from 'moment';
-import { utils } from '../../../common/utils';
+import { Utils } from '../../../common/utils';
 
 export class MongoProducts implements DBProductsClass {
     private products: Model<INew_Product>;
@@ -28,7 +28,7 @@ export class MongoProducts implements DBProductsClass {
             const docs = await this.products.find({ _id: id });
             if (docs.length > 0) {
                 const product: IMongoProduct[] =
-                    utils.extractMongoProducts(docs);
+                    Utils.extractMongoProducts(docs);
                 return product;
             }
             return [];
@@ -36,7 +36,7 @@ export class MongoProducts implements DBProductsClass {
             const docs = await this.products.find({});
             if (docs.length > 0) {
                 const products: IMongoProduct[] =
-                    utils.extractMongoProducts(docs);
+                    Utils.extractMongoProducts(docs);
                 return products;
             }
             return [];
@@ -44,7 +44,7 @@ export class MongoProducts implements DBProductsClass {
     }
     async add(product: INew_Product): Promise<CUDResponse> {
         const doc = await this.products.create(product);
-        const result: IMongoProduct = utils.extractMongoProducts([doc])[0];
+        const result: IMongoProduct = Utils.extractMongoProducts([doc])[0];
         return {
             message: `Product successfully saved.`,
             data: result,
@@ -52,7 +52,7 @@ export class MongoProducts implements DBProductsClass {
     }
     async update(id: string, data: IUpdate): Promise<CUDResponse> {
         const doc = await this.products.find({ _id: id });
-        const product: IMongoProduct = utils.extractMongoProducts(doc)[0];
+        const product: IMongoProduct = Utils.extractMongoProducts(doc)[0];
         const newProduct = { ...product, ...data };
         newProduct.timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
         console.log(newProduct);
@@ -65,14 +65,14 @@ export class MongoProducts implements DBProductsClass {
     async delete(id: string): Promise<CUDResponse> {
         const deletedDoc = await this.products.find({ _id: id });
         const deletedProduct: IMongoProduct =
-            utils.extractMongoProducts(deletedDoc)[0];
+            Utils.extractMongoProducts(deletedDoc)[0];
         await this.products.deleteOne({ _id: id });
         return {
             message: `Product successfully deleted`,
             data: deletedProduct,
         };
     }
-    
+
     async query(options: IQuery): Promise<IMongoProduct[] | []> {
         const titleRegex =
             options.title === ''
@@ -96,7 +96,7 @@ export class MongoProducts implements DBProductsClass {
         });
         console.log(doc);
         if (doc.length > 0) {
-            const products: IMongoProduct[] = utils.extractMongoProducts(doc);
+            const products: IMongoProduct[] = Utils.extractMongoProducts(doc);
             return products;
         } else {
             return [];

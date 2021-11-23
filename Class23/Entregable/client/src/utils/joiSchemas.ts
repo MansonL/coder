@@ -1,10 +1,11 @@
 import Joi from "joi";
-import { INew_Product } from "../../../server/src/interfaces/interfaces";
+import { INew_Product, INew_User } from "../../../server/src/interfaces/interfaces";
 
 class Validations {
     public email: Joi.StringSchema
     public message: Joi.StringSchema
     public newProduct: Joi.ObjectSchema<INew_Product>
+    public user: Joi.ObjectSchema<INew_User>
     constructor(){
         /**
          * JOI Schema to validate user email.
@@ -35,6 +36,18 @@ class Validations {
            price: Joi.number().min(0.01).required(),
            stock: Joi.number().min(0).required(),
        });
+       /**
+         * JOI Schema to validate users.
+         */
+        this.user = Joi.object<INew_User>({
+            timestamp: Joi.string().required(),
+            user: Joi.string().email({ tlds: { allow: false } }),
+            name: Joi.string().min(4).max(20).required(),
+            surname: Joi.string().min(4).max(20).required(),
+            age: Joi.number().min(10).max(100).required(),
+            alias: Joi.string().min(5).max(35),
+            avatar: Joi.string().uri(),
+        });
     }
 }
 

@@ -1,5 +1,10 @@
 import Joi from 'joi';
-import { INew_Product, IQuery, IUpdate, INew_User } from '../interfaces/interfaces';
+import {
+    INew_Product,
+    IQuery,
+    IUpdate,
+    INew_User,
+} from '../interfaces/interfaces';
 
 class Validations {
     newProduct: Joi.ObjectSchema<INew_Product>;
@@ -38,7 +43,7 @@ class Validations {
             price: Joi.number().min(0.01),
             stock: Joi.number().min(0),
         });
-        
+
         this.query = Joi.object<IQuery>({
             title: Joi.string().alphanum().allow('').optional(),
             code: Joi.string().alphanum().allow('').optional(),
@@ -56,13 +61,13 @@ class Validations {
          */
         this.user = Joi.object<INew_User>({
             timestamp: Joi.string().required(),
-            user: Joi.string().email({tlds: {allow: false}}),
+            user: Joi.string().email({ tlds: { allow: false } }),
             name: Joi.string().min(4).max(20).required(),
             surname: Joi.string().min(4).max(20).required(),
             age: Joi.number().min(10).max(100).required(),
-            alias: Joi.string().allow('').min(5).max(20),
+            alias: Joi.string().min(5).max(35),
             avatar: Joi.string().uri(),
-        })
+        });
 
         this.id = Joi.string().min(2).required();
     }

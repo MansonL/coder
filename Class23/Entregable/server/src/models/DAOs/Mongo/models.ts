@@ -7,6 +7,7 @@ import {
 } from '../../../interfaces/interfaces';
 import * as dotenv from 'dotenv';
 import moment from 'moment';
+import { Utils } from '../../../common/utils';
 
 dotenv.config();
 
@@ -35,15 +36,20 @@ const cartProductSchema = new Schema({
     price: { type: Number, required: true },
 });
 
-const messagesSchema = new Schema({
-    timestamp: { type: String, required: true },
-    user: { type: String, required: true },
-    message: { type: String, required: true },
-});
-
 const usersSchema = new Schema({
     timestamp: { type: String, required: true },
     user: { type: String, required: true },
+    name: { type: String, required: true },
+    surname: { type: String, required: true },
+    alias: { type: String, required: true },
+    age: { type: Number, required: true },
+    avatar: { type: String, required: true },
+});
+
+const messagesSchema = new Schema({
+    timestamp: { type: String, required: true },
+    author: usersSchema,
+    message: { type: String, required: true },
 });
 
 export const models = {
@@ -59,13 +65,22 @@ export const models = {
     users: model<INew_User, Model<INew_User>>('users', usersSchema),
 };
 
-export const WelcomeBot = new models.users({
+const botData: INew_User = {
     timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
-    user: `Welcome Bot`,
-});
+    user: `test@gmail.com`,
+    name: `Manson`,
+    surname: `Bot`,
+    alias: `Welcome Bot`,
+    age: 99,
+    avatar: `https://cdn.icon-icons.com/icons2/1371/PNG/512/robot02_90810.png`,
+};
+
+export const WelcomeBot = new models.users(botData);
+
+export const bot = Utils.extractMongoUsers([WelcomeBot])[0];
 
 export const WelcomeMessage = new models.messages({
     timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
-    user: `Welcome Bot`,
+    author: bot,
     message: `Welcome everyone to my first very simple app.`,
 });

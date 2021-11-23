@@ -3,11 +3,11 @@ import {
     IMongoMessage,
     INew_Message,
     CUDResponse,
+    IMongoUser,
 } from '../../../interfaces/interfaces';
 import { models, WelcomeMessage } from './models';
 import { Model, connect } from 'mongoose';
-import { atlasURI, mongoURI } from './models';
-import { utils } from '../../../common/utils';
+import { Utils } from '../../../common/utils';
 
 export class MongoMessages implements DBMessagesClass {
     private messages: Model<INew_Message>;
@@ -23,7 +23,7 @@ export class MongoMessages implements DBMessagesClass {
     async get(): Promise<IMongoMessage[] | []> {
         const docs = await this.messages.find({});
         if (docs.length > 0) {
-            const messages: IMongoMessage[] = utils.extractMongoMessages(docs);
+            const messages: IMongoMessage[] = Utils.extractMongoMessages(docs);
             return messages;
         } else {
             return [];
@@ -31,7 +31,7 @@ export class MongoMessages implements DBMessagesClass {
     }
     async add(msg: INew_Message): Promise<CUDResponse> {
         const doc = await this.messages.create(msg);
-        const result = utils.extractMongoMessages([doc])[0];
+        const result = Utils.extractMongoMessages([doc])[0];
         return {
             message: `Message successfully added.`,
             data: result,

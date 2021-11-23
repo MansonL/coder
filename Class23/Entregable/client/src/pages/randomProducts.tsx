@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { IMongoCartProduct, IMongoProduct } from "../../../server/src/interfaces/interfaces";
 import { socket } from "../lib/socket";
 import { Products } from "./Products";
+import React from "react";
 
 export function RandomProducts () {
     const [products, setProducts] = useState<IMongoProduct[] | IMongoCartProduct[]>([]);
@@ -33,6 +34,8 @@ export function RandomProducts () {
     }, [products])
 
     return (
+        <React.Fragment>
         <Products updateProducts={undefined} products={products} type="random" noProducts={noProducts}/>
+        </React.Fragment>
     )
 }

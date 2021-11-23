@@ -48,14 +48,14 @@ class UsersController {
     async save(req: Request, res: Response, next: NextFunction): Promise<void> {
         const user: INew_User = req.body;
         const { error } = validator.user.validate(user);
-        if(error){
-            next(ApiError.badRequest(EUsersErrors.IncorrectProperties))
-        }else{
+        console.log(error);
+        if (error) {
+            next(ApiError.badRequest(EUsersErrors.IncorrectProperties));
+        } else {
             console.log(`[PATH] Inside controller.`);
             const result: CUDResponse = await usersApi.addUser(user);
             res.status(200).send(result);
         }
-        
     }
 }
 

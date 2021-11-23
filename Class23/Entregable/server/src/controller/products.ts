@@ -2,10 +2,15 @@ import { Request, NextFunction, Response } from 'express';
 import { ApiError } from '../utils/errorApi';
 import { EProductsErrors } from '../common/EErrors';
 import { productsApi } from '../api/products';
-import { CUDResponse, IMongoProduct, INew_Product, IQuery, IUpdate } from '../interfaces/interfaces';
+import {
+    CUDResponse,
+    IMongoProduct,
+    INew_Product,
+    IQuery,
+    IUpdate,
+} from '../interfaces/interfaces';
 import { validator } from '../utils/joiSchemas';
-import { utils } from '../common/utils';
-
+import { Utils } from '../common/utils';
 
 /**
  *
@@ -54,16 +59,15 @@ class ProductController {
         next: NextFunction
     ): Promise<void> {
         const qty = req.query.qty;
-        console.log(qty)
-        if(qty != null){
+        console.log(qty);
+        if (qty != null) {
             const quantity = Number(qty);
-            const randomProducts = utils.generateRandomProducts(quantity);
+            const randomProducts = Utils.generateRandomProducts(quantity);
             res.status(200).send(randomProducts);
-        }else{
-            const randomProducts = utils.generateRandomProducts(10);
+        } else {
+            const randomProducts = Utils.generateRandomProducts(10);
             res.status(200).send(randomProducts);
         }
-        
     }
     async save(req: Request, res: Response, next: NextFunction): Promise<void> {
         const product: INew_Product = req.body;
@@ -73,7 +77,7 @@ class ProductController {
         if (error) {
             next(ApiError.badRequest(EProductsErrors.PropertiesIncorrect));
         } else {
-            const result : CUDResponse = await productsApi.addProduct(product);
+            const result: CUDResponse = await productsApi.addProduct(product);
             res.status(200).send(result);
         }
     }
@@ -140,14 +144,14 @@ class ProductController {
                 maxPrice != null
                     ? maxPrice
                     : (
-                          await utils.getMaxStockPrice(products, 'price')
+                          await Utils.getMaxStockPrice(products, 'price')
                       ).toString();
             minStock = minStock != null ? minStock : '0';
             maxStock =
                 maxStock != null
                     ? maxStock
                     : (
-                          await utils.getMaxStockPrice(products, 'stock')
+                          await Utils.getMaxStockPrice(products, 'stock')
                       ).toString();
             const options: IQuery = {
                 title: title,
@@ -179,7 +183,6 @@ class ProductController {
             next(ApiError.notFound(`No products matching the query`));
         }
     }
-    
 }
 
 export const products_controller = new ProductController();

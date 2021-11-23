@@ -1,35 +1,35 @@
 import React from "react";
 
 interface FormMessagesProps {
-    handleEmail: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+    handleUserData: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
     updateValues: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    focusOut: () => void;
-    email: string;
+    user: {
+      user: string;
     name: string;
     surname: string;
     alias: string;
     age: number;
     avatar: string;
-    inputLabelClass: string;
+    }
 }
 
-export function FormMessages (props: FormMessagesProps){
+export function MessagesForm (props: FormMessagesProps){
     return (
-        <form onSubmit={props.handleEmail}>
+        <form onSubmit={props.handleUserData}>
     <div className="effect-input">
       
-      <input type="email" className="label-styled-input" onBlur={props.focusOut} name="email" value={props.email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.updateValues(e)}/>
-      <label className={props.inputLabelClass} >Email</label>
+      <input onChange={props.updateValues} type="email" className="label-styled-input" name="user" value={props.user.user} />
+      <label className={props.user.user != '' ? "hasContent" : "label-styled"} >Email</label>
       <span className="form-border"></span>
     </div>
-    <div className="effect-input"><input type="text" className="label-styled-input" name="name" value={props.name} /><label className="hasContent ">Name</label><span className="form-border"></span></div>
-        <div className="effect-input"><input type="text" className="label-styled-input" name="surname" value={props.surname}/><label className="hasContent ">Surname</label><span className="form-border"></span></div>
-        <div className="effect-input"><input type="text" className="label-styled-input" name="alias" value={props.alias}/><label className="hasContent ">Alias (optional)</label><span className="form-border"></span></div>
-        <div className="effect-input"><input type="number" min="10" max="100" step="1" className="label-styled-input" name="age" value={props.age}/><label className="hasContent ">Age</label><span className="form-border"></span></div>
-        <div className="effect-input"><input type="text" className="label-styled-input" name="avatar" value={props.avatar}/><label className="label-styled">Avatar (URL image)</label><span className="form-border"></span></div>
+    <div className="effect-input"><input onChange={props.updateValues} type="text" className="label-styled-input" name="name" value={props.user.name} /><label className={props.user.name != '' ? "hasContent" : "label-styled"}>Name</label><span className="form-border"></span></div>
+        <div className="effect-input"><input onChange={props.updateValues} type="text" className="label-styled-input" name="surname" value={props.user.surname}/><label className={props.user.surname != '' ? "hasContent" : "label-styled"}>Surname</label><span className="form-border"></span></div>
+        <div className="effect-input"><input onChange={props.updateValues} type="text" className="label-styled-input" name="alias" value={props.user.alias}/><label className={props.user.alias != '' ? "hasContent" : "label-styled"}>Alias (optional)</label><span className="form-border"></span></div>
+        <div className="effect-input"><input onChange={props.updateValues} type="number" min="10" max="100" step="1" className="label-styled-input" name="age" value={props.user.age}/><label className={props.user.age ? "hasContent" : "label-styled"}>Age</label><span className="form-border"></span></div>
+        <div className="effect-input"><input onChange={props.updateValues} type="text" className="label-styled-input" name="avatar" value={props.user.avatar}/><label className={props.user.avatar != '' ? "hasContent" : "label-styled"}>Avatar (URL image)</label><span className="form-border"></span></div>
         
     <div className="submit-btn">
-      <button name="submit" type="submit">Submit</button>
+      <button name="submit" type="submit" id="submit">Submit</button>
     </div>
     </form>
     )

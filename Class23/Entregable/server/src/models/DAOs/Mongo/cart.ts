@@ -1,5 +1,5 @@
 import { connect, Model } from 'mongoose';
-import { utils } from '../../../common/utils';
+import { Utils } from '../../../common/utils';
 import {
     CUDResponse,
     DBCartClass,
@@ -27,7 +27,7 @@ export class MongoCart implements DBCartClass {
             console.log(doc);
             if (doc.length > 0) {
                 const products: IMongoCartProduct[] =
-                    utils.extractMongoCartDocs(doc);
+                    Utils.extractMongoCartDocs(doc);
                 return products;
             } else {
                 return [];
@@ -36,7 +36,7 @@ export class MongoCart implements DBCartClass {
             const doc = await this.cart.find({});
             if (doc.length > 0) {
                 const products: IMongoCartProduct[] =
-                    utils.extractMongoCartDocs(doc);
+                    Utils.extractMongoCartDocs(doc);
                 return products;
             } else {
                 return [];

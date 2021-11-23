@@ -30,7 +30,7 @@ export interface ICartProduct extends INew_Product {
  *
  */
 export interface INew_Product {
-    [key: string]: number | string; 
+    [key: string]: number | string;
     title: string;
     description: string;
     timestamp: string; // Will have this type after the controller set product's
@@ -75,12 +75,13 @@ export interface IMongoUser extends INew_User {
  *
  */
 export interface INew_User {
+    [key: string]: string | number;
     timestamp: string;
     user: string;
     name: string;
     surname: string;
     age: number;
-    alias: string | undefined;
+    alias: string;
     avatar: string;
 }
 
@@ -103,7 +104,7 @@ export interface IUpdate {
  * Type of the possible Query Object properties in a query request.
  *
  */
- export interface IQuery {
+export interface IQuery {
     title: string;
     code: string;
     stock: {
@@ -115,7 +116,6 @@ export interface IUpdate {
         maxPrice: number;
     };
 }
-
 
 /**
  *

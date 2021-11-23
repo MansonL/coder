@@ -1,10 +1,13 @@
 import React, {  useEffect, useState } from 'react';
-import { IMongoUser, IMongoMessage, INew_Message, INew_User } from '../../../server/src/interfaces/interfaces';
+import { MessagesForm } from './MessagesForm';
+import { IMongoUser, IMongoMessage, INew_Message, INew_User, CUDResponse } from '../../../server/src/interfaces/interfaces';
+import { NormalizedSchema } from 'normalizr'
 import { validation } from '../utils/joiSchemas';
 import { socket } from '../lib/socket';
 import axios from 'axios';
 import moment from 'moment'
 import './messages.css';
+import { denormalizeData } from '../utils/compression';
 
 export function Messages(){
   
@@ -27,26 +30,50 @@ export function Messages(){
   const [inputDisabled, setInputDisabled] = useState(true);
 
   /**
+   * 
+   * User Data inputs onChange handler.
+   * 
+   */
+  const updateValues = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const property : string = e.target.name;
+    const value : string | number = e.target.value 
+    setUser({
+      ...user,
+      [property]: value
+    })
+  }
+
+  /**
    * Email submit handler
    * @param e just for preventing default submit action
    * 
    */
   
-  const handleEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUserData = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const { error } = validation.email.validate(email);
+      setUser({
+        ...user,
+        timestamp: moment().format('YYYY-MM-DD HH:mm:ss')
+      })
+      if(user.alias === ''){
+        setUser({
+          ...user,
+          alias: `${user.name} ${user.surname}`,
+        })
+      }
+      console.log(user)
+      const { error } = validation.user.validate(user);
       if(error){
-        setEmailError(true);
-        setEmailSuccess(false);
+        setDataError(true);
+        setDataSuccess(false);
+        setErrorMessage(error.message)
       }else{
-        if(emailError === true) setEmailError(false);
-        setEmailSuccess(true);
+        if(dataError === true) setDataError(false);
+        setDataSuccess(true);
         setInputDisabled(false);
-        const user: INew_User = {
-          user: email,
-          timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
-      };
-        await axios.post('http://localhost:8080/users/save', user)
+        const savedUser = await (await axios.post<CUDResponse>('http://localhost:8080/users/save', user)).data.data as IMongoUser
+        setUserID(savedUser._id)
         socket.emit('users');
       }
   }
@@ -56,34 +83,13 @@ export function Messages(){
    * 
    */
   const errorExit = () => {
-      setEmailError(false);
-      setEmailSuccess(false);
+      setDataError(false);
+      setDataSuccess(false);
   }
-
-  /**
-   * 
-   * For CSS changes at email label.
-   * 
-   */
-  const [hasContent, setHasContent] = useState(false);
-  const inputLabelClass = `${hasContent ? 'hasContent ' : 'label-styled'}`;
-
-  /**
-   * 
-   * Email input FocusOut event listener.
-   * 
-   */
-  const focusOut = () => {
-    if(email != ''){
-      setHasContent(true)
-    }else{
-      setHasContent(false);
-    }
-  }
-
-
   
+
   const [users, setUsers] = useState<IMongoUser[]>([]);
+  const [userID, setUserID] = useState('');
   const [messages, setMessages] = useState<IMongoMessage[]>([])
   const [message, setMessage] = useState('');
   /**
@@ -96,9 +102,12 @@ export function Messages(){
     e.preventDefault(); 
     const { error } = validation.message.validate(message); 
     if(!error){
-      const msg : INew_Message= {
+      const msg : INew_Message = {
         timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
-        user: email,
+        author: {
+          ...user,
+          _id: userID
+        },
         message: message
       }
       await axios.post('http://localhost:8080/messages/save', msg);
@@ -106,7 +115,10 @@ export function Messages(){
       socket.emit('message');
     }
   }
-  
+  /**
+   * Set the width according the compression of the data normalized vs the denormalized data.
+   */
+  const [barWidth, setBarWidth] = useState(0);
 
   /**
    * 
@@ -115,9 +127,14 @@ export function Messages(){
    */
 
   const messagesUpdateListener = async () => {
-    const newMessages : IMongoMessage[] = await (await axios.get<IMongoMessage[]>('http://localhost:8080/messages/list')).data;
+    const newMessages  = await (await axios.get<NormalizedSchema<{
+      [key: string]: {
+          [key: string]: any;
+      } | undefined;
+  }, any>
+  >('http://localhost:8080/messages/list')).data;
     console.log(`Messages received`);
-    setMessages(newMessages)
+    const messages = denormalizeData(newMessages)
   }
 
   const usersUpdateListener = async () => {
@@ -138,7 +155,7 @@ export function Messages(){
   
 
   return (
-        <>
+        <React.Fragment>
         <header>
     <div className="title">
       <h4>Messages</h4>
@@ -146,7 +163,7 @@ export function Messages(){
   </header>
   <div className="email-form">
     <h6>Input your email for sending messages:</h6>
-    
+    <MessagesForm updateValues={updateValues} handleUserData={handleUserData} user={user}/>
   </div>
   {dataError && <div className="form-error">
       <div className="result-top">
@@ -154,7 +171,7 @@ export function Messages(){
         <button className="result-btn" onClick={errorExit}><i className="fas fa-times"></i></button>
       </div>
       <div className="result-msg">
-        Email incorrect.
+        {errorMessage}
       </div>
     </div>}
     {dataSuccess && <div className="form-success">
@@ -163,23 +180,27 @@ export function Messages(){
         <button className="result-btn" onClick={errorExit}><i className="fas fa-times"></i></button>
       </div>
       <div className="result-msg">
-        Email submitted. Now you can chat.
+        User saved! Now you can chat.
       </div>
     </div>}
+    <div className="bar-container">
+      <span className="progress-bar"></span>
+      <span className="percent" style={{width: `${barWidth}%`}}>{}</span>
+    </div>
   <section className="msg-card">
     <div className="msg-body">
       {messages.map((message: IMongoMessage, idx: number): JSX.Element => {
         
         // Setting if it's a message from the current session user or not...
         
-        const sentOrReceived : string = message.author.user === user.user ? "sent-msg" : "received-msg";
+        const sentOrReceived = message.author.user === user.user ? ["sent-msg", "sent-content-msg"] : ["received-msg", "received-content-msg"];
         return (
-          <div key={idx} className="msg">
-          {sentOrReceived === "received-msg" && <div className="avatar-img"><img src={message.author.avatar}/></div>}
-          <div className={sentOrReceived}>
-          <span className="date">{message.timestamp}</span><span className="username">{user.avatar ? user.avatar : user.user}</span><br/>{message.message}
+          <div key={idx} className={sentOrReceived[0]}>
+          {sentOrReceived[0] === "received-msg" && <div className="avatar-img"><img src={message.author.avatar}/></div>}
+          <div className={sentOrReceived[1]}>
+          <span className="date">{message.timestamp}</span><span className="username">{message.author.alias ? message.author.alias : message.author.name && message.author.surname ? `${message.author.name} ${message.author.surname}` : message.author.user}</span><br/>{message.message}
           </div>
-          {sentOrReceived === "sent-msg" && <div className="avatar-img"><img src={message.author.avatar}/></div>}
+          {sentOrReceived[0] === "sent-msg" && <div className="avatar-img"><img src={message.author.avatar}/></div>}
           </div>
         )
         
@@ -205,6 +226,6 @@ export function Messages(){
          })}
       </div>
     </section>
-</>
+</React.Fragment>
     )
 }

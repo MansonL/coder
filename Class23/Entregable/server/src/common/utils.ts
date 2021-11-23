@@ -3,23 +3,24 @@ import {
     IMongoMessage,
     IMongoUser,
     IMongoCartProduct,
-    IQuery,
+    INew_Message,
+    INew_User,
     INew_Product,
 } from '../interfaces/interfaces';
 import faker from 'faker';
 import moment from 'moment';
 import { randomNumber } from '../models/mockProducts';
+import { Document, Types } from 'mongoose';
 
-class Utils {
-    
+export class Utils {
     /**
      *
      * @param type: string
      *
      * @returns : Max price or stock of products.
      */
-     getMaxStockPrice = async (
-        products: IMongoProduct[] ,
+    static getMaxStockPrice = async (
+        products: IMongoProduct[],
         type: string
     ): Promise<number> => {
         if (type === 'price') {
@@ -30,25 +31,30 @@ class Utils {
             return Math.max(...stocks);
         }
     };
-    
+
     /**
      * Product code different than DB id.
      * @returns String code.
      */
 
-    generateCode = (): string => {
+    static generateCode = (): string => {
         return `_${Math.random().toString(36).substr(2, 9)}`;
     };
 
     /**
      * Functions for extracting the needed data from the queried docs from MongoDB
-     * @param documents 
-     * 
-     * @returns 
+     * @param documents
+     *
+     * @returns
      */
-    extractMongoProducts = (documents: any): IMongoProduct[] => {
+    static extractMongoProducts = (
+        documents: (Document<any, any, INew_Product> &
+            INew_Product & {
+                _id: Types.ObjectId;
+            })[]
+    ): IMongoProduct[] => {
         const products: IMongoProduct[] = documents.map(
-            (document: any): IMongoProduct => {
+            (document): IMongoProduct => {
                 const {
                     _id,
                     timestamp,
@@ -58,26 +64,34 @@ class Utils {
                     img,
                     stock,
                     price,
-                } = document;
+                } = document.toObject({ flattenMaps: true });
                 const product: IMongoProduct = {
-                    _id,
-                    timestamp,
-                    title,
-                    description,
-                    code,
-                    img,
-                    stock,
-                    price,
+                    _id: _id as string,
+                    timestamp: timestamp as string,
+                    title: title as string,
+                    description: description as string,
+                    code: code as string,
+                    img: img as string,
+                    stock: stock as number,
+                    price: price as number,
                 };
                 return product;
             }
         );
         return products;
     };
-    extractMongoMessages = (documents: any): IMongoMessage[] => {
+    static extractMongoMessages = (
+        documents: (Document<any, any, INew_Message> &
+            INew_Message & {
+                _id: Types.ObjectId;
+            })[]
+    ): IMongoMessage[] => {
         const messages: IMongoMessage[] = documents.map(
-            (document: any): IMongoMessage => {
-                const { _id, timestamp, author, message } = document;
+            (document): IMongoMessage => {
+                const { timestamp, author, message } = document.toObject({
+                    flattenMaps: true,
+                });
+                const _id = document._id;
                 const mongoMessage: IMongoMessage = {
                     _id,
                     timestamp,
@@ -89,26 +103,31 @@ class Utils {
         );
         return messages;
     };
-    extractMongoUsers = (documents: any): IMongoUser[] => {
-        const users: IMongoUser[] = documents.map(
-            (document: any): IMongoUser => {
-                const { _id, timestamp, user, name, surname, age, alias, avatar } = document;
-                const mongoUser: IMongoUser = {
-                    _id,
-                    timestamp,
-                    user,
-                    name, 
-                    surname,
-                    age,
-                    alias,
-                    avatar
-                };
-                return mongoUser;
-            }
-        );
+    static extractMongoUsers = (
+        documents: (Document<any, any, INew_User> &
+            INew_User & {
+                _id: Types.ObjectId;
+            })[]
+    ): IMongoUser[] => {
+        const users: IMongoUser[] = documents.map((document): IMongoUser => {
+            const { timestamp, user, name, surname, age, alias, avatar } =
+                document.toObject({ flattenMaps: true });
+            const _id: string = document._id;
+            const mongoUser: IMongoUser = {
+                _id: _id,
+                timestamp: timestamp as string,
+                user: user as string,
+                name: name as string,
+                surname: surname as string,
+                age: age as number,
+                alias: alias as string,
+                avatar: avatar as string,
+            };
+            return mongoUser;
+        });
         return users;
     };
-    extractMongoCartDocs = (documents: any): IMongoCartProduct[] => {
+    static extractMongoCartDocs = (documents: any): IMongoCartProduct[] => {
         const productsIds = documents.map((document: any) => {
             const { product_id } = document;
             return product_id;
@@ -121,24 +140,22 @@ class Utils {
         );
         return cartProducts;
     };
-    
-    generateRandomProducts = (qty: number): IMongoProduct[] => {
+
+    static generateRandomProducts = (qty: number): IMongoProduct[] => {
         const randomProducts = [];
         for (let i = 0; i < qty; i++) {
-            const randomProduct : IMongoProduct = {
-                _id: utils.generateCode(), // This line is just for not changing the frontend and simulating a real product from MongoDB
+            const randomProduct: IMongoProduct = {
+                _id: new Types.ObjectId().toString(), // This line is just for not changing the frontend and simulating a real product from MongoDB
                 timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
                 title: faker.commerce.productName(),
                 description: faker.commerce.productDescription(),
                 img: faker.image.imageUrl(),
-                code: utils.generateCode(),
+                code: this.generateCode(),
                 price: Number(faker.commerce.price(0.01)),
-                stock: randomNumber('stock')
+                stock: randomNumber('stock'),
             };
             randomProducts.push(randomProduct);
         }
-        return randomProducts
-    }
+        return randomProducts;
+    };
 }
-
-export const utils = new Utils();
