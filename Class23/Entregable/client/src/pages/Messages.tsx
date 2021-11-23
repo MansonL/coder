@@ -7,7 +7,7 @@ import { socket } from '../lib/socket';
 import axios from 'axios';
 import moment from 'moment'
 import './messages.css';
-import { denormalizeData } from '../utils/compression';
+import { denormalizeData, MessagesEntities } from '../utils/compression';
 
 export function Messages(){
   
@@ -40,7 +40,8 @@ export function Messages(){
     const value : string | number = e.target.value 
     setUser({
       ...user,
-      [property]: value
+      [property]: value,
+      timestamp: moment().format('YYYY-MM-DD HH:mm:ss')
     })
   }
 
@@ -52,10 +53,6 @@ export function Messages(){
   
   const handleUserData = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      setUser({
-        ...user,
-        timestamp: moment().format('YYYY-MM-DD HH:mm:ss')
-      })
       if(user.alias === ''){
         setUser({
           ...user,
@@ -127,14 +124,12 @@ export function Messages(){
    */
 
   const messagesUpdateListener = async () => {
-    const newMessages  = await (await axios.get<NormalizedSchema<{
-      [key: string]: {
-          [key: string]: any;
-      } | undefined;
-  }, any>
+    const newMessages  = await (await axios.get<NormalizedSchema<MessagesEntities, string[]>
   >('http://localhost:8080/messages/list')).data;
     console.log(`Messages received`);
-    const messages = denormalizeData(newMessages)
+    const {denormalizedMsg, percentage} = denormalizeData(newMessages);
+    setMessages(denormalizedMsg);
+    setBarWidth(percentage)
   }
 
   const usersUpdateListener = async () => {
@@ -184,8 +179,10 @@ export function Messages(){
       </div>
     </div>}
     <div className="bar-container">
-      <span className="progress-bar"></span>
-      <span className="percent" style={{width: `${barWidth}%`}}>{}</span>
+      <span className="progress-bar">
+      <span className="inside-bar" style={{backgroundColor: `${barWidth < 0 ? "red" : "green"}`,width: `${barWidth < 0 ? -barWidth : barWidth}%`}}></span>
+      </span>
+      <span style={{color: "white", textAlign: 'center'}}>Data compression</span><span className="percent" style={{color: `${barWidth < 0 ? "red": "green"}`}}>{barWidth}%</span>
     </div>
   <section className="msg-card">
     <div className="msg-body">

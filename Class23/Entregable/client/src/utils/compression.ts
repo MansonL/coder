@@ -1,7 +1,7 @@
 
 import { denormalize, NormalizedSchema, schema } from 'normalizr';
 import { inspect } from 'util';
-import { IMongoMessage } from '../../../server/src/interfaces/interfaces';
+import { IMongoMessage, IMongoUser } from '../../../server/src/interfaces/interfaces';
 
 const authorsSchema = new schema.Entity(
     'authors',
@@ -16,11 +16,30 @@ const messagesSchema = new schema.Entity(
     {idAttribute: "_id"}
 )
 
+export interface MessagesEntities {
+    authors: {
+        [_id: string]: IMongoUser
+    },
+    messages: {
+        [_id: string]: {
+            [key: string]: string,
+            _id: string,
+            timestamp: string,
+            author: string,
+            message: string,
+        }
+    }
+}
 
-export const denormalizeData = (messages: NormalizedSchema<any, any>
+export const denormalizeData = (messages: NormalizedSchema<MessagesEntities, string[]>
 ) => {
-    console.log(messages)
     const denormalizedMsg : IMongoMessage[] = denormalize(messages.result, [messagesSchema], messages.entities);
-    console.log(inspect(denormalizedMsg, true, 12, false));
-    return denormalizedMsg
+    const normalizedBytes = JSON.stringify(messages).length;
+    const denormalizedBytes = JSON.stringify(denormalizedMsg).length;
+    console.log(messages);
+    console.log(denormalizedMsg);
+    console.log(`----------------------------- BYTES DIFFERENCE ---------------------------------------------`);
+    console.log(`Normalized: ${normalizedBytes} bytes < Denormalized: ${denormalizedBytes} bytes.`);
+    const percentage = Number((-(100 - denormalizedBytes * 100 / normalizedBytes)).toFixed(3));
+    return { denormalizedMsg, percentage }
 }

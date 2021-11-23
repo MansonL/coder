@@ -75,7 +75,7 @@
     margin: auto;
     margin-bottom: 1rem;
   }
-  .progress-bar:after {
+  .inside-bar {
     content: "";
     display: block;
     position: absolute;
