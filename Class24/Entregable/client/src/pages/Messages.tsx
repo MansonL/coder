@@ -139,6 +139,8 @@ export function Messages(){
   }
 
   useEffect(() => {
+    socket.emit('message');
+    socket.emit('users');
     socket.on('messagesUpdate', messagesUpdateListener);
     socket.on('usersUpdate', usersUpdateListener);
 

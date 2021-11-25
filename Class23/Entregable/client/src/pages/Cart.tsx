@@ -30,6 +30,7 @@ export function Cart () {
         }
 
         useEffect(() => {
+          socket.emit('cart');
           socket.on('cartUpdate', updateListener);
           return () => { socket.off('cartUpdate', updateListener) }
         })

@@ -27,6 +27,7 @@ export function DBProducts () {
       }
 
     useEffect(() => {
+      socket.emit('products');
       socket.on('productsUpdate', updateListener);
       return () => {socket.off('productsUpdate', updateListener)}
     })

@@ -29,6 +29,7 @@ export function RandomProducts () {
     }
 
     useEffect(() => {
+        socket.emit('randomProducts');
         socket.on('randomProductsUpdate', updateListener);
         return () => { socket.off('randomProductsUpdate', updateListener) }
     }, [products])
