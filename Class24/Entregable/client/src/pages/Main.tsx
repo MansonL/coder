@@ -1,6 +1,5 @@
 
 import { Routes, Link, Route, Router, BrowserRouter } from 'react-router-dom';
-import { Products } from './Products';
 import { Messages } from './Messages';
 import { Form } from './Form';
 import { Home } from './Home';
@@ -9,7 +8,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { RandomProducts } from './randomProducts';
 import { DBProducts } from './DBProducts';
 import { Cart } from './Cart';
-import { whichUpdate } from '../utils/utilities';
+import { LogIn } from './LogIn';
+
 export function Main () {
   const dropdownMenu = useRef(null);
   const dropdownBtn = useRef(null);
@@ -37,29 +37,15 @@ export function Main () {
         <div className="container">
           
   <div className="top-bar">
-    <Link   to="/messages">
-    <button className="top-buttons"  >Messages</button>
-    </Link>
-    <div className="products-menu">
-    <button className="top-buttons" id="product-menu-button" ref={dropdownBtn} onClick={menuBtnHandleClick}>Products</button>
-      <div className={menuClass} ref={dropdownMenu}>
-        <Link   to='/randomProducts'>
-        <button className='top-buttons' >Random Generated</button>
-        </Link>
-        <hr className="hr-menu"/>
-        <Link   to="/form">
-        <button className='top-buttons'  >Form</button>
-        </Link>
-        <hr className="hr-menu"/>
-        <Link   to="/DBProducts">
-        <button className='top-buttons'  >DB Products</button>
-      </Link>
-      <hr className='hr-menu'/>
-      <Link   to="/cart">
-        <button className='top-buttons'  >DB Cart</button>
-      </Link>
+  <div className="products-menu"><button className="top-buttons" ref={dropdownBtn} id="product-menu-button" onClick={menuBtnHandleClick}>Products</button>
+      <div className={menuClass} ref={dropdownMenu}><Link to="/randomProducts"><button className="top-buttons">Random Generated</button></Link>
+        <hr className="hr-menu"/><Link to="/form" ><button className="top-buttons">Form</button></Link>
+        <hr className="hr-menu"/><Link to="/DBProducts"><button className="top-buttons">DB Products</button></Link>
+        <hr className="hr-menu"/><Link to="/cart"><button className="top-buttons">DB Cart</button></Link>
       </div>
-      </div>
+    </div>
+    <Link to="/messages"><button className="top-buttons">Messages</button></Link>
+    <Link to="/login"><button className="top-buttons">Log in/Log out</button></Link>
   </div><hr/>
   <div className="body">
   
@@ -70,6 +56,7 @@ export function Main () {
       <Route path="/DBProducts" element={<DBProducts/>} />
       <Route path="/cart" element={<Cart/>} />
       <Route path="/form" element={<Form/>} />
+      <Route path="/login" element={<LogIn/>}/>
     </Routes>
     
 </div>

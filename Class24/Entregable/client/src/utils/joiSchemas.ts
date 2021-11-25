@@ -6,6 +6,7 @@ class Validations {
     public message: Joi.StringSchema
     public newProduct: Joi.ObjectSchema<INew_Product>
     public user: Joi.ObjectSchema<INew_User>
+    public login: Joi.ObjectSchema
     constructor(){
         /**
          * JOI Schema to validate user email.
@@ -48,6 +49,15 @@ class Validations {
             alias: Joi.string().min(5).max(35),
             avatar: Joi.string().uri(),
         });
+        /**
+         * 
+         * Joi Schema to validate login. // To be modified and merge with user in future
+         * 
+         */
+        this.login = Joi.object({
+            user: Joi.alternatives().try(Joi.string().min(5), Joi.string().email({ tlds: { allow: false } })).required(),
+            password: Joi.string().min(6).required()
+        })
     }
 }
 
