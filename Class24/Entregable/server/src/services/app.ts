@@ -5,22 +5,28 @@ import { errorHandler } from '../utils/errorHandler';
 import { unknownRoute } from '../utils/unknownRoute';
 import { mongoConnection } from '../models/DAOs/Mongo/connection';
 import session from 'express-session'
-import { Utils } from '../common/utils';
+import mongoStore from 'connect-mongo'
 
 export const app: express.Application = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(session({
     secret: 'secret',
     resave: true,
     saveUninitialized: true,
+    store: mongoStore.create({
+        client: mongoConnection(),
+        stringify: false,
+        autoRemove: 'interval',
+        autoRemoveInterval: 1,
+    }),
     cookie: {
         maxAge: 1000 * 60,
         httpOnly: false,
     }
 }));
-mongoConnection().then((msg) => console.log(msg));
 app.use('/', router);
 app.use(errorHandler);
 app.use(unknownRoute);
