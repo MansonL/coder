@@ -17,6 +17,8 @@ declare module 'express-session' {
 
 usersRouter.get('/login', (req: e.Request, res: e.Response) => {
     const { user, password } = req.query;
+    console.log(req.sessionID);
+    console.log(req.session.user)
     if((!user || !password) && !req.session.user){
         res.send({ process: "Error 400.", message: `You have to set credentials first...` })
     }else{

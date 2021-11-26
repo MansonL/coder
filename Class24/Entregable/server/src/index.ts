@@ -10,7 +10,6 @@ dotenv.config({ path: envPath });
 export const server: http.Server = http.createServer(app);
 const PORT = process.env.PORT;
 server.listen(PORT, () => console.log(`Server hosted at PORT: ${PORT}`));
-//socketConnection();
 const io = new socket.Server(server);
 io.on('connection', (socket) => {
     console.log('New client connected!');

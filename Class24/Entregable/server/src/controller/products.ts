@@ -59,7 +59,6 @@ class ProductController {
         next: NextFunction
     ): Promise<void> {
         const qty = req.query.qty;
-        console.log(qty);
         if (qty != null) {
             const quantity = Number(qty);
             const randomProducts = Utils.generateRandomProducts(quantity);
@@ -73,7 +72,6 @@ class ProductController {
         const product: INew_Product = req.body;
         console.log(`[PATH] Inside controller.`);
         const { error } = await validator.newProduct.validateAsync(product);
-        console.log(error);
         if (error) {
             next(ApiError.badRequest(EProductsErrors.PropertiesIncorrect));
         } else {
@@ -165,7 +163,6 @@ class ProductController {
                     maxStock: Number(maxStock),
                 },
             };
-            console.log(options);
             const { error } = await validator.query.validateAsync(options);
             if (error) {
                 next(ApiError.badRequest(error.message)); // This is just for checking if there's an error in the query implementation

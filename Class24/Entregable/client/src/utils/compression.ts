@@ -36,10 +36,6 @@ export const denormalizeData = (messages: NormalizedSchema<MessagesEntities, str
     const denormalizedMsg : IMongoMessage[] = denormalize(messages.result, [messagesSchema], messages.entities);
     const normalizedBytes = JSON.stringify(messages).length;
     const denormalizedBytes = JSON.stringify(denormalizedMsg).length;
-    console.log(messages);
-    console.log(denormalizedMsg);
-    console.log(`----------------------------- BYTES DIFFERENCE ---------------------------------------------`);
-    console.log(`Normalized: ${normalizedBytes} bytes < Denormalized: ${denormalizedBytes} bytes.`);
     const percentage = Number((-(100 - denormalizedBytes * 100 / normalizedBytes)).toFixed(3));
     return { denormalizedMsg, percentage }
 }

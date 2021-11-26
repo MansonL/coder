@@ -63,7 +63,7 @@ export function LogIn (){
         setLoginResult(false);
         setLoginMsgResult(error.message);
       }else{
-        const response = await (await axios.get<loginResponse>(`http://localhost:8080/users/login?user=${credentials.user}&password=${credentials.password}`)).data;
+        const response = await (await axios.get<loginResponse>(`http://localhost:8080/users/login?user=${credentials.user}&password=${credentials.password}`, {withCredentials: true})).data;
         if(response.process.match(/Error/g)){
           setShowResultLogin(true);
           setLoginResult(false);
@@ -97,7 +97,7 @@ export function LogIn (){
     }
     
     useEffect(() => {
-      axios.get<loginResponse>('http://localhost:8080/users/login').then(response => {
+      axios.get<loginResponse>('http://localhost:8080/users/login', {withCredentials: true}).then(response => {
         const data = response.data;
         console.log(data.message)
         if(data.message.match(/already logged/g)){
