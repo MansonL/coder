@@ -8,6 +8,7 @@ const PORT = 8080;
 const fileStore = store(session);
 
 const app = e();
+app.use(cookieParser());
 app.use(e.json());
 app.use(session({
     secret: "secret",
