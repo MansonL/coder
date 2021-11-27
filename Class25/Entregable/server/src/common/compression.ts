@@ -13,6 +13,5 @@ const messagesSchema = new schema.Entity(
 
 export const normalizeData = (messages: IMongoMessage[]) => {
     const normalizedData = normalize(messages, [messagesSchema]);
-    console.log(inspect(normalizedData, false, 12, false));
     return normalizedData;
 };

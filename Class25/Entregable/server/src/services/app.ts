@@ -27,7 +27,7 @@ app.use(session({
         autoRemoveInterval: 1,
     }),
     cookie: {
-        maxAge: 1000 * 60,
+        maxAge: 1000 * 60 * 10, // Ten minutes before session expiration
         httpOnly: true,
     }
 }));
