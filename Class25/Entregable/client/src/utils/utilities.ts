@@ -44,27 +44,3 @@ export const hasMessagesOrEmpty = (message: [] | IMongoMessage): message is IMon
     return 'message' in message
 }
 
-/**
- * 
- * A function that determines which products should be updated and requested through sockets.
- * @param type This will be the type that the user selected in the menu and the Main component pass to Products
- * component.
- * 
- */
-export const whichUpdate = (type: string): void => {
-        switch(type){
-            case 'Messages': 
-                socket.emit('message');
-                socket.emit('users');
-                break;
-            case 'DB Products' || 'normal':
-                socket.emit('products');
-                break;
-            case 'DB Cart' || 'cart':
-                socket.emit('cart');
-                break;
-            case 'Random Generated' || 'random':
-                socket.emit('randomProducts');
-                break;
-            }
-}
