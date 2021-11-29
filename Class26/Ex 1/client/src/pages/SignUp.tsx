@@ -56,7 +56,7 @@ export function SignUp (props: SignUpProps) {
 
     const signupSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
-        const user = {
+        const user : INew_User= {
             ...newUser,
             timestamp: moment().format('YYYY-MM-DD HH:mm:ss')
         }
@@ -65,7 +65,7 @@ export function SignUp (props: SignUpProps) {
         if(error){
           props.signUpValidationError(error)
         }else{
-          const response = await (await axios.post<loginResponse>(`http://localhost:8080/signup`, { data: user })).data;
+          const response = await (await axios.post<loginResponse>(`http://localhost:8080/api/signup`, user)).data;
           console.log(response)
           if(response.response.match(/Error/g)){
             props.signUpError();

@@ -9,6 +9,10 @@ export interface loginResponse {
     response: string;
     data: Express.User | {}
   }
+interface loginData {
+  username: string;
+  password: string;
+}
 
 export function Redirect () {
     const [showResult, setShowResult] = useState(false);
@@ -68,7 +72,7 @@ export function Redirect () {
           setMsgResult(error.message);
         }else{
           try {
-            const response = await (await axios.post<loginResponse>(`http://localhost:8080/users/login?user=${credentials.username}&password=${credentials.password}`, {withCredentials: true})).data;
+            const response = await (await axios.post<loginResponse>('http://localhost:8080/api/login',credentials, {withCredentials: true} )).data;
             setShowResult(true);
             setLoginSignResult(true);
             setMsgResult("Successfully logged in");
@@ -133,7 +137,7 @@ export function Redirect () {
       }, [logOrSign])
 
       const signUpValidationError = (error: Joi.ValidationError) => {
-          setShowResult(true);
+          setShowResult(true); 
           setLoginSignResult(false);
           setMsgResult(error.message);
       };

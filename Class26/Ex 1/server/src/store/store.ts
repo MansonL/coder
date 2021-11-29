@@ -33,7 +33,7 @@ export class Store {
 
      findOne (username: string, cb: (error: any | undefined, user: IUser | undefined) =>  void) {
         try {
-            const user = this.users.filter(user => user.user === username)[0];
+            const user = this.users.filter(user => user.username === username)[0];
             console.log(this.users)
             cb(null, user)
         } catch (error) {

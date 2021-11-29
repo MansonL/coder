@@ -85,6 +85,8 @@ body {
 .label-styled {
   font-size: 0.9rem;
   position: absolute;
+  overflow: hidden;
+  white-space: nowrap;
   left:0;
   top: 0;
   width: 100%;
@@ -105,6 +107,8 @@ body {
 }
 .hasContent{
   position: absolute;
+  overflow: hidden;
+  white-space: nowrap;
     left: 0;
     bottom: 0;
     top: -1rem;
@@ -121,7 +125,7 @@ body {
 .submit-form:hover, .random-submit:hover {
   background-color: #faf0dc;
 }
-#submit {
+.submit-row {
   display: flex;
   justify-content: center;
   width: 100%;

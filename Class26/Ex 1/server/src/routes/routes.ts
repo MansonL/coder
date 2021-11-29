@@ -1,19 +1,28 @@
-import e, { Request, Response, Router } from 'express';
+import e, { NextFunction, Request, Response, Router } from 'express';
 import passport from 'passport';
+import { IVerifyOptions } from 'passport-local';
 import { Controller } from '../controllers/controller';
 
 export const router = Router();
 
 router.get('/login', Controller.login);
-router.post('/login', passport.authenticate('login', { failureRedirect: '/logsignFailure' }), (req: Request, res: Response) => {
+router.post('/login', passport.authenticate('login'), (req: Request, res: Response) => {
     const user = req.user;
     res.send({response: "Successful", data: user});
 });
 
 router.get('/signup', Controller.signup);
-router.post('/signup', passport.authenticate('signup', { failureRedirect: '/logsignFailure' }), (req: Request, res: Response) => {
-    const user = req.user;
-    res.send({response: "Successful", data: user});
+router.post('/signup', (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate('signup', (err: any, user: any, info: IVerifyOptions) => {
+        console.log(`Inside authenticate callback.`)
+        console.log(err, user, info)
+        if(err){
+            console.log(err);
+            return next(err);
+        }
+        if(!user) return res.status(401).json({data: info});
+        res.json({data: user, msg: "Signed up"});
+    })(req,res,next);
 });
 
 router.get('/profile', Controller.isAuthenticated, Controller.profile)
