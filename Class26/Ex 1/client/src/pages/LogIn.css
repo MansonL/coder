@@ -49,7 +49,6 @@
     border-radius: 0.8rem;
     padding: 0.3rem;
     cursor: pointer;
-    align-self: flex-end;
   }
   .user-login{
     display: flex;

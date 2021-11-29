@@ -1,5 +1,5 @@
 import e, { NextFunction, Request, Response, Router } from 'express';
-import passport from 'passport';
+import passport from '../utils/passport';
 import { IVerifyOptions } from 'passport-local';
 import { Controller } from '../controllers/controller';
 
@@ -13,14 +13,16 @@ router.post('/login', passport.authenticate('login'), (req: Request, res: Respon
 
 router.get('/signup', Controller.signup);
 router.post('/signup', (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('signup', (err: any, user: any, info: IVerifyOptions) => {
+    passport.authenticate('signup', function(err: any, user: any, info: IVerifyOptions){
         console.log(`Inside authenticate callback.`)
         console.log(err, user, info)
         if(err){
             console.log(err);
-            return next(err);
+             res.send(err);
         }
-        if(!user) return res.status(401).json({data: info});
+        if(!user) { 
+            res.status(401).json({data: info})
+        };
         res.json({data: user, msg: "Signed up"});
     })(req,res,next);
 });

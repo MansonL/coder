@@ -24,24 +24,23 @@ export const passportLogin: VerifyFunctionWithRequest = (req: Request, username:
          if(err) done(err, null);
          if(!user){
              console.log(`Wrong credentials.`);
-             return done(null, false, { message: `Wrong credentials.` });
+              return done(null, false, { message: `Wrong credentials.` });
          }else{
              if(!validPassword(user, password)){
                  console.log(`Wrong credentials`);
-                 return done(null, false, { message: "Wrong credentials." });
+                  return done(null, false, { message: "Wrong credentials." });
          }
-             return done(null, user)
+              return done(null, user)
          }   
      })
  }
  
  export const passportSignUp : VerifyFunctionWithRequest = (req: Request, username: string, password: string, done: doneFunction) => {
-     process.nextTick(function(){
         console.log('Inside passportSignUp')     
         usersStore.findOne(username, (err, user) => {
              if(err){
                  console.log(`Error at signup ` + err)
-                 return done(err)
+                  return done(err)
              }
              if(user){
                  console.log(`There's an existing user with the username ${username}`);
@@ -60,15 +59,15 @@ export const passportLogin: VerifyFunctionWithRequest = (req: Request, username:
                  usersStore.saveOne(newUser, (err, user) => {
                  if(err){
                      console.log(`Error at saving user ` + err);
-                     done(err)
+                      return done(err)
                  }else{
-                     done(null, user)
+                      return done(null, user)
                  }
                      
              })
          }
      })
- })}
+ }
  
 /**
  * Function for encrypting user password
@@ -98,9 +97,7 @@ export const passportLogin: VerifyFunctionWithRequest = (req: Request, username:
 
 const LocalStrategy = passportLocal.Strategy
 const strategyOptions : IStrategyOptionsWithRequest = {
-    usernameField: 'username',
-    passwordField: 'password',
-    passReqToCallback: true,
+    passReqToCallback: true
     
 }
 
