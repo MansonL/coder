@@ -4,7 +4,8 @@
   "description": "Class26 Excercise 1",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsnd --respawn ./src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "eslint": "^8.3.0",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.2"
   },
   "dependencies": {

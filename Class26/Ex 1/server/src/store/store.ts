@@ -1,4 +1,4 @@
-import e from "express";
+import uuid from 'uuid'
 
 declare global {
     namespace Express {
@@ -6,15 +6,19 @@ declare global {
     }
 }
 
-export interface IUser  {
-    [key: string]: string | number;
-    _id: string;
+export interface IUser extends INew_User {
+    
+    _id: string,
+}
+
+export interface INew_User {
+    [key: string]: string,
     timestamp: string;
-    user: string;
+    username: string;
     password: string,
     name: string;
     surname: string;
-    age: number;
+    age: string;
     alias: string;
     avatar: string;
 }
@@ -30,6 +34,7 @@ export class Store {
      findOne (username: string, cb: (error: any | undefined, user: IUser | undefined) =>  void) {
         try {
             const user = this.users.filter(user => user.user === username)[0];
+            console.log(this.users)
             cb(null, user)
         } catch (error) {
             cb(error, undefined);
@@ -45,8 +50,12 @@ export class Store {
         }
     }
 
-    saveOne (user: IUser, cb: (error: any | undefined, user: IUser | undefined) =>  void) {
+    saveOne (newUser: INew_User, cb: (error: any | undefined, user: IUser | undefined) =>  void) {
         try {
+            const user = {
+                ...newUser,
+                _id: uuid.v4(),
+            }
             this.users.push(user);
             cb(null, user)
         } catch (error) {

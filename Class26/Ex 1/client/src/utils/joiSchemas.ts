@@ -1,35 +1,13 @@
 import Joi from "joi";
+import { IUser, INew_User } from '../../../server/src/store/store'
+import moment from 'moment'
 
+const maxDate = moment().subtract(10, 'y').format('MM/DD/YYYY');
+const minDate = moment().subtract(99, 'y').format('MM/DD/YYYY');
 
-/**
- *
- * Type of User Object to be stored and query from Mongo.
- *
- */
- export interface IMongoUser extends INew_User {
-    _id: string;
-}
-
-/**
- *
- * Type of User Object receiving from the frontend.
- *
- */
-export interface INew_User {
-    [key: string]: string | number;
-    timestamp: string;
-    user: string;
-    name: string;
-    surname: string;
-    age: number;
-    alias: string;
-    avatar: string;
-}
-
-
+console.log(`${maxDate} ${minDate}`)
 class Validations {
     public email: Joi.StringSchema
-    public message: Joi.StringSchema
     public user: Joi.ObjectSchema<INew_User>
     public login: Joi.ObjectSchema
     constructor(){
@@ -38,20 +16,16 @@ class Validations {
          */
         this.email = Joi.string().email({tlds: {allow: false}});
         
-        /**
-         * JOI Schema to validate a no whitespace message to be sent.
-         */
-        this.message = Joi.string().min(1);
-        
        /**
          * JOI Schema to validate users.
          */
         this.user = Joi.object<INew_User>({
             timestamp: Joi.string().required(),
-            user: Joi.string().email({ tlds: { allow: false } }),
+            username: Joi.string().email({ tlds: { allow: false } }),
             name: Joi.string().min(4).max(20).required(),
             surname: Joi.string().min(4).max(20).required(),
-            age: Joi.number().min(10).max(100).required(),
+            password: Joi.string().alphanum().min(6).max(20),
+            age: Joi.date().min(minDate).max(maxDate),
             alias: Joi.string().min(5).max(35),
             avatar: Joi.string().uri(),
         });
@@ -61,7 +35,7 @@ class Validations {
          * 
          */
         this.login = Joi.object({
-            user: Joi.alternatives().try(Joi.string().min(5), Joi.string().email({ tlds: { allow: false } })).required(),
+            username: Joi.string().email({ tlds: { allow: false } }).required(),
             password: Joi.string().min(6).required()
         })
     }

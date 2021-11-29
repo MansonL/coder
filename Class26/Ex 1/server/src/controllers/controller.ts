@@ -41,4 +41,9 @@ export class Controller {
             res.redirect('/login');
         }
     }
+
+    static logsignFailure (req: Request, res: Response, next: NextFunction) {
+        console.log(req.body);
+        res.send({ response: "Error", data: {}})
+    }
 }
