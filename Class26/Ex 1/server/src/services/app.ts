@@ -11,12 +11,12 @@ app.use(cors({
     methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
     credentials: true,
 }));
+app.use(e.urlencoded({extended: true}));
 app.use(e.json());
-app.use(e.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
     secret: 'secret',
-    resave: true,
+    resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: false,
@@ -27,13 +27,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use((req: Request, res: Response) => {
-    /*
-    console.log('------------------------- REQ SESSION --------------------------------');
-    console.log(JSON.stringify(req.session));
-    console.log('------------------------- REQ USER -----------------------------------');
-    console.log(JSON.stringify(req.user))
-    */
-})
+
 
 app.use('/api', router);

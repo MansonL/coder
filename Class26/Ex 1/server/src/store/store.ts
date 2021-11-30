@@ -1,4 +1,4 @@
-import uuid from 'uuid'
+import * as uuid from 'uuid';
 
 declare global {
     namespace Express {
@@ -34,7 +34,6 @@ export class Store {
      findOne (username: string, cb: (error: any | undefined, user: IUser | undefined) =>  void) {
         try {
             const user = this.users.filter(user => user.username === username)[0];
-            console.log(this.users)
             cb(null, user)
         } catch (error) {
             cb(error, undefined);

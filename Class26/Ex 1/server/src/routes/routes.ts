@@ -5,25 +5,27 @@ import { Controller } from '../controllers/controller';
 
 export const router = Router();
 
-router.get('/login', Controller.login);
+//router.get('/login', Controller.login);
+
 router.post('/login', passport.authenticate('login'), (req: Request, res: Response) => {
     const user = req.user;
     res.send({response: "Successful", data: user});
 });
 
-router.get('/signup', Controller.signup);
+//router.get('/signup', Controller.signup);
+
 router.post('/signup', (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate('signup', function(err: any, user: any, info: IVerifyOptions){
         console.log(`Inside authenticate callback.`)
         console.log(err, user, info)
         if(err){
             console.log(err);
-             res.send(err);
+             return res.send(err);
         }
         if(!user) { 
-            res.status(401).json({data: info})
+            return res.status(401).send({data: info})
         };
-        res.json({data: user, msg: "Signed up"});
+        return res.json({data: user, msg: "Signed up"});
     })(req,res,next);
 });
 

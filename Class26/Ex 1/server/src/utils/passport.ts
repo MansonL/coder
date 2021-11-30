@@ -97,6 +97,8 @@ export const passportLogin: VerifyFunctionWithRequest = (req: Request, username:
 
 const LocalStrategy = passportLocal.Strategy
 const strategyOptions : IStrategyOptionsWithRequest = {
+    usernameField: "username",
+    passwordField: "password",
     passReqToCallback: true
     
 }

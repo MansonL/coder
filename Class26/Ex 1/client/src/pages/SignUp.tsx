@@ -65,13 +65,15 @@ export function SignUp (props: SignUpProps) {
         if(error){
           props.signUpValidationError(error)
         }else{
-          const response = await (await axios.post<loginResponse>(`http://localhost:8080/api/signup`, user)).data;
-          console.log(response)
-          if(response.response.match(/Error/g)){
+          try {
+            const response = await (await axios.post<loginResponse>(`http://localhost:8080/api/signup`, user)).data;
+          console.log(response);
+          props.signUpSuccessful();
+          } catch (error) {
+            console.log(error)
             props.signUpError();
-          }else{
-            props.signUpSuccessful();
           }
+          
         }
     }
     /*
