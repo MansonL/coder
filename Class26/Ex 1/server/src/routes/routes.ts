@@ -5,31 +5,39 @@ import { Controller } from '../controllers/controller';
 
 export const router = Router();
 
-//router.get('/login', Controller.login);
+router.get('/login', Controller.login);
 
-router.post('/login', passport.authenticate('login'), (req: Request, res: Response) => {
-    const user = req.user;
-    res.send({response: "Successful", data: user});
+router.post('/login', (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate('login', function(err: any, user: any, info: IVerifyOptions){
+        console.log(`Inside authenticate callback`);
+        if(err){
+            return res.status(500).send(err);
+        }
+        if(!user){
+            return res.status(403).json({ data: {}, msg: info.message });
+        }
+        return res.status(201).json({ data: user, msg: info.message })
+    })(req,res,next)
+
 });
 
-//router.get('/signup', Controller.signup);
+
+router.get('/signup', Controller.signup);
 
 router.post('/signup', (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate('signup', function(err: any, user: any, info: IVerifyOptions){
         console.log(`Inside authenticate callback.`)
-        console.log(err, user, info)
         if(err){
             console.log(err);
-             return res.send(err);
+             return res.status(500).send(err);
         }
         if(!user) { 
-            return res.status(401).send({data: info})
+            return res.status(401).json({ data: {}, msg: info.message })
         };
-        return res.json({data: user, msg: "Signed up"});
+        return res.status(201).json({ data: user, msg: info.message });
     })(req,res,next);
 });
 
 router.get('/profile', Controller.isAuthenticated, Controller.profile)
 
 router.get('/logout', Controller.logout)
-router.get('/logsignFailure', Controller.logsignFailure);

@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import { INew_User, IUser, usersStore } from "../store/store";
 import passport from "passport";
 import passportLocal from 'passport-local'
+import { Console } from "console";
 
 export type doneFunction = (error: any, user?: any, options?: IVerifyOptions) => void
 
@@ -30,7 +31,7 @@ export const passportLogin: VerifyFunctionWithRequest = (req: Request, username:
                  console.log(`Wrong credentials`);
                   return done(null, false, { message: "Wrong credentials." });
          }
-              return done(null, user)
+              return done(null, user, { message: "Successfully logged in." })
          }   
      })
  }
@@ -61,7 +62,7 @@ export const passportLogin: VerifyFunctionWithRequest = (req: Request, username:
                      console.log(`Error at saving user ` + err);
                       return done(err)
                  }else{
-                      return done(null, user)
+                      return done(null, user, { message: `Succesfully signed up.`})
                  }
                      
              })
@@ -107,12 +108,16 @@ passport.use('login', new LocalStrategy(strategyOptions, passportLogin))
 passport.use('signup', new LocalStrategy(strategyOptions, passportSignUp));
 
 
-passport.serializeUser((user: IUser, done: (err: any, id?: string) => void) => {
+passport.serializeUser((user, done: (err: any, id?: string) => void) => {
+    console.log("Serializing")
+    console.log(user)
     done(null, user._id)
 });
 
 passport.deserializeUser((id: string, done: (err: any, user: IUser | undefined | false | null) => void) => {
+    console.log("Deserializing")
     usersStore.findByID(id, (err, user) => {
+        console.log(user)
         done(err,user)
     })
 })

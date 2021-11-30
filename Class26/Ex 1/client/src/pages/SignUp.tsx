@@ -10,7 +10,7 @@ import './SignUp.css'
 type SignUpProps = {
     
     signUpValidationError : (error: Joi.ValidationError) => void;
-    signUpError : () => void;
+    signUpError : (msg: string) => void;
     signUpSuccessful : () => void;
     
 } 
@@ -54,7 +54,7 @@ export function SignUp (props: SignUpProps) {
       setShowHide(!showHide);
     }
 
-    const signupSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
+    const signupSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
         const user : INew_User= {
             ...newUser,
@@ -65,15 +65,13 @@ export function SignUp (props: SignUpProps) {
         if(error){
           props.signUpValidationError(error)
         }else{
-          try {
-            const response = await (await axios.post<loginResponse>(`http://localhost:8080/api/signup`, user)).data;
-          console.log(response);
-          props.signUpSuccessful();
-          } catch (error) {
-            console.log(error)
-            props.signUpError();
-          }
-          
+           axios.post<loginResponse>(`http://localhost:8080/api/signup`, user).then(response => {
+            props.signUpSuccessful();
+           }).catch(error => {
+            console.log(error.response);
+            if(error.response) return props.signUpError(error.response.data.msg);
+            props.signUpError("Code: 500. Internal error.")
+           })
         }
     }
     /*
@@ -87,7 +85,6 @@ export function SignUp (props: SignUpProps) {
         })
       }, [])
 */
-      console.log(showPassRequirements)
     return (
         <>
     <section>
