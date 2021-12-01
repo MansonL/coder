@@ -5,8 +5,10 @@ import {
     IUpdate,
     IMongoProduct,
     IQuery,
+    InternalError,
 } from '../interfaces/interfaces';
 import { MongoProducts } from '../models/DAOs/Mongo/products';
+import { ApiError } from '../utils/errorApi';
 
 /**
  *
@@ -21,30 +23,29 @@ export class ProductsApi {
     constructor() {
         this.products = ProductsFactory.get(storage);
     }
-    async getProduct(id?: string | undefined): Promise<IMongoProduct[] | []> {
+    async getProduct(id?: string | undefined): Promise<IMongoProduct[] | ApiError | InternalError> {
         if (id != null) {
-            const result = await this.products.get(id);
+            const result : IMongoProduct[] | ApiError | InternalError = await this.products.get(id);
             return result;
         } else {
-            const result = await this.products.get();
+            const result : IMongoProduct[] | ApiError | InternalError = await this.products.get();
             return result;
         }
     }
-    async addProduct(product: INew_Product): Promise<CUDResponse> {
-        const result = await this.products.add(product);
+    async addProduct(product: INew_Product): Promise<CUDResponse | InternalError> {
+        const result : CUDResponse | InternalError = await this.products.add(product);
         return result;
     }
-    async updateProduct(id: string, product: IUpdate): Promise<CUDResponse> {
-        const result = await this.products.update(id, product);
+    async updateProduct(id: string, product: IUpdate): Promise<CUDResponse | InternalError> {
+        const result : CUDResponse | InternalError = await this.products.update(id, product);
         return result;
     }
-    async deleteProduct(id: string): Promise<CUDResponse> {
-        const result = await this.products.delete(id);
+    async deleteProduct(id: string): Promise<CUDResponse | InternalError> {
+        const result : CUDResponse | InternalError = await this.products.delete(id);
         return result;
     }
-    
-        async query(options: IQuery): Promise<IMongoProduct[] | []> {
-        const result = await this.products.query(options);
+    async query(options: IQuery): Promise<IMongoProduct[] | ApiError | InternalError> {
+        const result : IMongoProduct[] | ApiError | InternalError = await this.products.query(options);
         return result;
     }
     

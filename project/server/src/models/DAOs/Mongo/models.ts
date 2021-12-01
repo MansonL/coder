@@ -8,6 +8,7 @@ import {
 import * as dotenv from 'dotenv';
 import moment from 'moment';
 import { Utils } from '../../../common/utils';
+import { createHash } from '../../../passport/passport';
 
 dotenv.config();
 
@@ -67,11 +68,12 @@ export const models = {
 
 const botData: INew_User = {
     timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
-    user: `test@gmail.com`,
+    username: `test@gmail.com`,
+    password: createHash('test123'),
     name: `Manson`,
     surname: `Bot`,
     alias: `Welcome Bot`,
-    age: 99,
+    age: "27/12/2000",
     avatar: `https://cdn.icon-icons.com/icons2/1371/PNG/512/robot02_90810.png`,
 };
 

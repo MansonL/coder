@@ -4,10 +4,12 @@ import {
     INew_Message,
     CUDResponse,
     IMongoUser,
+    InternalError,
 } from '../../../interfaces/interfaces';
 import { models, WelcomeMessage } from './models';
 import { Model, connect } from 'mongoose';
 import { Utils } from '../../../common/utils';
+import { ApiError } from '../../../utils/errorApi';
 
 export class MongoMessages implements DBMessagesClass {
     private messages: Model<INew_Message>;
@@ -20,21 +22,37 @@ export class MongoMessages implements DBMessagesClass {
         await WelcomeMessage.save();
         console.log(`Messages initialized`);
     }
-    async get(): Promise<IMongoMessage[] | []> {
-        const docs = await this.messages.find({});
+    async get(): Promise<IMongoMessage[] | ApiError | InternalError> {
+        try {
+            const docs = await this.messages.find({});
         if (docs.length > 0) {
             const messages: IMongoMessage[] = Utils.extractMongoMessages(docs);
             return messages;
         } else {
-            return [];
+            return ApiError.notFound(`No messages.`)
         }
+        } catch (error) {
+            return {
+                error: error,
+                message: error.message as string,
+            }
+        }
+        
     }
-    async add(msg: INew_Message): Promise<CUDResponse> {
-        const doc = await this.messages.create(msg);
+    async add(msg: INew_Message): Promise<CUDResponse | ApiError> {
+        try {
+            const doc = await this.messages.create(msg);
         const result = Utils.extractMongoMessages([doc])[0];
         return {
             message: `Message successfully added.`,
             data: result,
         };
+        } catch (error) {
+            return {
+                error: error,
+                message: error.message as string,
+            }
+        }
+        
     }
 }

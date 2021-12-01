@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { cartApi } from '../api/cart';
 import { productsApi } from '../api/products';
 import { EProductsErrors } from '../common/EErrors';
-import { IMongoCartProduct, IMongoProduct } from '../interfaces/interfaces';
+import { IMongoCartProduct, IMongoProduct, InternalError } from '../interfaces/interfaces';
 import { ApiError } from '../utils/errorApi';
 import { validator } from '../utils/joiSchemas';
 
@@ -23,14 +23,10 @@ class CartController {
         if (error) {
             next(ApiError.badRequest(EProductsErrors.IdIncorrect));
         } else {
-            const result: IMongoCartProduct[] | [] = await cartApi.getProduct(
+            const result: IMongoCartProduct[] | InternalError | ApiError = await cartApi.getProduct(
                 id
             );
-            if (result.length > 0) {
-                res.status(200).send(result);
-            } else {
-                next(ApiError.notFound(EProductsErrors.ProductNotFound));
-            }
+            
         }
     }
     async getCart(

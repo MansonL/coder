@@ -18,54 +18,13 @@ export type doneFunction = (error: any, user?: any, options?: IVerifyOptions) =>
 export const passportLogin: VerifyFunctionWithRequest = async (req: Request, username: string, password: string, done: doneFunction) => {
     console.log('Inside passportLogin')
     console.log('------------------- REQ BODY ---------------------')
-     console.log(req.body)
-     usersStore.findOne(username, (err, user) => {
-         if(err) done(err, null);
-         if(!user){
-             console.log(`Wrong credentials.`);
-              return done(null, false, { message: `Wrong credentials.` });
-         }else{
-             if(!validPassword(user, password)){
-                 console.log(`Wrong credentials`);
-                  return done(null, false, { message: "Wrong credentials." });
-         }
-              return done(null, user, { message: "Successfully logged in." })
-         }   
-     })
+    console.log(req.body)
+    
  }
  
  export const passportSignUp : VerifyFunctionWithRequest = (req: Request, username: string, password: string, done: doneFunction) => {
         console.log('Inside passportSignUp')     
-        usersStore.findOne(username, (err, user) => {
-             if(err){
-                 console.log(`Error at signup ` + err)
-                  return done(err)
-             }
-             if(user){
-                 console.log(`There's an existing user with the username ${username}`);
-                 return done(null, false, { message: `There's an existing user with the username ${username}` })
-             }else{
-                 const newUser : INew_User = {
-                     timestamp: req.body.timestamp as string,
-                     username: username as string,
-                     password: createHash(password),
-                     name: req.body.name as string,
-                     surname: req.body.surname as string,
-                     avatar: req.body.avatar as string,
-                     age: req.body.age as string,
-                     alias: req.body.alias as string,
-                 };
-                 usersStore.saveOne(newUser, (err, user) => {
-                 if(err){
-                     console.log(`Error at saving user ` + err);
-                      return done(err)
-                 }else{
-                      return done(null, user, { message: `Succesfully signed up.`})
-                 }
-                     
-             })
-         }
-     })
+        
  }
  
 /**
@@ -114,7 +73,7 @@ passport.serializeUser((user, done: (err: any, id?: string) => void) => {
 
 passport.deserializeUser((id: string, done: (err: any, user: IMongoUser | undefined | false | null) => void) => {
     console.log("Deserializing")
-    usersStore.findByID(id, (err, user) => {
+    .findByID(id, (err, user) => {
         console.log(user)
         done(err,user)
     })

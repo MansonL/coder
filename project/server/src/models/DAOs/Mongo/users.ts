@@ -5,9 +5,12 @@ import {
     INew_User,
     IMongoUser,
     CUDResponse,
+    InternalError,
 } from '../../../interfaces/interfaces';
 import { Utils } from '../../../common/utils';
 import { DBUsersClass } from '../../../interfaces/interfaces';
+import { ApiError } from '../../../utils/errorApi';
+import { EUsersErrors } from '../../../common/EErrors';
 
 export class MongoUsers implements DBUsersClass {
     private users: Model<INew_User>;
@@ -20,14 +23,15 @@ export class MongoUsers implements DBUsersClass {
         await WelcomeBot.save();
         console.log(`Users initialized`);
     }
-    async get(id?: string | undefined): Promise<IMongoUser[] | []> {
+    async get(id?: string | undefined): Promise<IMongoUser[] | ApiError | InternalError> {
+      try {
         if (id != null) {
             const docs = await this.users.find({ _id: id });
             if (docs.length > 0) {
                 const user: IMongoUser[] = Utils.extractMongoUsers(docs);
                 return user;
             } else {
-                return [];
+                return ApiError.badRequest(EUsersErrors.UserNotFound)
             }
         } else {
             const docs = await this.users.find({});
@@ -35,16 +39,46 @@ export class MongoUsers implements DBUsersClass {
                 const users: IMongoUser[] = Utils.extractMongoUsers(docs);
                 return users;
             } else {
-                return [];
+                return ApiError.notFound(EUsersErrors.NoUsers)
+            }
+        }
+       } catch (error) {
+          return {
+              error: error,
+              message: error.message as string,
+          } 
+    }
+    }
+    async getByUser(username: string): Promise<IMongoUser | ApiError | InternalError> {
+        try {
+            const doc = await this.users.findOne({ username: username });
+            console.log(doc);
+            if(doc){
+                const user : IMongoUser = Utils.extractMongoUsers([doc])[0]
+                return user
+            }else{
+                return ApiError.notFound(EUsersErrors.UserNotFound);
+            }
+        } catch (error) {
+            return {
+                error: error,
+                message: error.message as string
             }
         }
     }
-    async add(user: INew_User): Promise<CUDResponse> {
-        const doc = await this.users.create(user);
-        const result = Utils.extractMongoUsers([doc])[0];
-        return {
-            message: `Message successfully added.`,
-            data: result,
-        };
-    }
+    async add(user: INew_User): Promise<CUDResponse | InternalError> {
+        try {
+            const doc = await this.users.create(user);
+            const result = Utils.extractMongoUsers([doc])[0];
+            return {
+                message: `Message successfully added.`,
+                data: result,
+            };
+        }catch (error) {
+            return {
+                error: error,
+                message: error.message,
+            }
+        }
+}
 }

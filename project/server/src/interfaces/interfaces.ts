@@ -1,3 +1,5 @@
+import { ApiError } from "../utils/errorApi";
+
 /**
  *
  * Type of Product to be stored and query from Mongo
@@ -130,17 +132,27 @@ export interface CUDResponse {
 }
 
 /**
+ * 
+ * Internal Error Response type
+ * 
+ */
+export interface InternalError {
+    error: any;
+    message: string;
+}
+
+/**
  *
  * Product Storage Classes structure.
  *
  */
 export interface DBProductsClass {
     init?(): Promise<void>;
-    get(id?: string | undefined): Promise<IMongoProduct[] | []>;
-    add(newProduct: INew_Product): Promise<CUDResponse>;
-    update(id: string | number, data: IUpdate): Promise<CUDResponse>;
-    delete(id: string | number): Promise<CUDResponse>;
-    //query(options: IQuery): Promise< IMongoProduct[] | []>;
+    get(id?: string | undefined): Promise<IMongoProduct[] | ApiError | InternalError>;
+    add(newProduct: INew_Product): Promise<CUDResponse | InternalError>;
+    update(id: string | number, data: IUpdate): Promise<CUDResponse | InternalError>;
+    delete(id: string | number): Promise<CUDResponse | InternalError>;
+    query(options: IQuery): Promise<IMongoProduct[] | ApiError | InternalError>;
 }
 
 /**
@@ -152,9 +164,9 @@ export interface DBCartClass {
     init?(): Promise<void>;
     get(
         id?: string | undefined
-    ): Promise<ICartProduct[] | IMongoCartProduct[] | []>;
-    add(id: string, product: INew_Product): Promise<CUDResponse>;
-    delete(id: string): Promise<CUDResponse>;
+    ): Promise<IMongoCartProduct[] | ApiError | InternalError>;
+    add(id: string, product: INew_Product): Promise<CUDResponse | InternalError>;
+    delete(id: string): Promise<CUDResponse | |InternalError>;
 }
 
 /**
@@ -164,8 +176,8 @@ export interface DBCartClass {
  */
 export interface DBMessagesClass {
     init?(): Promise<void>;
-    get(): Promise<IMongoMessage[] | []>;
-    add(msg: INew_Message): Promise<CUDResponse>;
+    get(): Promise<IMongoMessage[] | ApiError | InternalError>;
+    add(msg: INew_Message): Promise<CUDResponse | InternalError>;
 }
 
 /**
@@ -175,6 +187,7 @@ export interface DBMessagesClass {
  */
 export interface DBUsersClass {
     init?(): Promise<void>;
-    get(id?: string | undefined): Promise<IMongoUser[] | []>;
-    add(user: INew_User): Promise<CUDResponse>;
+    get(id?: string | undefined): Promise<IMongoUser[] | ApiError | unknown>;
+    getByUser(username: string): Promise <IMongoUser | ApiError | unknown> // This method is for checking and not storing repeated users.
+    add(user: INew_User): Promise<CUDResponse | ApiError | unknown>;
 }

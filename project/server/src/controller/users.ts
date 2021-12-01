@@ -38,11 +38,11 @@ class UsersController {
         next: NextFunction
     ): Promise<void> {
         console.log(`[PATH] Inside controller.`);
-        const users: IMongoUser[] | [] = await usersApi.getUsers();
+        const users: IMongoUser[] | ApiError | unknown = await usersApi.getUsers();
         if (users.length > 0) {
             res.status(200).send(users);
         } else {
-            next(ApiError.badRequest(EUsersErrors.NoUsers));
+            next();
         }
     }
     async save(req: Request, res: Response, next: NextFunction): Promise<void> {

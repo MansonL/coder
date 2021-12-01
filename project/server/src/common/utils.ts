@@ -110,18 +110,19 @@ export class Utils {
             })[]
     ): IMongoUser[] => {
         const users: IMongoUser[] = documents.map((document): IMongoUser => {
-            const { timestamp, user, name, surname, age, alias, avatar } =
+            const { timestamp, username, password, name, surname, age, alias, avatar } =
                 document.toObject({ flattenMaps: true });
             const _id: string = document._id;
             const mongoUser: IMongoUser = {
                 _id: _id,
-                timestamp: timestamp as string,
-                user: user as string,
-                name: name as string,
-                surname: surname as string,
-                age: age as number,
-                alias: alias as string,
-                avatar: avatar as string,
+                timestamp: timestamp,
+                username: username,
+                password: password,
+                name: name,
+                surname: surname ,
+                age: age,
+                alias: alias,
+                avatar: avatar,
             };
             return mongoUser;
         });
