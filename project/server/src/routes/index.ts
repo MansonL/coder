@@ -1,10 +1,12 @@
-import express from 'express';
-import router_products from './routes_products';
-import router_cart from './routes_cart';
+import e, { Router } from 'express';
+import { productsRouter } from './products';
+import { messagesRouter } from './messages1';
+import { usersRouter } from './users';
+import { cartRouter } from './cart';
 
-const router = express.Router();
+export const router: e.Router = Router();
+router.use('/products', productsRouter);
+router.use('/cart', cartRouter);
+router.use('/messages', messagesRouter);
+router.use('/users', usersRouter);
 
-router.use('/products', router_products);
-router.use('/cart', router_cart);
-
-export default router;

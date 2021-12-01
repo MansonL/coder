@@ -5,11 +5,12 @@
   .title, h6, h5, .submit-btn{
     text-align: center;
   }
-  .row-form {
+  .row-form, .random-row {
     position: relative;
     margin-bottom: 1.2rem;
+    text-align: left;
   }
-  input {
+  .label-styled-input {
     position: relative;
     z-index:1;
     width:100%;
@@ -17,10 +18,10 @@
     background-color: transparent;
     border-bottom: 1px solid grey;
   }
-  input:focus {
+  .label-styled-input:focus {
     outline: none;
   }
-  input ~ label {
+  .label-styled {
     font-size: 0.9rem;
     position: absolute;
     left:0;
@@ -28,7 +29,7 @@
     transition: 0.3s;
     z-index:0;
   }
-  input:focus ~ label {
+  .label-styled-input:focus ~ .label-styled {
     position: absolute;
     left: 0;
     bottom: 0;
@@ -37,7 +38,7 @@
     font-weight:700;
     transition: 0.3s;
   }
-  input ~ .form-border {
+  .label-styled-input ~ .form-border {
     position: absolute;
     left:0;
     bottom:0;
@@ -46,11 +47,11 @@
     height: 4px;
     transition: 0.3s;
   }
-  input:focus ~ .form-border {
+  .label-styled-input:focus ~ .form-border {
     width: 100%;
     transition: 0.3s;
   }
-  input:focus {
+  .label-styled-input:focus {
     border-bottom: none;
   }
   .hasContent{
@@ -62,17 +63,57 @@
       font-weight:700;
       transition: 0.3s;
   }
-  .submit-form {
+  .submit-form, .random-submit {
     border: 0.1rem solid #faf0dc;
     background-color: transparent;
     border-radius: 0.8rem;
     font-size: 1.3rem;
+    cursor: pointer;
+    transition: 0.2s;
   }
-  .submit-form:hover {
-    background-color: #faf0dc;
-  }
-  #submit {
+  .submit-form:hover, .random-submit:hover {
+    font-weight: 550;
+    transition: 0.2s;
+    }
+  .submit-row {
     display: flex;
     justify-content: center;
     width: 100%;
   }
+  .form-error, .form-success {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    margin: auto;
+    margin-top: 0.5rem;
+    border-radius: 0.8rem;
+    padding: 0.5rem;
+  }
+  .form-error {
+    border: 1px red solid;
+    background-color: #F9B3BB;
+  }
+  .form-success {
+    border: 1px green solid;
+    background-color: #B9D39C;
+  }
+  .result-top {
+    display: flex;
+  }
+  .result-header {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.2rem;
+  }
+  .result-btn {
+    background-color: transparent;
+      border: none;
+      margin-right: 1rem;
+      margin-top: 0.3rem;
+    cursor:pointer;
+  }
+  .result-message {
+    margin: 0.5rem 0rem 0.2rem 0.4rem;
+    font-size: small;
+  }
+  

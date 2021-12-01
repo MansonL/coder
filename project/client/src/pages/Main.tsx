@@ -1,91 +1,66 @@
 
-import { BrowserRouter as Router, Switch, Link, Route } from 'react-router-dom';
-import { Products } from './Products';
+import { Routes, Link, Route, Router, BrowserRouter } from 'react-router-dom';
 import { Messages } from './Messages';
 import { Form } from './Form';
 import { Home } from './Home';
-import { socket } from '../lib/socket';
 import './main.css';
+import React, { useEffect, useRef, useState } from 'react';
+import { RandomProducts } from './randomProducts';
+import { DBProducts } from './DBProducts';
+import { Cart } from './Cart';
+import { LogIn } from './LogIn';
 
 export function Main () {
+  const dropdownMenu = useRef(null);
+  const dropdownBtn = useRef(null);
+  const [showMenu, setShowMenu] = useState(false)
 
-  /**
-   * We are emitting the respective events for requesting to the backend the necessary resources through sockets
-   * @param e  
-   * 
-   */
-
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const whichMenu = e.currentTarget.innerHTML;
-    switch(whichMenu){
-      case 'Messages': 
-          socket.emit('messages');
-          socket.emit('users');
-          break;
-      case 'DB Products':
-          socket.emit('products');
-          break;
-      case 'DB Cart':
-          socket.emit('cart');
-          break;
-      case 'Random Generated':
-          socket.emit('randomProducts');
-          break;
-      }
-  }
+  useEffect(() => {
+    document.addEventListener('click', (ev: MouseEvent) => {
+      if(dropdownMenu && dropdownBtn && ev.target){
+          if(ev.target != dropdownBtn.current && ev.target !== dropdownMenu.current){
+            if(showMenu) setShowMenu(false)
+          }
+        }
+    })
+  })
   
+  
+  const menuBtnHandleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      setShowMenu(true)
+  }
+
+  const menuClass = `products-dropdown ${showMenu ? 'showMenu' : ''}`;
   return (
-    <Router>
+        <BrowserRouter>
         <div className="container">
+          
   <div className="top-bar">
-    <Link to="/messages">
-    <button className="top-buttons">Messages</button>
-    </Link>
-    <div className="products-menu">
-    <button className="top-buttons" id="product-menu-button">Products</button>
-      <div className="products-dropdown">
-        <Link to='/randomProducts'>
-        <button>Random Generated</button>
-        </Link>
-        <hr className="hr-menu"/>
-        <Link to="/form">
-        <button onClick={handleClick}>Form</button>
-        </Link>
-        <hr className="hr-menu"/>
-        <Link to="/products">
-        <button>DB Products</button>
-      </Link>
-      <hr className='hr-menu'/>
-      <Link to="/cart">
-        <button>DB Cart</button>
-      </Link>
+  <div className="products-menu"><button className="top-buttons" ref={dropdownBtn} id="product-menu-button" onClick={menuBtnHandleClick}>Products</button>
+      <div className={menuClass} ref={dropdownMenu}><Link to="/randomProducts"><button className="top-buttons">Random Generated</button></Link>
+        <hr className="hr-menu"/><Link to="/form" ><button className="top-buttons">Form</button></Link>
+        <hr className="hr-menu"/><Link to="/DBProducts"><button className="top-buttons">DB Products</button></Link>
+        <hr className="hr-menu"/><Link to="/cart"><button className="top-buttons">DB Cart</button></Link>
       </div>
-      </div>
+    </div>
+    <Link to="/messages"><button className="top-buttons">Messages</button></Link>
+    <Link to="/login"><button className="top-buttons">Log in/Log out</button></Link>
   </div><hr/>
   <div className="body">
-    <Switch>
-      <Route path="/messages">
-        <Messages />
-      </Route>
-      <Route path="/randomProducts">
-        <Products type="random"/>
-      </Route>
-      <Route path="/products">
-        <Products type="normal"/>
-      </Route>
-      <Route path="/cart">
-        <Products type="cart"/>
-      </Route>
-      <Route path="/form">
-        <Form />
-      </Route>
-      <Route path="/">
-        <Home />
-      </Route>
-    </Switch>
+  
+    <Routes>
+    <Route path="/" element={<Home/>} />
+      <Route path="/messages" element={<Messages/>}/>
+      <Route path="/randomProducts" element={<RandomProducts/>} />
+      <Route path="/DBProducts" element={<DBProducts/>} />
+      <Route path="/cart" element={<Cart/>} />
+      <Route path="/form" element={<Form/>} />
+      <Route path="/login" element={<LogIn/>}/>
+    </Routes>
+    
 </div>
 </div>
-</Router>
+</BrowserRouter>
     )
 }

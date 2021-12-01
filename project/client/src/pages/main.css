@@ -32,6 +32,9 @@ body {
   display: none;
   white-space: nowrap;
 }
+.showMenu {
+  display: block !important;
+}
 .hr-menu {
   color: grey;
   border: 1px solid grey;
@@ -41,14 +44,15 @@ body {
   border: none;
   background-color: white;
   border-radius: 0.4rem;
+  cursor: pointer;
 }
 .menu-btn {
   font-size: 0.8rem;
 }
-.title, h6, h5, .submit-btn{
+.title, h6, h5, .submit-btn, .body-header{
   text-align: center;
 }
-input {
+.label-styled-input {
   position: relative;
   z-index:1;
   width:100%;
@@ -56,18 +60,19 @@ input {
   background-color: transparent;
   border-bottom: 1px solid grey;
 }
-input:focus {
+.label-styled-input:focus {
   outline: none;
 }
-input ~ label {
+.label-styled {
   font-size: 0.9rem;
   position: absolute;
   left:0;
+  top: 0;
   width: 100%;
   transition: 0.3s;
   z-index:0;
 }
-input:focus ~ label {
+.label-styled-input:focus ~ .label-styled {
   position: absolute;
   left: 0;
   bottom: 0;
@@ -76,7 +81,7 @@ input:focus ~ label {
   font-weight:700;
   transition: 0.3s;
 }
-input:focus {
+.label-styled-input:focus {
   border-bottom: none;
 }
 .hasContent{
@@ -94,11 +99,15 @@ input:focus {
   border-radius: 0.8rem;
   font-size: 1.3rem;
 }
-.submit-form:hover {
+.submit-form:hover, .random-submit:hover {
   background-color: #faf0dc;
 }
 #submit {
   display: flex;
   justify-content: center;
   width: 100%;
+}
+img{
+  width: 100%;
+  height: auto;
 }
