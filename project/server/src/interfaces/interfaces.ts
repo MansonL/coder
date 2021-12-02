@@ -166,7 +166,7 @@ export interface DBCartClass {
         id?: string | undefined
     ): Promise<IMongoCartProduct[] | ApiError | InternalError>;
     add(id: string, product: INew_Product): Promise<CUDResponse | InternalError>;
-    delete(id: string): Promise<CUDResponse | |InternalError>;
+    delete(id: string): Promise<CUDResponse | InternalError>;
 }
 
 /**
@@ -187,7 +187,7 @@ export interface DBMessagesClass {
  */
 export interface DBUsersClass {
     init?(): Promise<void>;
-    get(id?: string | undefined): Promise<IMongoUser[] | ApiError | unknown>;
-    getByUser(username: string): Promise <IMongoUser | ApiError | unknown> // This method is for checking and not storing repeated users.
-    add(user: INew_User): Promise<CUDResponse | ApiError | unknown>;
+    get(id?: string | undefined): Promise<IMongoUser[] | ApiError | InternalError>;
+    getByUser(username: string): Promise <IMongoUser | ApiError | InternalError>  // This method is for checking and not storing repeated users.
+    add(user: INew_User): Promise<CUDResponse | ApiError>;
 }

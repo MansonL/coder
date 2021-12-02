@@ -20,8 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
 app.use(session({
     secret: 'secret',
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     store: MongoStore.create({
         clientPromise: mongoConnection(),
         stringify: false,
@@ -39,7 +39,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-app.use('/', router);
+app.use('/api', router);
 app.use(errorHandler);
 app.use(unknownRoute);
 

@@ -134,7 +134,7 @@ export class MongoProducts implements DBProductsClass {
                 const products: IMongoProduct[] = Utils.extractMongoProducts(doc);
                 return products;
             } else {
-                return ApiError.notFound(EProductsErrors.ProductNotFound)
+                return ApiError.notFound(`No products matching the query`);
             }
         } catch (error) {
             return {

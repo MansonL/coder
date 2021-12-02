@@ -1,19 +1,17 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { validation } from "../utils/joiSchemas";
+import { LoggedIn } from "./components/LoggedIn";
+import { LogSignHeader } from "./components/LogSignHeader";
 import './LogIn.css'
-
-interface loginResponse {
-  process: string;
-  message: string;
-}
+import { authResponse } from "./Main";
 
 
 export function LogIn (){
     
-    const [showResultLogin, setShowResultLogin] = useState(false);
-    const [loginResult, setLoginResult] = useState(false);
-    const [loginMsgResult, setLoginMsgResult] = useState('');
+    const [showResult, setShowResult] = useState(false);
+    const [loginSignResult, setLoginSignResult] = useState(false);
+    const [msgResult, setMsgResult] = useState('');
 
     const [loggedIn, setLoggedIn] = useState(false);
     const [loggingOut, setLoggingOut] = useState(false);
@@ -21,15 +19,15 @@ export function LogIn (){
     const [showHide, setShowHide] = useState(false);
 
     const [credentials, setCredentials] = useState({
-        user: '',
+        username: '',
         password: '',
     });
 
     /**
      * Simple function for deleting the result message of the form submission attempt.
      */
-    const deleteLogInMsg = () => {
-      setShowResultLogin(false);
+    const deleteResultMsg = () => {
+      setShowResult(false);
     }
 
     /**
@@ -59,19 +57,19 @@ export function LogIn (){
       ev.preventDefault();
       const { error } = validation.login.validate(credentials);
       if(error){
-        setShowResultLogin(true);
-        setLoginResult(false);
-        setLoginMsgResult(error.message);
+        setShowResult(true);
+        setLoginSignResult(false);
+        setMsgResult(error.message);
       }else{
-        const response = await (await axios.get<loginResponse>(`http://localhost:8080/users/login?user=${credentials.user}&password=${credentials.password}`, {withCredentials: true})).data;
-        if(response.process.match(/Error/g)){
-          setShowResultLogin(true);
-          setLoginResult(false);
-          setLoginMsgResult(response.message)
+        const response = await (await axios.post<authResponse>(`http://localhost:8080/api/auth/login}`, credentials,{withCredentials: true})).data;
+        if(response.message.match(/Error/g)){
+          setShowResult(true);
+          setLoginSignResult(false);
+          setMsgResult(response.message)
         }else{
-          setShowResultLogin(true);
-          setLoginResult(true);
-          setLoginMsgResult(response.message);
+          setShowResult(true);
+          setLoginSignResult(true);
+          setMsgResult(response.message);
           setTimeout(() => {
             setLoggedIn(true);
             setLoggingOut(false);
@@ -88,16 +86,16 @@ export function LogIn (){
       setTimeout(() => {
         setLoggingOut(false);
         setLoggedIn(false);
-        setShowResultLogin(false);
+        setShowResult(false);
         setCredentials({
-          user: '',
+          username: '',
           password: '',
         })
       }, 2000)
     }
     
     useEffect(() => {
-      axios.get<loginResponse>('http://localhost:8080/users/login', {withCredentials: true}).then(response => {
+      axios.get<authResponse>('http://localhost:8080/api/auth/login', {withCredentials: true}).then(response => {
         const data = response.data;
         console.log(data.message)
         if(data.message.match(/already logged/g)){
@@ -105,7 +103,7 @@ export function LogIn (){
           setLoggingOut(false);
         }else{
           setLoggedIn(false);
-          setShowResultLogin(false);
+          setShowResult(false);
         }
       })
     }, [])
@@ -113,29 +111,15 @@ export function LogIn (){
     return (
         <>
         {!loggedIn ?  <>
-        <header>
-      <div className="title">
-        <h4>Sign in</h4>
-      </div>
-    </header>
-    {showResultLogin && <div className="login-msg" style={{border: `2px solid ${loginResult ? "#83944C" : "#ff5d8f"}` }}>
-      <header className="login-msg-header" style={{backgroundColor: `${loginResult ? "#99AC5D" : "#ff87ab"} `}}>
-        <span className="login-header-msg">{`${loginResult ? "Succesfully logged in!" : "Failed to log in!"}`}</span>
-        <img className="login-header-icon" src="../../grey-cross.png" onClick={deleteLogInMsg}></img>
-        </header>
-    <div className="login-msg-description" style={{backgroundColor: `${loginResult ? "#E9EDC9" : "#fadde1"}`}}>
-      {loginMsgResult}
-    </div>
-    </div>
-}
+        <LogSignHeader logSignResult={loginSignResult} type="login" deleteResultMsg={deleteResultMsg} showResult={showResult} msgResult={msgResult}/>
     <section>
       <form onSubmit={logInSubmit}>
       <div className="user-login">
         
           <div className="row-form">
             
-            <div className="effect-input"><input type="text" className="label-styled-input" value={credentials.user} onChange={onChange} name="user"/>
-            <label className={`${credentials.user != '' ? "hasContent" : "label-styled"}`}>Email or username</label>
+            <div className="effect-input"><input type="text" className="label-styled-input" value={credentials.username} onChange={onChange} name="user"/>
+            <label className={`${credentials.username != '' ? "hasContent" : "label-styled"}`}>Email or username</label>
               <span className="form-border"/>
             </div>
           </div>
@@ -152,15 +136,8 @@ export function LogIn (){
         </form>
      
     </section>
-    </> : 
-    <>
-    <div className="logged-in-container-msg">
-      <div className="logged-in-msg">
-        { loggingOut ? `Goodbye ${credentials.user}` : `You're already logged in ${credentials.user}.` /* Here this line will be modified when whe store the users at DB*/} 
-      </div>
-      { !loggingOut && <button className="submit-form" onClick={logOutClick}>Log out</button>}
-    </div>
-    </>}
+    </> : <LoggedIn logOutClick={logOutClick} loggingOut={loggingOut} credentials={credentials}/>
+    }
     </>
     )
 }

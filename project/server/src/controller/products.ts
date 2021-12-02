@@ -6,11 +6,13 @@ import {
     CUDResponse,
     IMongoProduct,
     INew_Product,
+    InternalError,
     IQuery,
     IUpdate,
 } from '../interfaces/interfaces';
 import { validator } from '../utils/joiSchemas';
 import { Utils } from '../common/utils';
+import { isCUDResponse, isProduct } from '../interfaces/checkType';
 
 /**
  *
@@ -24,12 +26,14 @@ class ProductController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const products: IMongoProduct[] | [] = await productsApi.getProduct();
+        const result: IMongoProduct[] | ApiError | InternalError = await productsApi.getProduct();
         console.log(`[PATH] Inside controller.`);
-        if (products.length > 0) {
-            res.status(200).send(products);
-        } else {
-            next(ApiError.notFound(EProductsErrors.NoProducts));
+        if(isProduct(result)){
+            res.status(200).send(result)
+        }else if(result instanceof ApiError){
+            res.status(result.error).send(result)
+        }else{
+            res.status(500).send(result) // Internal Error sent.
         }
     }
     async getOne(
@@ -43,13 +47,15 @@ class ProductController {
         if (error) {
             next(ApiError.badRequest(EProductsErrors.IdIncorrect));
         } else {
-            const product: IMongoProduct[] | [] = await productsApi.getProduct(
+            const result: IMongoProduct[] | ApiError | InternalError = await productsApi.getProduct(
                 id
             );
-            if (product.length > 0) {
-                res.status(200).send(product);
-            } else {
-                next(ApiError.notFound(EProductsErrors.ProductNotFound));
+            if(isProduct(result)){
+                res.status(200).send(result);
+            }else if(result instanceof ApiError){
+                res.status(result.error).send(error);
+            }else{
+                res.status(500).send(result)    // Internal Error sent.
             }
         }
     }
@@ -75,8 +81,12 @@ class ProductController {
         if (error) {
             next(ApiError.badRequest(EProductsErrors.PropertiesIncorrect));
         } else {
-            const result: CUDResponse = await productsApi.addProduct(product);
-            res.status(200).send(result);
+            const result: CUDResponse | InternalError = await productsApi.addProduct(product);
+            if(isCUDResponse(result)){
+                res.status(201).send(result)
+            }else{
+                res.status(500).send(result)    // Internal Error sent.
+            }
         }
     }
     async update(
@@ -86,20 +96,28 @@ class ProductController {
     ): Promise<void> {
         const id: string = req.params.id;
         const newProperties: IUpdate = req.body;
-        const resultID = await validator.id.validateAsync(id);
-        const resultProps = await validator.update.validateAsync(newProperties);
-        if (resultID.error)
-            next(ApiError.badRequest(EProductsErrors.IdIncorrect));
-        if (resultProps.error)
-            next(ApiError.badRequest(EProductsErrors.PropertiesIncorrect));
-        const product: IMongoProduct[] | [] = await productsApi.getProduct(id);
-        if (product.length > 0) {
-            const result = await productsApi.updateProduct(id, newProperties);
-            res.status(200).send(result);
-        } else {
-            next(ApiError.notFound(EProductsErrors.ProductNotFound));
-        }
+        const resultID = validator.id.validate(id);
+        const resultProps = validator.update.validate(newProperties);
         console.log(`[PATH] Inside controller.`);
+        if (resultID.error){
+            next(ApiError.badRequest(EProductsErrors.IdIncorrect));
+        }else if(resultProps.error){
+            next(ApiError.badRequest(EProductsErrors.PropertiesIncorrect));
+        }else{
+            const firstResult: IMongoProduct[] | ApiError | InternalError = await productsApi.getProduct(id);
+            if(isProduct(firstResult)){
+                const result : CUDResponse | InternalError = await productsApi.updateProduct(id, newProperties);
+                if(isCUDResponse(result)){
+                    res.status(201).send(result)
+                }else{
+                    res.status(500).send(result)  // Internal Error sent, generated at the attempt to update the required product.
+                }
+            }else if(firstResult instanceof ApiError){
+                res.status(firstResult.error).send(firstResult)
+            }else{
+                res.status(500).send(firstResult) // Internal Error sent, generated at the search of the required product to be updated.
+            }
+        }
     }
 
     async delete(
@@ -110,14 +128,24 @@ class ProductController {
         const id = req.params.id;
         console.log(`[PATH] Inside controller.`);
         const { error } = await validator.id.validateAsync(id);
-        if (error) next(ApiError.badRequest(EProductsErrors.IdIncorrect));
-        const product: IMongoProduct[] | [] = await productsApi.getProduct(id);
-        if (product.length > 0) {
-            const result = await productsApi.deleteProduct(id);
-            res.status(200).send(result);
-        } else {
-            next(ApiError.notFound(EProductsErrors.ProductNotFound));
+        if (error){
+            next(ApiError.badRequest(EProductsErrors.IdIncorrect));
+        }else{
+            const firstResult: IMongoProduct[] | ApiError | InternalError = await productsApi.getProduct(id);
+            if(isProduct(firstResult)){
+                const result : CUDResponse | InternalError = await productsApi.deleteProduct(id);
+                if(isCUDResponse(result)){
+                    res.status(201).send(result)
+                }else{
+                    res.status(500).send(result)    // Internal Error sent, generated at the attempt to delete the required product.
+                }
+            }else if(firstResult instanceof ApiError){
+                res.status(firstResult.error).send(firstResult)
+            }else{
+                res.status(500).send(firstResult)   // Internal Error sent, generated at the search of the required product to be deleted.
+            }
         }
+        
     }
 
     async query(
@@ -133,52 +161,61 @@ class ProductController {
             minStock: req.query.minStock as string,
             maxStock: req.query.maxStock as string,
         };
-        const products: IMongoProduct[] | [] = await productsApi.getProduct();
-        if (products.length > 0) {
-            title = title != null ? title : '';
-            code = code != null ? code : '';
-            minPrice = minPrice != null ? minPrice : '0.01';
-            maxPrice =
-                maxPrice != null
-                    ? maxPrice
-                    : (
-                          await Utils.getMaxStockPrice(products, 'price')
-                      ).toString();
-            minStock = minStock != null ? minStock : '0';
-            maxStock =
-                maxStock != null
-                    ? maxStock
-                    : (
-                          await Utils.getMaxStockPrice(products, 'stock')
-                      ).toString();
-            const options: IQuery = {
-                title: title,
-                code: code,
-                price: {
-                    minPrice: Number(minPrice),
-                    maxPrice: Number(maxPrice),
-                },
-                stock: {
-                    minStock: Number(minStock),
-                    maxStock: Number(maxStock),
-                },
-            };
-            const { error } = await validator.query.validateAsync(options);
-            if (error) {
-                next(ApiError.badRequest(error.message)); // This is just for checking if there's an error in the query implementation
-            } else {
-                const result: IMongoProduct[] | [] = await productsApi.query(
-                    options
-                );
-                if (result.length > 0) {
-                    res.status(200).send(result);
+        const firstResult: IMongoProduct[] | ApiError | InternalError = await productsApi.getProduct();
+        if(isProduct(firstResult)){
+                /**
+                 * First result already checked to have the corresponding properties of a stored Product
+                 */
+            
+                title = title != null ? title : '';
+                code = code != null ? code : '';
+                minPrice = minPrice != null ? minPrice : '0.01';
+                maxPrice =
+                    maxPrice != null
+                        ? maxPrice
+                        : (
+                              await Utils.getMaxStockPrice(firstResult as IMongoProduct[], 'price')
+                          ).toString();
+                minStock = minStock != null ? minStock : '0';
+                maxStock =
+                    maxStock != null
+                        ? maxStock
+                        : (
+                              await Utils.getMaxStockPrice(firstResult as IMongoProduct[], 'stock')
+                          ).toString();
+                const options: IQuery = {
+                    title: title,
+                    code: code,
+                    price: {
+                        minPrice: Number(minPrice),
+                        maxPrice: Number(maxPrice),
+                    },
+                    stock: {
+                        minStock: Number(minStock),
+                        maxStock: Number(maxStock),
+                    },
+                };
+                const { error } =  validator.query.validate(options);
+                if (error) {
+                    next(ApiError.badRequest(error.message));
                 } else {
-                    next(ApiError.notFound(EProductsErrors.NoProducts));
+                    const result: IMongoProduct[] | ApiError | InternalError = await productsApi.query(
+                        options
+                    );
+                    if(isProduct(result)){
+                        res.status(200).send(result)
+                    }else if(result instanceof ApiError){
+                        res.status(result.error).send(result)
+                    }else{
+                        res.status(500).send(result)  // Internal Error sent, generated at the attempt to get a products query.
+                    }
                 }
-            }
-        } else {
-            next(ApiError.notFound(`No products matching the query`));
+        }else if(firstResult instanceof ApiError){
+            res.status(firstResult.error).send(firstResult)
+        }else{
+            res.status(500).send(firstResult)  // Internal Error sent, genereated at the attempt to get products (just for checking if there is at least one product to request a query).
         }
+        
     }
 }
 

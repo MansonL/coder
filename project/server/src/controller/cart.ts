@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { cartApi } from '../api/cart';
 import { productsApi } from '../api/products';
 import { EProductsErrors } from '../common/EErrors';
-import { IMongoCartProduct, IMongoProduct, InternalError } from '../interfaces/interfaces';
+import { isCartProduct, isCUDResponse, isProduct } from '../interfaces/checkType';
+import { CUDResponse, IMongoCartProduct, IMongoProduct, InternalError } from '../interfaces/interfaces';
 import { ApiError } from '../utils/errorApi';
 import { validator } from '../utils/joiSchemas';
 
@@ -34,12 +35,14 @@ class CartController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const result: IMongoCartProduct[] | [] = await cartApi.getProduct();
+        const result: IMongoCartProduct[] | ApiError | InternalError = await cartApi.getProduct();
         console.log(`[PATH] Inside controller.`);
-        if (result.length !== 0) {
+        if (isCartProduct(result)) {
             res.status(200).send(result);
-        } else {
-            next(ApiError.notFound(EProductsErrors.NoProducts));
+        }else if(result instanceof ApiError){
+            res.status(result.error).send(result)
+        }else{
+            res.status(500).send(result)  // Internal Error sent.
         }
     }
 
@@ -54,18 +57,28 @@ class CartController {
         if (error) {
             next(ApiError.badRequest(EProductsErrors.IdIncorrect));
         } else {
-            const products: IMongoProduct[] | [] = await productsApi.getProduct(
+            const firstResult: IMongoProduct[] | ApiError | InternalError = await productsApi.getProduct(
                 productID
             );
-            if (products.length > 0) {
+            if (isProduct(firstResult)) {
+                /**
+                 * Cause the data was previously checked to be MongoProducts
+                 */
+                const products = firstResult as IMongoProduct[]; 
                 const { _id, ...product } = products[0];
-                const results = await cartApi.addProduct(
+                const result : CUDResponse | InternalError = await cartApi.addProduct(
                     _id.toString(),
                     product
                 );
-                res.status(200).send(results);
-            } else {
-                next(ApiError.notFound(EProductsErrors.ProductNotFound));
+                if(isCUDResponse(result)){
+                    res.status(201).send(result);
+                }else{
+                    res.status(500).send(result) // Internal Error sent, generated at the product saving to cart.
+                }
+            } else if(firstResult instanceof ApiError){
+                res.status(firstResult.error).send(firstResult)
+            }else{
+                res.status(500).send(firstResult) // Internal Error sent, generated at the searched of the required product to be added to the cart
             }
         }
     }
@@ -81,13 +94,19 @@ class CartController {
         if (error) {
             next(ApiError.badRequest(EProductsErrors.IdIncorrect));
         } else {
-            const product: IMongoCartProduct[] | IMongoCartProduct[] | [] =
+            const firstResult: IMongoCartProduct[] | ApiError | InternalError =
                 await cartApi.getProduct(id);
-            if (product.length > 0) {
-                const result = await cartApi.deleteProduct(id);
-                res.status(200).send(result);
-            } else {
-                next(ApiError.notFound(EProductsErrors.ProductNotFound));
+            if(isProduct(firstResult)){
+                const result: CUDResponse | InternalError = await cartApi.deleteProduct(id);
+                if(isCUDResponse(result)){
+                    res.status(201).send(result)
+                }else{
+                    res.status(500).send(result)     // Internal Error sent, generated at the product deleting from cart.
+                }
+            }else if(firstResult instanceof ApiError){
+                res.status(firstResult.error).send(firstResult);
+            }else{
+                res.status(500).send(firstResult)  // Internal Error sent, generated at the searched of the required product to be deleted from the cart
             }
         }
     }

@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { EProductsErrors, EUsersErrors } from '../common/EErrors';
-import { CUDResponse, IMongoUser, INew_User } from '../interfaces/interfaces';
+import { CUDResponse, IMongoUser, INew_User, InternalError } from '../interfaces/interfaces';
 import { ApiError } from '../utils/errorApi';
 import { validator } from '../utils/joiSchemas';
 import { usersApi } from '../api/users';
 import moment from 'moment';
+import { isCUDResponse, isUser } from '../interfaces/checkType';
 
 /**
  *
@@ -24,11 +25,13 @@ class UsersController {
         if (error) {
             next(ApiError.badRequest(EProductsErrors.IdIncorrect));
         } else {
-            const users: IMongoUser[] | [] = await usersApi.getUser(id);
-            if (users.length > 0) {
-                res.status(200).send(users);
-            } else {
-                next(ApiError.badRequest(EUsersErrors.NoUsers));
+            const result:  IMongoUser[] | ApiError | InternalError = await usersApi.getUser(id);
+            if(isUser(result)){
+                res.status(200).send(result)
+            }else if(result instanceof ApiError){
+                res.status(result.error).send(result)
+            }else{
+                res.status(500).send(result)     // Internal Error sent.
             }
         }
     }
@@ -38,23 +41,28 @@ class UsersController {
         next: NextFunction
     ): Promise<void> {
         console.log(`[PATH] Inside controller.`);
-        const users: IMongoUser[] | ApiError | unknown = await usersApi.getUsers();
-        if (users.length > 0) {
-            res.status(200).send(users);
-        } else {
-            next();
+        const result: IMongoUser[] | ApiError | InternalError = await usersApi.getUsers();
+        if(isUser(result)){
+            res.status(200).send(result)
+        }else if(result instanceof ApiError){
+            res.status(result.error).send(result)
+        }else{
+            res.status(500).send(result) // Internal Error sent.
         }
     }
     async save(req: Request, res: Response, next: NextFunction): Promise<void> {
         const user: INew_User = req.body;
         const { error } = validator.user.validate(user);
-        console.log(error);
         if (error) {
             next(ApiError.badRequest(EUsersErrors.IncorrectProperties));
         } else {
             console.log(`[PATH] Inside controller.`);
-            const result: CUDResponse = await usersApi.addUser(user);
-            res.status(200).send(result);
+            const result: CUDResponse | InternalError = await usersApi.addUser(user);
+            if(isCUDResponse(result)){
+                res.status(201).send(result)
+            }else{
+                res.status(500).send(result) // Internal Error sent.
+            }
         }
     }
 }

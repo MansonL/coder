@@ -10,6 +10,12 @@ import { DBProducts } from './DBProducts';
 import { Cart } from './Cart';
 import { LogIn } from './LogIn';
 
+
+export interface authResponse {
+    message: string;
+    data: any
+}
+
 export function Main () {
   const dropdownMenu = useRef(null);
   const dropdownBtn = useRef(null);

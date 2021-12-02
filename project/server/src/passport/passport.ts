@@ -3,7 +3,17 @@ import { IStrategyOptionsWithRequest, IVerifyOptions, VerifyFunctionWithRequest 
 import bcrypt from 'bcrypt'
 import passport from "passport";
 import passportLocal from 'passport-local'
-import { IMongoUser, INew_User } from "../interfaces/interfaces";
+import { CUDResponse, IMongoUser, INew_User, InternalError } from "../interfaces/interfaces";
+import { usersApi } from "../api/users";
+import { ApiError } from "../utils/errorApi";
+import { isCUDResponse, isUser } from "../interfaces/checkType";
+
+
+declare global {
+    namespace Express {
+        interface User extends IMongoUser {}
+    }
+}
 
 export type doneFunction = (error: any, user?: any, options?: IVerifyOptions) => void
 
@@ -16,15 +26,51 @@ export type doneFunction = (error: any, user?: any, options?: IVerifyOptions) =>
  */
 
 export const passportLogin: VerifyFunctionWithRequest = async (req: Request, username: string, password: string, done: doneFunction) => {
-    console.log('Inside passportLogin')
-    console.log('------------------- REQ BODY ---------------------')
-    console.log(req.body)
-    
+    console.log('Inside passportLogin');
+    const result : IMongoUser | ApiError | InternalError = await usersApi.getUserByUsername(username);
+    if(isUser(result)){
+        if(validPassword(result, password)){
+            return done(null, {
+                data: result,
+                message: "Successfully logged in!"
+            })
+        }else{
+            return done(null, null, `Wrong credentials`);
+        }
+    }else if(result instanceof ApiError){
+        return done(null, null, result.message);
+    }else{
+        return done(result)
+    }
  }
  
- export const passportSignUp : VerifyFunctionWithRequest = (req: Request, username: string, password: string, done: doneFunction) => {
+ export const passportSignUp : VerifyFunctionWithRequest = async (req: Request, username: string, password: string, done: doneFunction) => {
         console.log('Inside passportSignUp')     
-        
+        console.log('\n----------------- REQ BODY -------------------------\n');
+        console.log(req.body);
+        const firstResult : IMongoUser | ApiError | InternalError = await usersApi.getUserByUsername(username);
+        if(isUser(firstResult)){
+            return done(null, null, `The email submitted is already in use.`);
+        }else if(firstResult instanceof ApiError){
+            const newUser : INew_User = {
+                timestamp: req.body.timestamp,
+                username: username,
+                password: createHash(password),
+                name: req.body.name,
+                surname: req.body.surname,
+                age: req.body.age,
+                alias: req.body.alias,
+                avatar: req.body.avatar,
+            };
+            const result : CUDResponse | InternalError = await usersApi.addUser(newUser);
+            if(isCUDResponse(result)){
+                return done(null, result)
+            }else{
+                return done(result)  // Internal Error sent, generated at the attempt to register a new user.
+            }
+        }else{
+            return done(firstResult) // Internal Error sent, generated at the search of an existing user with the submitted username.
+        }
  }
  
 /**
@@ -67,16 +113,17 @@ passport.use('signup', new LocalStrategy(strategyOptions, passportSignUp));
 
 passport.serializeUser((user, done: (err: any, id?: string) => void) => {
     console.log("Serializing")
-    console.log(user)
     done(null, user._id)
 });
 
-passport.deserializeUser((id: string, done: (err: any, user: IMongoUser | undefined | false | null) => void) => {
+passport.deserializeUser(async (id: string, done: (err: any, user: IMongoUser | undefined | false | null) => void) => {
     console.log("Deserializing")
-    .findByID(id, (err, user) => {
-        console.log(user)
-        done(err,user)
-    })
+    const result : IMongoUser[] | ApiError | InternalError = await usersApi.getUser(id);
+    if(isUser(result)){
+        done(null, result)
+    }else{
+        done(result, null)
+    }
 })
 
 export default passport

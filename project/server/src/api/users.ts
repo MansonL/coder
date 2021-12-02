@@ -17,6 +17,10 @@ export class UsersApi {
         const result: IMongoUser[] | ApiError | InternalError = await this.users.get();
         return result;
     }
+    async getUserByUsername(username: string): Promise <IMongoUser | ApiError | InternalError> {
+        const result = await this.users.getByUser(username);
+        return result
+    }
     async addUser(message: INew_User): Promise<CUDResponse | InternalError> {
         const result: CUDResponse | InternalError = await this.users.add(message);
         return result;

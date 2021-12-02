@@ -1,7 +1,7 @@
+import { Server } from 'http';
 import * as socket from 'socket.io';
-import { server } from '..';
 
-export const socketConnection = () => {
+export const socketConnection = (server: Server) => {
     const io = new socket.Server(server);
     io.on('connection', (socket) => {
         console.log('New client connected!');
