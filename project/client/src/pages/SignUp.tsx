@@ -1,13 +1,14 @@
 import axios from "axios";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { INew_User } from "../../../server/src/interfaces/interfaces";
 import { validation } from "../utils/joiSchemas";
 import { LoggedIn } from "./components/LoggedIn";
 import { LogSignHeader } from "./components/LogSignHeader";
+import { SignUpForm } from "./components/SignUpForm";
 import { authResponse } from "./Main";
 
-export function SignUp (props: SignUpProps) {
+export function SignUp () {
     
     const [showResult, setShowResult] = useState(false);
     const [loginSignResult, setLoginSignResult] = useState(false);
@@ -34,8 +35,15 @@ export function SignUp (props: SignUpProps) {
         avatar: '',
     })
     const [repeatedPassword, setRepeatedPassword] = useState('')
-    const [showPassRequirements, setShowPassRequirements] = useState([false, false]);
+    //const [showPassRequirements, setShowPassRequirements] = useState([false, false]);
     
+    /**
+     * 
+     * @param ev with this param we are getting the value of the target fields "name" & "value"
+     * With them we are going to make a dinamic change of the user data state, accessing to the user data
+     * properties via [key : string]. 
+     * 
+     */
     const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
         const property = ev.target.name;
         const value = ev.target.value;
@@ -44,37 +52,43 @@ export function SignUp (props: SignUpProps) {
             [property]: value
         })
     }
-
-    const [showHide, setShowHide] = useState(false);
     
 
-
     /**
-     * Simple function for changing the Hide/Show button at password input.
+     * 
+     * @param ev just for preventing default submit action.
+     * 
+     * Description:
+     * First complete the user object timestamp for requesting the signing up to the backend. 
+     * Check if there's an error or not with the user data validation. Then make the POST request & show if
+     * it was successful or there was an error.
+     * 
      */
-    const showHideClick = () => {
-      setShowHide(!showHide);
-    }
-
     const signupSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
         const user : INew_User= {
             ...newUser,
             timestamp: moment().format('YYYY-MM-DD HH:mm:ss')
         }
-        console.log(user)
         const { error } = validation.user.validate(user);
         if(error){
-          props.signUpValidationError(error)
+          setShowResult(true);
+          setLoginSignResult(false);
+          setMsgResult(error.message);
         }else{
-           axios.post<authResponse>(`http://localhost:8080/api/signup`, user).then(response => {
-            props.signUpSuccessful();
-           }).catch(error => {
-            console.log(error.response);
-            if(error.response) return props.signUpError(error.response.data.msg);
-            props.signUpError("Code: 500. Internal error.")
-           })
+          axios.post<authResponse>('http://localhost:8080/api/auth/signup', user, { withCredentials: true }).then(response => {
+            const data = response.data;
+            setShowResult(true);
+            setLoginSignResult(true);
+            setMsgResult(data.message);
+          }).catch(error => {
+            setShowResult(true);
+            setLoginSignResult(false);
+            setMsgResult(error.response.data.message)
+          })
+          
         }
+        
     }
     
     /**
@@ -89,91 +103,32 @@ export function SignUp (props: SignUpProps) {
         }, 2000)
       }
 
+      /**
+       * 
+       * useEffect method to check if the client is already authenticated at the backend session or not.
+       * 
+       */
+      useEffect(() => {
+        setShowResult(false);
+        axios.get<authResponse>('http://localhost:808/api/auth/signup',{ withCredentials: true }).then(response => {
+          const data = response.data;
+          if(data.message.match(/already/g)){
+            setLoggedIn(true);
+            setNewUser({
+              ...newUser,
+              username: data.data.username,
+            })
+          }
+        })
+      }, [])
+
+
     return (
         <>
         {!loggedIn ?  <>
         <LogSignHeader showResult={showResult} msgResult={msgResult} type="signup" deleteResultMsg={deleteResultMsg} logSignResult={loginSignResult}/>
     <section>
-      <form onSubmit={signupSubmit}>
-        <div className="user-login">
-
-          <div className="row-form">
-
-            <div className="effect-input"><input type="text" className="label-styled-input" value={newUser.name} onChange={onChange} name="name" />
-              <label className={newUser.name !== '' ? "hasContent" : "label-styled"}>Name</label>
-              <span className="form-border" />
-            </div>
-          </div>
-          <div className="row-form">
-            <div className="effect-input">
-              <input type="text" className="label-styled-input" name="surname" onChange={onChange} value={newUser.surname}/>
-              <label className={newUser.surname !== '' ? "hasContent" : "label-styled"}>Surname</label>
-              <span className="form-border"/>
-            </div>
-          </div>
-          <div className="row-form">
-            <div className="effect-input">
-              <input type="date" min="1922-11-28" max="2011-11-28" className="label-styled-input" name="age" onChange={onChange} value={newUser.age}/>
-              <label className="hasContent">Born date</label>
-              <span className="form-border"/>
-            </div>
-          </div>
-          <div className="row-form">
-            <div className="effect-input">
-              <input type="text" className="label-styled-input" name="alias" onChange={onChange} value={newUser.alias}/>
-              <label className={newUser.alias !== '' ? "hasContent" : "label-styled"}>Alias</label>
-              <span className="form-border"/>
-            </div>
-          </div>
-          <div className="row-form">
-            <div className="effect-input">
-              <input type="url" className="label-styled-input" name="avatar" onChange={onChange} value={newUser.avatar}/>
-              <label className={newUser.avatar !== '' ? "hasContent" : "label-styled"}>Avatar (url image)</label>
-              <span className="form-border"/>
-            </div>
-          </div>
-          <div className="row-form">
-            <div className="effect-input">
-              <input type="email" className="label-styled-input" name="username" onChange={onChange} value={newUser.username}/>
-              <label className={newUser.username !== '' ? "hasContent" : "label-styled"}>Email</label>
-              <span className="form-border"/>
-            </div>
-          </div>
-          <div className="pswd-form">
-            
-            <div className="effect-input"><input type={showHide ? "text" : "password" } className="label-styled-input" value={newUser.password} onChange={onChange} name="password" />
-              <label className={newUser.password !== '' ? "hasContent" : "label-styled"}>Password</label>
-              <span className="form-border"></span>
-              
-            </div>
-            <img className="info-icon" src="https://img.icons8.com/ios/50/000000/info.png"
-                
-            />
-            <span className={showPassRequirements[0] ? "pswd-requirement showMenu" : "pswd-requirement"}>Remember that your password should have at least <b>6 characters</b> with a maximum of <b>20</b>. At least <b>one uppercase </b>and <b>one number</b>.</span>
-            <span className="show-pswd" onClick={showHideClick}>Show/Hide</span>
-          </div>
-          <div className="pswd-form">
-            
-              
-            <div className="effect-input">
-              <input type={showHide ? "text" : "password" } className="label-styled-input" value={repeatedPassword} onChange={(ev) => setRepeatedPassword(ev.target.value)} name="password" />
-              <label className={repeatedPassword !== '' ? "hasContent" : "label-styled"}>Repeat your password</label>
-              <span className="form-border"></span>
-         
-            </div>
-            
-            <img className="info-icon" src="https://img.icons8.com/ios/50/000000/info.png"
-                alt=""
-                
-            />
-            <span className={showPassRequirements[1] ? "pswd-requirement showMenu" : "pswd-requirement"} >Remember that your password should have at least <b>6 characters</b> with a maximum of <b>20</b>. At least <b>one uppercase </b>and <b>one number</b>.</span>
-            <span className="show-pswd" onClick={showHideClick}>Show/Hide</span>
-          </div>
-          <div className="submit-row">
-            <button type="submit" className="submit-form">Submit</button>
-          </div>
-        </div>
-      </form>
+      <SignUpForm signupSubmit={signupSubmit} onChange={onChange} newUser={newUser} repeatedPassword={repeatedPassword} setRepeatedPassword={setRepeatedPassword}/>
 
     </section>
     </> : <LoggedIn credentials={

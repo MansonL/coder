@@ -9,6 +9,7 @@ import { RandomProducts } from './randomProducts';
 import { DBProducts } from './DBProducts';
 import { Cart } from './Cart';
 import { LogIn } from './LogIn';
+import { SignUp } from './SignUp';
 
 
 export interface authResponse {
@@ -63,6 +64,7 @@ export function Main () {
       <Route path="/cart" element={<Cart/>} />
       <Route path="/form" element={<Form/>} />
       <Route path="/login" element={<LogIn/>}/>
+      <Route path="/signup" element={<SignUp/>}/>
     </Routes>
     
 </div>

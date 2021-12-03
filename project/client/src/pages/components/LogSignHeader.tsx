@@ -2,7 +2,6 @@ interface LogSignHeaderProps {
     showResult: boolean;
     logSignResult: boolean;
     deleteResultMsg: () => void;
-    logOrSignHandler: () => void;
     msgResult: string;
     type: string;
 
@@ -17,7 +16,7 @@ export function LogSignHeader(props: LogSignHeaderProps){
         <div>
         <span>{`${props.type === 'login' ? 
         `Don't you have an account? Please, sign up in ` : 
-        `Do you already have an account? Please, log in `}`}<a onClick={props.logOrSignHandler}>here</a></span>
+        `Do you already have an account? Please, log in `}`}<a href={props.type === 'login' ? "/signup" : "/login"}>here</a></span>
           </div>
       </div>
     </header>

@@ -111,7 +111,7 @@ export function LogIn (){
     return (
         <>
         {!loggedIn ?  <>
-        <LogSignHeader logSignResult={loginSignResult} type="login" deleteResultMsg={deleteResultMsg} showResult={showResult} msgResult={msgResult}/>
+        <LogSignHeader logSignResult={loginSignResult} type="login" deleteResultMsg={deleteResultMsg} showResult={showResult} msgResult={msgResult} />
     <section>
       <form onSubmit={logInSubmit}>
       <div className="user-login">
