@@ -8,94 +8,31 @@ import axios from 'axios';
 import moment from 'moment'
 import './messages.css';
 import { denormalizeData, MessagesEntities } from '../utils/compression';
+import { authResponse } from './Main';
 
 export function Messages(){
   
-  /**
-   * For showing error at email input.
-   * For enabling input message once the user has typed a valid email.  
-   */
-  const [user, setUser] = useState<INew_User>({
-      timestamp: '',
-      user: '',
-      name:'',
-      surname: '',
-      alias: '',
-      age: 10,
-      avatar: '',
-  })
-  const [dataError, setDataError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [dataSuccess, setDataSuccess] = useState(false);
   const [inputDisabled, setInputDisabled] = useState(true);
-
-  /**
-   * 
-   * User Data inputs onChange handler.
-   * 
-   */
-  const updateValues = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const property : string = e.target.name;
-    const value : string | number = e.target.value 
-    setUser({
-      ...user,
-      [property]: value,
-      timestamp: moment().format('YYYY-MM-DD HH:mm:ss')
-    })
-  }
-
-  /**
-   * Email submit handler
-   * @param e just for preventing default submit action
-   * 
-   */
   
-  const handleUserData = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      if(user.alias === ''){
-        setUser({
-          ...user,
-          alias: `${user.name} ${user.surname}`,
-        })
-      }
-      console.log(user)
-      const { error } = validation.user.validate(user);
-      if(error){
-        setDataError(true);
-        setDataSuccess(false);
-        setErrorMessage(error.message)
-      }else{
-        if(dataError === true) setDataError(false);
-        setDataSuccess(true);
-        setInputDisabled(false);
-        const savedUser = await (await axios.post<CUDResponse>('http://localhost:8080/users/save', user)).data.data as IMongoUser
-        setUserID(savedUser._id)
-        socket.emit('users');
-      }
-  }
-  /**
-   * 
-   * Click on exit at error msg at email input.
-   * 
-   */
-  const errorExit = () => {
-      setDataError(false);
-      setDataSuccess(false);
-  }
-  
-
+  const [user, setUser] = useState<IMongoUser>()
   const [users, setUsers] = useState<IMongoUser[]>([]);
   const [userID, setUserID] = useState('');
   const [messages, setMessages] = useState<IMongoMessage[]>([])
   const [message, setMessage] = useState('');
+  
+  /**
+   * Set the width according the compression of the data normalized vs the denormalized data.
+   */
+  const [barWidth, setBarWidth] = useState(0);
+
+
   /**
    * 
    * Message submit handler
    * @param e just for preventing default submit action
    * 
    */
-  const handleMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+   const handleMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); 
     const { error } = validation.message.validate(message); 
     if(!error){
@@ -112,10 +49,6 @@ export function Messages(){
       socket.emit('message');
     }
   }
-  /**
-   * Set the width according the compression of the data normalized vs the denormalized data.
-   */
-  const [barWidth, setBarWidth] = useState(0);
 
   /**
    * 
@@ -143,7 +76,9 @@ export function Messages(){
     socket.emit('users');
     socket.on('messagesUpdate', messagesUpdateListener);
     socket.on('usersUpdate', usersUpdateListener);
+    axios.get<authResponse>('http://localhost:8080/api/auth/login').then(response => {
 
+    })
     return () => {
       socket.off('messagesUpdate', messagesUpdateListener);
       socket.off('usersUpdate', usersUpdateListener)
@@ -156,30 +91,9 @@ export function Messages(){
         <header>
     <div className="title">
       <h4>Messages</h4>
+
     </div>
   </header>
-  <div className="email-form">
-    <h6>Input your email for sending messages:</h6>
-    <MessagesForm updateValues={updateValues} handleUserData={handleUserData} user={user}/>
-  </div>
-  {dataError && <div className="form-error">
-      <div className="result-top">
-        <span className="result-header">Oops!</span> 
-        <button className="result-btn" onClick={errorExit}><i className="fas fa-times"></i></button>
-      </div>
-      <div className="result-msg">
-        {errorMessage}
-      </div>
-    </div>}
-    {dataSuccess && <div className="form-success">
-      <div className="result-top">
-        <span className="result-header">Successful!</span> 
-        <button className="result-btn" onClick={errorExit}><i className="fas fa-times"></i></button>
-      </div>
-      <div className="result-msg">
-        User saved! Now you can chat.
-      </div>
-    </div>}
     <div className="bar-container">
       <span className="progress-bar">
       <span className="inside-bar" style={{backgroundColor: `${barWidth < 0 ? "red" : "green"}`,width: `${barWidth < 0 ? -barWidth : barWidth}%`}}></span>

@@ -1,8 +1,11 @@
-.email-form {
-    margin-top: 0.8rem;
-    width: 60%;
-    margin:auto;
-  }
+.title > div {
+  font-size: 1rem;
+  max-width: 70%;
+  margin: auto;
+}
+a {
+  color: #EDC982;
+}
   .effect-input{
     position:relative;
     margin: 1rem 0rem 0.5rem 0rem;
