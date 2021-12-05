@@ -1,5 +1,5 @@
 import { MongoCart } from './DAOs/Mongo/cart';
-import { MemoryType } from './productsFactory';
+import { MemoryType } from './usersFactory';
 
 export class CartFactory {
     static get(type: MemoryType): MongoCart {

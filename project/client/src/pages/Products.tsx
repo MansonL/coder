@@ -7,9 +7,10 @@ import { hasProductOrEmpty } from '../utils/utilities'
 
 interface ProductsProp {
     products: IMongoProduct[] | IMongoCartProduct[];
-    updateProducts: ((products: IMongoProduct[] | IMongoCartProduct[] | []) => void) | undefined
+    updateProducts: ((products: IMongoProduct[] | IMongoCartProduct[] | [], msg: string | undefined) => void) | undefined
     type: string;
     noProducts: boolean;
+    noProductsMsg: string | undefined;
 }
 
 export function Products(props: ProductsProp) {
@@ -28,15 +29,46 @@ export function Products(props: ProductsProp) {
 
     const handleFiltersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        setFilters({
-          ...filters,
-          [e.target.name]: value
-        });
+        const property = e.target.name
+        if(/Price/g.test(property)){
+          setFilters({
+            ...filters,
+            price: {
+              ...filters.price,
+              [property] : value
+            }
+          })
+        }else if(/Stock/g.test(property)){
+          setFilters({
+            ...filters,
+            stock: {
+              ...filters.stock,
+              [property]: value 
+            }
+          });
+        }else{
+          setFilters({
+            ...filters,
+            [property]: value
+          });
+        }
     }
 
     const handleFilterApply = async (ev: React.MouseEvent<HTMLButtonElement>) => {
-        const products: IMongoProduct[] = (await axios.get<IMongoProduct[]>('http://localhost:8080/products/query', {data: filters})).data;
-        if(props.updateProducts) props.updateProducts(products)
+      console.log(filters);
+      const url = `http://localhost:8080/api/products/query?${filters.title ? `title=${filters.title}&` : ""}${filters.code ? `code=${filters.code}&` : ""}${filters.stock.minStock ? `minStock=${filters.stock.minStock}&` : ""}${filters.stock.maxStock ? `maxStock=${filters.stock.maxStock}&` : ""}${filters.price.minPrice ? `minPrice=${filters.price.minPrice}&` : ""}${filters.price.maxPrice ? `maxPrice=${filters.price.maxPrice}` : ""}`
+      console.log(url)
+        axios.get<IMongoProduct[]>(url, { withCredentials: true } ).then(response => {
+          const filteredProducts = response.data;
+          if(props.updateProducts){
+            props.updateProducts(filteredProducts,undefined);
+          }
+        }).catch(error => {
+          if(props.updateProducts){
+            props.updateProducts([], error.response.data.message)
+          }
+        })
+        
         
     }
 
@@ -62,8 +94,7 @@ export function Products(props: ProductsProp) {
     const resultOperationStyle = operationType === 'failure' ? 'result-error' : 'result-success';
 
     const handleAddProduct = async (code: string) => {
-      setCode(code);
-      const result : CUDResponse = await (await axios.post<CUDResponse>(`http://localhost:8080/cart/add/${saveCode}`)).data;
+      const result : CUDResponse = await (await axios.post<CUDResponse>(`http://localhost:8080/api/cart/add/${code}`)).data;
       setShowOperationResult(true);
       if(hasProductOrEmpty(result.data as IMongoProduct | [])){
           setOperationType('success');
@@ -84,29 +115,28 @@ export function Products(props: ProductsProp) {
       setShowConfirmation(false);
     }
 
-    const handleDelete = async () => {
+    const handleDelete = () => {
       /**
        * 
        * Here we check if we are showing the cart products or the products on the DB,
        * and based on that condition we are going to delete products from the cart or from the DB
        * 
        */
-      const url = props.type === 'cart' ? `http://localhost:8080/cart/delete/${saveCode}` : `http://localhost:8080/products/delete/${saveCode}`;
-      const result : CUDResponse = await (await axios.delete<CUDResponse>(url)).data;
-      setShowOperationResult(true);
-      if(hasProductOrEmpty(result.data as IMongoProduct | [])){
-          setOperationType('success');
-          setResultMessage(result.message);
-          if(props.type === 'cart'){
-            socket.emit('cart');
-          }else{
-            socket.emit('products')
-          }
-      }else{
-          setOperationType('failure');
-          setResultMessage(result.message)
-      }
-      
+      const url = props.type === 'cart' ? `http://localhost:8080/api/cart/delete/${saveCode}` : `http://localhost:8080/api/products/delete/${saveCode}`
+      axios.delete<CUDResponse>(url, { withCredentials: true }).then(response => {
+        const data = response.data
+        setShowOperationResult(true);
+        setOperationType('success');
+        setResultMessage(data.message);
+        if(props.type === 'cart'){
+          socket.emit('cart');
+        }else{
+          socket.emit('products')
+        }
+      }).catch(error => {
+        setOperationType('failure');
+        setResultMessage(error.response.data.message)
+      })  
     }
 
     const handleAlertEnd = (ev: React.AnimationEvent<HTMLDivElement>) => {
@@ -196,19 +226,19 @@ export function Products(props: ProductsProp) {
         <div className={filterDropdownClassName} ref={filterDropdown}>
 
           <label htmlFor="title" className="filter-label">Title</label><br/>
-          <input type="text" id="title" className="filter-input" onChange={handleFiltersChange} />
+          <input type="text" name="title" className="filter-input" onChange={handleFiltersChange} />
           <br/>
           <label htmlFor="code" className="filter-label">Code</label><br/>
-          <input type="text" id="code" className="filter-input" onChange={handleFiltersChange} />
+          <input type="text" name="code" className="filter-input" onChange={handleFiltersChange} />
           <br />
           <label className=".filter-label">Price</label>
           <div className="price">
-            <input type="number" min="0.1" step="0.05" id="minPrice" className="number-input" onChange={handleFiltersChange} placeholder="Min" />
-            <input type="number" min="0.1" step="0.05" id="maxPrice" className="number-input" onChange={handleFiltersChange} placeholder="Max" />
+            <input type="number" min="0.1" step="0.05" name="minPrice" className="number-input" onChange={handleFiltersChange} placeholder="Min" />
+            <input type="number" min="0.1" step="0.05" name="maxPrice" className="number-input" onChange={handleFiltersChange} placeholder="Max" />
           </div>
           <label className="filter-label">Stock</label>
           <div className="stock">
-            <input type="number" min="0" id="minStock" className="number-input" onChange={handleFiltersChange} placeholder="Min" /><input type="number" min="0" id="maxStock" className="number-input" onChange={handleFiltersChange} placeholder="Max" />
+            <input type="number" min="0" name="minStock" className="number-input" onChange={handleFiltersChange} placeholder="Min" /><input type="number" min="0" name="maxStock" className="number-input" onChange={handleFiltersChange} placeholder="Max" />
           </div>
           <div className="apply">
       <button className="apply-filter" onClick={handleFilterApply}> Apply</button>
@@ -240,7 +270,7 @@ export function Products(props: ProductsProp) {
         <button className="result-btn"><i className="fas fa-times"></i></button>
       </div>
       <div className="result-message">
-        <span>There's no products stored...</span>
+        <span>{props.noProductsMsg ? props.noProductsMsg : "There's no products stored..."}</span>
       </div>
     </div>}
     </div>

@@ -3,6 +3,7 @@ import { ErrorRequestHandler } from 'express';
 
 export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
     console.log(`Inside error handler.`);
+    console.log(error)
     if (error instanceof ApiError) {
         res.status(error.error).send(error.message);
     } else {

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { INew_User } from "../../../../server/src/interfaces/interfaces";
+import '../SignUp.css'
 
 interface SignUpFormProps {
     signupSubmit: (ev: React.FormEvent<HTMLFormElement>) => void;
@@ -75,7 +76,7 @@ export function SignUpForm(props: SignUpFormProps) {
                 
             />
             <span className="pswd-requirement">Remember that your password should have at least <b>6 characters</b> with a maximum of <b>20</b>. At least <b>one uppercase </b>and <b>one number</b>.</span>
-            <span className="show-pswd" onClick={showHideClick}>Show/Hide</span>
+            <span className="show-pswd" onClick={showHideClick}>{showHide ? "Hide" : "Show"}</span>
           </div>
           <div className="pswd-form">
             
@@ -92,7 +93,7 @@ export function SignUpForm(props: SignUpFormProps) {
                 
             />
             <span className="pswd-requirement">Remember that your password should have at least <b>6 characters</b> with a maximum of <b>20</b>. At least <b>one uppercase </b>and <b>one number</b>.</span>
-            <span className="show-pswd" onClick={showHideClick}>Show/Hide</span>
+            <span className="show-pswd" onClick={showHideClick}>{showHide ? "Hide" : "Show"}</span>
           </div>
           <div className="submit-row">
             <button type="submit" className="submit-form">Submit</button>

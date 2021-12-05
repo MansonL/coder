@@ -12,7 +12,7 @@ import passport from '../passport/passport'
 export const app: express.Application = express();
 app.use(cors({
     origin: "http://localhost:3000",
-    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+    methods: ["POST", "PUT", "GET", "UPDATE", "DELETE", "OPTIONS", "HEAD"],
     credentials: true,
 }));
 app.use(express.json());
@@ -21,7 +21,8 @@ app.use(cookieParser())
 app.use(session({
     secret: 'secret',
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    rolling: true,
     store: MongoStore.create({
         clientPromise: mongoConnection(),
         stringify: false,

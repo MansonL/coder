@@ -1,4 +1,4 @@
-import { MemoryType, ProductsFactory } from '../models/productsFactory';
+import { ProductsFactory } from '../models/productsFactory';
 import {
     INew_Product,
     CUDResponse,
@@ -9,6 +9,7 @@ import {
 } from '../interfaces/interfaces';
 import { MongoProducts } from '../models/DAOs/Mongo/products';
 import { ApiError } from '../utils/errorApi';
+import { storage } from '../models/usersFactory';
 
 /**
  *
@@ -16,7 +17,7 @@ import { ApiError } from '../utils/errorApi';
  * & connecting with the product controller
  *
  */
-export const storage = MemoryType.MongoAtlas;
+
 
 export class ProductsApi {
     private products: MongoProducts;

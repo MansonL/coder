@@ -1,4 +1,4 @@
-import { MemoryType } from './productsFactory';
+import { MemoryType } from './usersFactory';
 import { MongoMessages } from './DAOs/Mongo/messages';
 
 /**

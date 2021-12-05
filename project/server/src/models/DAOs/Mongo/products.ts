@@ -48,7 +48,7 @@ export class MongoProducts implements DBProductsClass {
       } catch (error) {
             return {
                 error: error,
-                message: error.message as string,
+                message: "An error occured"
             }
       }
     }
@@ -63,7 +63,7 @@ export class MongoProducts implements DBProductsClass {
         } catch (error) {
             return {
                 error: error,
-                message: error.message as string,
+                message: "An error occured"
             }
         }
         
@@ -83,7 +83,7 @@ export class MongoProducts implements DBProductsClass {
         } catch (error) {
             return {
                 error: error,
-                message: error.message as string,
+                message: "An error occured"
             }
         }
         
@@ -101,7 +101,7 @@ export class MongoProducts implements DBProductsClass {
         } catch (error) {
             return {
                 error: error,
-                message: error.message as string,
+                message: "An error occured"
             }
         }
         
@@ -129,7 +129,6 @@ export class MongoProducts implements DBProductsClass {
                     $lte: options.stock.maxStock,
                 },
             });
-            console.log(doc);
             if (doc.length > 0) {
                 const products: IMongoProduct[] = Utils.extractMongoProducts(doc);
                 return products;
@@ -139,7 +138,7 @@ export class MongoProducts implements DBProductsClass {
         } catch (error) {
             return {
                 error: error,
-                message: error.message as string,
+                message: "An error occured"
             }
         }
         

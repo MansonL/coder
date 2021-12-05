@@ -17,17 +17,11 @@ authRouter.post('/signup', (req: Request, res: Response, next: NextFunction) => 
     })(req,res,next);
 });
 
-authRouter.post('/login', (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('login', function(err: any, user: any, info: any){
-        if(err){
-            return res.status(500).send(err);
-        }
-        if(user){
-            return res.status(201).send(user);
-        }
-        return res.send(info)
-    })(req,res,next);
+authRouter.post('/login', passport.authenticate('login'), (req: Request, res: Response) => {
+    res.status(200).send({data: req.user, message: "Successfully logged in!"});
 })
+       
 
 authRouter.get('/login', authController.login);
+authRouter.get('/logout', authController.logout)
 authRouter.get('/signup', authController.signup)

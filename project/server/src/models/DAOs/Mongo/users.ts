@@ -1,6 +1,6 @@
 import { WelcomeBot } from './models';
-import { atlasURI, mongoURI, models } from './models';
-import { connect, Model } from 'mongoose';
+import {  models } from './models';
+import { Model } from 'mongoose';
 import {
     INew_User,
     IMongoUser,
@@ -45,7 +45,7 @@ export class MongoUsers implements DBUsersClass {
        } catch (error) {
           return {
               error: error,
-              message: error.message as string,
+              message: "An error occured",
           } 
     }
     }
@@ -62,7 +62,7 @@ export class MongoUsers implements DBUsersClass {
         } catch (error) {
             return {
                 error: error,
-                message: error.message as string
+                message: "An error occured" as string
             }
         }
     }
@@ -71,13 +71,13 @@ export class MongoUsers implements DBUsersClass {
             const doc = await this.users.create(user);
             const result = Utils.extractMongoUsers([doc])[0];
             return {
-                message: `Message successfully added.`,
+                message: `User successfully created.`,
                 data: result,
             };
         }catch (error) {
             return {
                 error: error,
-                message: error.message,
+                message: "An error occured",
             }
         }
 }

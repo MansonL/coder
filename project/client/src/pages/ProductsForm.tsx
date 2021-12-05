@@ -5,8 +5,9 @@ import { CUDResponse, IMongoProduct, INew_Product } from '../../../server/src/in
 import { socket } from '../lib/socket';
 import { validation } from '../utils/joiSchemas';
 import { hasProductOrEmpty } from '../utils/utilities';
-import './form.css';
-export function Form() {
+import './productsForm.css';
+
+export function ProductsForm() {
   
   /**
    * 

@@ -1,5 +1,9 @@
 import Joi from "joi";
+import moment from "moment";
 import { INew_Product, INew_User } from "../../../../Class25/Entregable/server/src/interfaces/interfaces";
+
+const maxDate = moment().subtract(10, 'y').format('MM/DD/YYYY');
+const minDate = moment().subtract(99, 'y').format('MM/DD/YYYY');
 
 class Validations {
     public email: Joi.StringSchema
@@ -42,12 +46,13 @@ class Validations {
          */
         this.user = Joi.object<INew_User>({
             timestamp: Joi.string().required(),
-            user: Joi.string().email({ tlds: { allow: false } }),
+            username: Joi.string().email({ tlds: { allow: false } }).required(),
             name: Joi.string().min(4).max(20).required(),
             surname: Joi.string().min(4).max(20).required(),
-            age: Joi.number().min(10).max(100).required(),
-            alias: Joi.string().min(5).max(35),
-            avatar: Joi.string().uri(),
+            password: Joi.string().alphanum().min(6).max(20).required(),
+            age: Joi.date().min(minDate).max(maxDate).required(),
+            alias: Joi.string().min(5).max(35).optional(),
+            avatar: Joi.string().uri().required(),
         });
         /**
          * 
@@ -55,7 +60,7 @@ class Validations {
          * 
          */
         this.login = Joi.object({
-            user: Joi.alternatives().try(Joi.string().min(5), Joi.string().email({ tlds: { allow: false } })).required(),
+            username: Joi.string().email({ tlds: { allow: false } }).required(),
             password: Joi.string().min(6).required()
         })
     }

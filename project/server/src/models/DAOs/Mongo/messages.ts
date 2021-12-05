@@ -34,12 +34,12 @@ export class MongoMessages implements DBMessagesClass {
         } catch (error) {
             return {
                 error: error,
-                message: error.message as string,
+                message: "An error occured."
             }
         }
         
     }
-    async add(msg: INew_Message): Promise<CUDResponse | ApiError> {
+    async add(msg: INew_Message): Promise<CUDResponse | InternalError> {
         try {
             const doc = await this.messages.create(msg);
         const result = Utils.extractMongoMessages([doc])[0];
@@ -50,7 +50,7 @@ export class MongoMessages implements DBMessagesClass {
         } catch (error) {
             return {
                 error: error,
-                message: error.message as string,
+                message: "An error occured."
             }
         }
         

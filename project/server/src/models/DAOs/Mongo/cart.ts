@@ -1,6 +1,7 @@
 import { connect, Model } from 'mongoose';
 import { EProductsErrors } from '../../../common/EErrors';
 import { Utils } from '../../../common/utils';
+import { isCartProduct } from '../../../interfaces/checkType';
 import {
     CUDResponse,
     DBCartClass,
@@ -49,12 +50,12 @@ export class MongoCart implements DBCartClass {
         } catch (error) {
             return {
                 error: error,
-                message: error.message as string, 
+                message: "An error occured." 
             }
         }
         
     }
-    async add(id: string, product: INew_Product): Promise<CUDResponse | ApiError> {
+    async add(id: string, product: INew_Product): Promise<CUDResponse | InternalError> {
         try {
             const cartProduct = { product_id: id, ...product };
             await this.cart.create(cartProduct);
@@ -65,23 +66,31 @@ export class MongoCart implements DBCartClass {
         } catch (error) {
             return {
                 error: error,
-                message: error.message as string,
+                message: "An error occured."
             }
         }
         
     }
-    async delete(id: string): Promise<CUDResponse | ApiError> {
+    async delete(id: string): Promise<CUDResponse | InternalError> {
         try {
-            const deleted: IMongoCartProduct = (await this.get(id))[0];
+            const deleted = await this.get(id);
+            if(isCartProduct(deleted)){
             const result = await this.cart.deleteOne({ product_id: id });
             return {
                 message: `Product successfully deleted.`,
                 data: deleted,
             };
+        }else{
+            const error = deleted as ApiError;
+            return {
+                error: error.error,
+                message: error.message
+            }
+        }
         } catch (error) {
             return {
                 error: error,
-                message: error.message as string,
+                message: "An error occured."
             }
         }
         

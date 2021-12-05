@@ -8,7 +8,7 @@ import {
 import * as dotenv from 'dotenv';
 import moment from 'moment';
 import { Utils } from '../../../common/utils';
-import { createHash } from '../../../passport/passport';
+
 
 dotenv.config();
 
@@ -39,11 +39,12 @@ const cartProductSchema = new Schema({
 
 const usersSchema = new Schema({
     timestamp: { type: String, required: true },
-    user: { type: String, required: true },
+    username: { type: String, required: true },
+    password: { type: String, required: true},
     name: { type: String, required: true },
     surname: { type: String, required: true },
     alias: { type: String, required: true },
-    age: { type: Number, required: true },
+    age: { type: String, required: true },
     avatar: { type: String, required: true },
 });
 
@@ -69,7 +70,7 @@ export const models = {
 const botData: INew_User = {
     timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
     username: `test@gmail.com`,
-    password: createHash('test123'),
+    password: Utils.createHash('test123'),
     name: `Manson`,
     surname: `Bot`,
     alias: `Welcome Bot`,

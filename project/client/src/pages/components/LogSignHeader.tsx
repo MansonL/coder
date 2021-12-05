@@ -1,3 +1,4 @@
+
 interface LogSignHeaderProps {
     showResult: boolean;
     logSignResult: boolean;

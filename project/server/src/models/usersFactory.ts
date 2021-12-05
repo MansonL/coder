@@ -1,5 +1,17 @@
-import { MemoryType } from "./productsFactory";
 import { MongoUsers } from "./DAOs/Mongo/users";
+
+/**
+ *
+ * Different types of memory storage
+ *
+ */
+
+ export enum MemoryType {
+    MongoAtlas = 'Mongo-Atlas',
+    LocalMongo = 'Local-Mongo',
+}
+
+export const storage = MemoryType.MongoAtlas;
 
 export class UsersFactory {
     static get(type: MemoryType): MongoUsers {

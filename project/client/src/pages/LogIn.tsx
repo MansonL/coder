@@ -1,8 +1,9 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { validation } from "../utils/joiSchemas";
 import { LoggedIn } from "./components/LoggedIn";
 import { LogSignHeader } from "./components/LogSignHeader";
+import { UserContext } from "./components/UserProvider";
 import './LogIn.css'
 import { authResponse } from "./Main";
 
@@ -12,12 +13,12 @@ export function LogIn (){
     const [showResult, setShowResult] = useState(false);
     const [loginSignResult, setLoginSignResult] = useState(false);
     const [msgResult, setMsgResult] = useState('');
-
-    const [loggedIn, setLoggedIn] = useState(false);
     const [loggingOut, setLoggingOut] = useState(false);
 
-    const [showHide, setShowHide] = useState(false);
+    const { loggedIn, updateLoginStatus, updateUser } = useContext(UserContext);
 
+    const [showHide, setShowHide] = useState(false);
+    
     const [credentials, setCredentials] = useState({
         username: '',
         password: '',
@@ -26,6 +27,7 @@ export function LogIn (){
     /**
      * Simple function for deleting the result message of the form submission attempt.
      */
+
     const deleteResultMsg = () => {
       setShowResult(false);
     }
@@ -33,6 +35,7 @@ export function LogIn (){
     /**
      * Simple function for changing the Hide/Show button at password input.
      */
+
     const showHideClick = () => {
       setShowHide(!showHide);
     }
@@ -41,6 +44,7 @@ export function LogIn (){
      * At every change event in the inputs field, we are setting the state with those values.
      * @param ev event param, just for taking the target name & value.
      */
+
     const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
       const property = ev.target.name;
       const value = ev.target.value;
@@ -53,7 +57,8 @@ export function LogIn (){
     /**
      * Function that receives the form submit event. Validate the current inputs value and then make the axios get (just for Class24 Assignment)
      */
-    const logInSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
+
+    const logInSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
       ev.preventDefault();
       const { error } = validation.login.validate(credentials);
       if(error){
@@ -61,52 +66,47 @@ export function LogIn (){
         setLoginSignResult(false);
         setMsgResult(error.message);
       }else{
-        const response = await (await axios.post<authResponse>(`http://localhost:8080/api/auth/login}`, credentials,{withCredentials: true})).data;
-        if(response.message.match(/Error/g)){
-          setShowResult(true);
-          setLoginSignResult(false);
-          setMsgResult(response.message)
-        }else{
+        axios.post<authResponse>(`http://localhost:8080/api/auth/login`, credentials,{withCredentials: true}).then(response => {
+          const data = response.data;
           setShowResult(true);
           setLoginSignResult(true);
-          setMsgResult(response.message);
+          setMsgResult(data.message);
           setTimeout(() => {
-            setLoggedIn(true);
+            updateUser(data.data)
+            updateLoginStatus();
             setLoggingOut(false);
           },2000)
-        }
+        }).catch(error => {
+          setShowResult(true);
+          setLoginSignResult(false);
+          if(error.response.status === 500){
+            setMsgResult("Internal server error.")
+          }else{
+            setMsgResult("Wrong credentials.")
+          }
+          
+        })
       }
     }
-    
+
     /**
      * Click handler for logging out. We show a goodbye message and after 2 seconds come back to the login form.
      */
     const logOutClick = async () => {
       setLoggingOut(true);
-      setTimeout(() => {
-        setLoggingOut(false);
-        setLoggedIn(false);
-        setShowResult(false);
-        setCredentials({
+      axios.get<authResponse>('http://localhost:8080/api/auth/logout', { withCredentials: true }).then(response => {
+        const data = response.data;
+        if(data.message.match(/Logged out/g)){
+          setLoggingOut(false);
+          updateLoginStatus();
+          setShowResult(false);
+          setCredentials({
           username: '',
           password: '',
-        })
-      }, 2000)
+          })
+        }         // Need to implement few modifications and UI for showing error in case of server
+      })          // error at the attempt of logging out.
     }
-    
-    useEffect(() => {
-      axios.get<authResponse>('http://localhost:8080/api/auth/login', {withCredentials: true}).then(response => {
-        const data = response.data;
-        console.log(data.message)
-        if(data.message.match(/already logged/g)){
-          setLoggedIn(true);
-          setLoggingOut(false);
-        }else{
-          setLoggedIn(false);
-          setShowResult(false);
-        }
-      })
-    }, [])
 
     return (
         <>
@@ -118,7 +118,7 @@ export function LogIn (){
         
           <div className="row-form">
             
-            <div className="effect-input"><input type="text" className="label-styled-input" value={credentials.username} onChange={onChange} name="user"/>
+            <div className="effect-input"><input type="text" className="label-styled-input" value={credentials.username} onChange={onChange} name="username"/>
             <label className={`${credentials.username != '' ? "hasContent" : "label-styled"}`}>Email or username</label>
               <span className="form-border"/>
             </div>
@@ -136,7 +136,7 @@ export function LogIn (){
         </form>
      
     </section>
-    </> : <LoggedIn logOutClick={logOutClick} loggingOut={loggingOut} credentials={credentials}/>
+    </> : <LoggedIn logOutClick={logOutClick} loggingOut={loggingOut}/>
     }
     </>
     )

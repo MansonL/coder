@@ -1,15 +1,6 @@
 import { MongoProducts } from './DAOs/Mongo/products';
+import { MemoryType } from './usersFactory';
 
-/**
- *
- * Different types of memory storage
- *
- */
-
-export enum MemoryType {
-    MongoAtlas = 'Mongo-Atlas',
-    LocalMongo = 'Local-Mongo',
-}
 
 /**
  *

@@ -16,6 +16,14 @@ class AuthController {
         }
     }
 
+    logout(req: Request, res: Response){
+        req.logout();
+        res.send({
+            message: "Logged out.",
+            data: {},
+        })
+    }
+
     signup(req: Request, res: Response){
         if(req.isAuthenticated()){
             res.send({

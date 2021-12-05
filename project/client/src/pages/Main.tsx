@@ -1,7 +1,7 @@
-
+import { UserProvider } from './components/UserProvider'
 import { Routes, Link, Route, Router, BrowserRouter } from 'react-router-dom';
 import { Messages } from './Messages';
-import { Form } from './Form';
+import { ProductsForm } from './ProductsForm';
 import { Home } from './Home';
 import './main.css';
 import React, { useEffect, useRef, useState } from 'react';
@@ -40,6 +40,7 @@ export function Main () {
 
   const menuClass = `products-dropdown ${showMenu ? 'showMenu' : ''}`;
   return (
+    <UserProvider>
         <BrowserRouter>
         <div className="container">
           
@@ -57,18 +58,21 @@ export function Main () {
   <div className="body">
   
     <Routes>
+      
     <Route path="/" element={<Home/>} />
       <Route path="/messages" element={<Messages/>}/>
       <Route path="/randomProducts" element={<RandomProducts/>} />
       <Route path="/DBProducts" element={<DBProducts/>} />
       <Route path="/cart" element={<Cart/>} />
-      <Route path="/form" element={<Form/>} />
+      <Route path="/form" element={<ProductsForm/>} />
       <Route path="/login" element={<LogIn/>}/>
       <Route path="/signup" element={<SignUp/>}/>
+    
     </Routes>
     
 </div>
 </div>
 </BrowserRouter>
+</UserProvider>
     )
 }

@@ -131,6 +131,9 @@ a {
     text-align: left;
     width: 70%;
   }
+  .msg-avatar {
+    max-width: 100%;
+  }
   .sent-msg{
     text-align:right;
     align-self: flex-end;

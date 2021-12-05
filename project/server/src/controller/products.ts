@@ -28,6 +28,7 @@ class ProductController {
     ): Promise<void> {
         const result: IMongoProduct[] | ApiError | InternalError = await productsApi.getProduct();
         console.log(`[PATH] Inside controller.`);
+        
         if(isProduct(result)){
             res.status(200).send(result)
         }else if(result instanceof ApiError){
@@ -64,7 +65,7 @@ class ProductController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const qty = req.query.qty;
+        const qty = req.params.qty;
         if (qty != null) {
             const quantity = Number(qty);
             const randomProducts = Utils.generateRandomProducts(quantity);
@@ -166,23 +167,25 @@ class ProductController {
                 /**
                  * First result already checked to have the corresponding properties of a stored Product
                  */
-            
+                const maxDBPrice = (
+                    await Utils.getMaxStockPrice(firstResult as IMongoProduct[], 'price')
+                )
+                const maxDBStock = (
+                    await Utils.getMaxStockPrice(firstResult as IMongoProduct[], 'stock')
+                )
+
                 title = title != null ? title : '';
                 code = code != null ? code : '';
                 minPrice = minPrice != null ? minPrice : '0.01';
                 maxPrice =
                     maxPrice != null
                         ? maxPrice
-                        : (
-                              await Utils.getMaxStockPrice(firstResult as IMongoProduct[], 'price')
-                          ).toString();
+                        :  +minPrice > maxDBPrice ? minPrice : maxDBPrice.toString();
                 minStock = minStock != null ? minStock : '0';
                 maxStock =
                     maxStock != null
                         ? maxStock
-                        : (
-                              await Utils.getMaxStockPrice(firstResult as IMongoProduct[], 'stock')
-                          ).toString();
+                        :  +minStock > maxDBStock ? minStock : maxDBStock.toString();
                 const options: IQuery = {
                     title: title,
                     code: code,
@@ -199,6 +202,7 @@ class ProductController {
                 if (error) {
                     next(ApiError.badRequest(error.message));
                 } else {
+                    console.log(options)
                     const result: IMongoProduct[] | ApiError | InternalError = await productsApi.query(
                         options
                     );
@@ -207,7 +211,7 @@ class ProductController {
                     }else if(result instanceof ApiError){
                         res.status(result.error).send(result)
                     }else{
-                        res.status(500).send(result)  // Internal Error sent, generated at the attempt to get a products query.
+                        res.status(500).send(result)  // Internal Error sent, generated at the attempt to get a products params.
                     }
                 }
         }else if(firstResult instanceof ApiError){

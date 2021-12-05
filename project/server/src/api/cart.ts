@@ -7,7 +7,7 @@ import {
 import { CartFactory } from '../models/cartFactory';
 import { MongoCart } from '../models/DAOs/Mongo/cart';
 import { ApiError } from '../utils/errorApi';
-import { storage } from './products';
+import { storage } from '../models/usersFactory';
 
 /**
  *

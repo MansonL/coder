@@ -118,13 +118,11 @@
 .add-remove-btns {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
 }
 .add-remove-icon{
   background-color: transparent;
   border: none;
   margin:auto;
-  flex-grow: 1;
   cursor: pointer;
 }
 .add-icon{
@@ -197,7 +195,7 @@
   border: 1px green solid;
 }
 .result-message {
-  font-size: 1.3rem;
+  font-size: 1rem;
 }
 .result-code {
   font-size: 0.7rem;

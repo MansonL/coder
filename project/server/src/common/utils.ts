@@ -11,6 +11,7 @@ import faker from 'faker';
 import moment from 'moment';
 import { randomNumber } from '../models/mockProducts';
 import { Document, Types } from 'mongoose';
+import bcrypt from 'bcrypt'
 
 export class Utils {
     /**
@@ -159,4 +160,14 @@ export class Utils {
         }
         return randomProducts;
     };
+
+    /**
+ * Function for encrypting user password
+ * @param password to encrypt
+ * @returns password encrypted
+ */
+
+ static createHash = (password: string): string => {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(10))
+}
 }

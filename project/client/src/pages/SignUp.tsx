@@ -1,21 +1,24 @@
 import axios from "axios";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import React from "react";
+import { useContext, useEffect, useState } from "react";
 import { INew_User } from "../../../server/src/interfaces/interfaces";
 import { validation } from "../utils/joiSchemas";
 import { LoggedIn } from "./components/LoggedIn";
 import { LogSignHeader } from "./components/LogSignHeader";
 import { SignUpForm } from "./components/SignUpForm";
 import { authResponse } from "./Main";
+import { UserContext } from './components/UserProvider'
+import './SignUp.css'
 
 export function SignUp () {
     
     const [showResult, setShowResult] = useState(false);
     const [loginSignResult, setLoginSignResult] = useState(false);
     const [msgResult, setMsgResult] = useState('');
-
-    const [loggedIn, setLoggedIn] = useState(false);
     const [loggingOut, setLoggingOut] = useState(false);
+
+    const { loggedIn, updateLoginStatus } = useContext(UserContext)
 
     /**
      * Simple function for deleting the result message of the form submission attempt.
@@ -78,9 +81,15 @@ export function SignUp () {
         }else{
           axios.post<authResponse>('http://localhost:8080/api/auth/signup', user, { withCredentials: true }).then(response => {
             const data = response.data;
-            setShowResult(true);
-            setLoginSignResult(true);
-            setMsgResult(data.message);
+            if(data.data){
+              setShowResult(true);
+              setLoginSignResult(true);
+              setMsgResult(data.message);  
+            }else{
+              setShowResult(true);
+              setLoginSignResult(false);
+              setMsgResult(data.message)
+            }
           }).catch(error => {
             setShowResult(true);
             setLoginSignResult(false);
@@ -96,32 +105,15 @@ export function SignUp () {
      */
      const logOutClick = async () => {
         setLoggingOut(true);
-        setTimeout(() => {
-          setLoggingOut(false);
-          setLoggedIn(false);
-          setShowResult(false);
-        }, 2000)
+        axios.get<authResponse>('http://localhost:8080/api/auth/logout', { withCredentials: true }).then(response => {
+            const data = response.data;
+            if(data.message.match(/Logged out/g)){
+              setLoggingOut(false);
+              updateLoginStatus();
+              setShowResult(false);
+            }
+      })
       }
-
-      /**
-       * 
-       * useEffect method to check if the client is already authenticated at the backend session or not.
-       * 
-       */
-      useEffect(() => {
-        setShowResult(false);
-        axios.get<authResponse>('http://localhost:808/api/auth/signup',{ withCredentials: true }).then(response => {
-          const data = response.data;
-          if(data.message.match(/already/g)){
-            setLoggedIn(true);
-            setNewUser({
-              ...newUser,
-              username: data.data.username,
-            })
-          }
-        })
-      }, [])
-
 
     return (
         <>
@@ -131,10 +123,7 @@ export function SignUp () {
       <SignUpForm signupSubmit={signupSubmit} onChange={onChange} newUser={newUser} repeatedPassword={repeatedPassword} setRepeatedPassword={setRepeatedPassword}/>
 
     </section>
-    </> : <LoggedIn credentials={
-        {username: newUser.username,
-        password: newUser.password,
-}} loggingOut={loggingOut} logOutClick={logOutClick}/>}
+    </> : <LoggedIn loggingOut={loggingOut} logOutClick={logOutClick}/>}
     </>
     ) 
 }

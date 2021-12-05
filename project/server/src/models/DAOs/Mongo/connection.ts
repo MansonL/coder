@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
-import { MongoClient } from 'mongodb';
-import { storage } from '../../../api/products';
-import { MemoryType } from '../../productsFactory';
+import { storage } from '../../usersFactory';
+import { MemoryType } from '../../usersFactory';
 import { atlasURI, mongoURI } from './models';
 
 const mongoURL = storage === MemoryType.MongoAtlas ? atlasURI : mongoURI;

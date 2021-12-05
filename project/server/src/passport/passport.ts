@@ -7,6 +7,7 @@ import { CUDResponse, IMongoUser, INew_User, InternalError } from "../interfaces
 import { usersApi } from "../api/users";
 import { ApiError } from "../utils/errorApi";
 import { isCUDResponse, isUser } from "../interfaces/checkType";
+import { Utils } from "../common/utils";
 
 
 declare global {
@@ -30,15 +31,12 @@ export const passportLogin: VerifyFunctionWithRequest = async (req: Request, use
     const result : IMongoUser | ApiError | InternalError = await usersApi.getUserByUsername(username);
     if(isUser(result)){
         if(validPassword(result, password)){
-            return done(null, {
-                data: result,
-                message: "Successfully logged in!"
-            })
+            return done(null, result)
         }else{
-            return done(null, null, `Wrong credentials`);
+            return done(null, null, {message: "Wrong credentials."});
         }
     }else if(result instanceof ApiError){
-        return done(null, null, result.message);
+        return done(null, null, {message: result.message});
     }else{
         return done(result)
     }
@@ -50,12 +48,12 @@ export const passportLogin: VerifyFunctionWithRequest = async (req: Request, use
         console.log(req.body);
         const firstResult : IMongoUser | ApiError | InternalError = await usersApi.getUserByUsername(username);
         if(isUser(firstResult)){
-            return done(null, null, `The email submitted is already in use.`);
+            return done(null, null, { message: `The email submitted is already in use.` });
         }else if(firstResult instanceof ApiError){
             const newUser : INew_User = {
                 timestamp: req.body.timestamp,
                 username: username,
-                password: createHash(password),
+                password: Utils.createHash(password),
                 name: req.body.name,
                 surname: req.body.surname,
                 age: req.body.age,
@@ -73,15 +71,7 @@ export const passportLogin: VerifyFunctionWithRequest = async (req: Request, use
         }
  }
  
-/**
- * Function for encrypting user password
- * @param password to encrypt
- * @returns password encrypted
- */
 
- export const createHash = (password: string): string => {
-     return bcrypt.hashSync(password, bcrypt.genSaltSync(10))
- }
 
  /**
   * 
@@ -113,7 +103,7 @@ passport.use('signup', new LocalStrategy(strategyOptions, passportSignUp));
 
 passport.serializeUser((user, done: (err: any, id?: string) => void) => {
     console.log("Serializing")
-    done(null, user._id)
+    done(null, user._id.toString())
 });
 
 passport.deserializeUser(async (id: string, done: (err: any, user: IMongoUser | undefined | false | null) => void) => {
