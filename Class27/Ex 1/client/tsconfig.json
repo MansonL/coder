@@ -21,6 +21,5 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
-, "../../Class27/Ex 1/client/src/Home.tsx"  ]
+    "src"],
 }
