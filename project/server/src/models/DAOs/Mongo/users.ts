@@ -6,16 +6,20 @@ import {
     IMongoUser,
     CUDResponse,
     InternalError,
+    IFacebookUser,
+    IMongoFBUser,
 } from '../../../interfaces/interfaces';
 import { Utils } from '../../../common/utils';
 import { DBUsersClass } from '../../../interfaces/interfaces';
 import { ApiError } from '../../../utils/errorApi';
 import { EUsersErrors } from '../../../common/EErrors';
 
-export class MongoUsers implements DBUsersClass {
+export class MongoUsers {
     private users: Model<INew_User>;
+    private FBusers: Model<IFacebookUser>
     constructor(type: string) {
         this.users = models.users;
+        this.FBusers = models.facebookUsers;
         this.init();
     }
     async init() {
@@ -49,6 +53,7 @@ export class MongoUsers implements DBUsersClass {
           } 
     }
     }
+    /* PASSPORT_LOCAL
     async getByUser(username: string): Promise<IMongoUser | ApiError | InternalError> {
         try {
             const doc = await this.users.findOne({ username: username });
@@ -66,6 +71,42 @@ export class MongoUsers implements DBUsersClass {
             }
         }
     }
+    */
+    /*  Just for PASSPORT FACEBOOK  */
+    async getFBUser(id: string): Promise<IMongoFBUser | ApiError | InternalError> {
+        try {
+            const doc = await this.FBusers.find({ facebookID: id });
+            if(doc.length > 0){
+                const result = Utils.extractFBUsers(doc)[0];
+                return result
+            }else{
+                return ApiError.notFound(EUsersErrors.UserNotFound);
+            }
+        } catch (error) {
+            return {
+                error: error,
+                message: "An error occured."
+            }
+        }
+    }
+
+    /*  Just for PASSPORT FACEBOOK  */
+    async saveFBUser(newUser: IFacebookUser): Promise<CUDResponse | InternalError> {
+        try {
+            const doc = await this.FBusers.create(newUser);
+            const result = Utils.extractFBUsers([doc])[0];
+            return {
+                message: `User successfully created.`,
+                data: result,
+            }
+        } catch (error) {
+            return {
+                error: error,
+                message: "An error occured."
+            }
+        }
+    }
+
     async add(user: INew_User): Promise<CUDResponse | InternalError> {
         try {
             const doc = await this.users.create(user);
@@ -81,4 +122,6 @@ export class MongoUsers implements DBUsersClass {
             }
         }
 }
+
+    
 }

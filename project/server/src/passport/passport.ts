@@ -1,22 +1,23 @@
 import { Request } from "express";
-import { IStrategyOptionsWithRequest, IVerifyOptions, VerifyFunctionWithRequest } from "passport-local";
-import bcrypt from 'bcrypt'
+import passportFacebook, { Profile, VerifyFunctionWithRequest } from 'passport-facebook'
 import passport from "passport";
-import passportLocal from 'passport-local'
-import { CUDResponse, IMongoUser, INew_User, InternalError } from "../interfaces/interfaces";
+import { IFacebookUser, IMongoFBUser, IMongoUser, } from "../interfaces/interfaces";
 import { usersApi } from "../api/users";
 import { ApiError } from "../utils/errorApi";
-import { isCUDResponse, isUser } from "../interfaces/checkType";
-import { Utils } from "../common/utils";
-
+import { isCUDResponse, isFBUser, isUser } from "../interfaces/checkType";
+import * as dotenv from 'dotenv'
+import moment from "moment";
 
 declare global {
     namespace Express {
-        interface User extends IMongoUser {}
+        interface User extends IMongoFBUser {}
     }
 }
 
-export type doneFunction = (error: any, user?: any, options?: IVerifyOptions) => void
+
+dotenv.config();
+
+export type doneFunction = (error: any, user?: any, options?: any) => void
 
 /**
  * 
@@ -26,62 +27,33 @@ export type doneFunction = (error: any, user?: any, options?: IVerifyOptions) =>
  *  
  */
 
-export const passportLogin: VerifyFunctionWithRequest = async (req: Request, username: string, password: string, done: doneFunction) => {
-    console.log('Inside passportLogin');
-    const result : IMongoUser | ApiError | InternalError = await usersApi.getUserByUsername(username);
-    if(isUser(result)){
-        if(validPassword(result, password)){
-            return done(null, result)
-        }else{
-            return done(null, null, {message: "Wrong credentials."});
+export const facebookVerify: VerifyFunctionWithRequest = async (req: Request, accessToken: string, refreshToken: string,profile: Profile, done: doneFunction) => {
+    console.log("---------------------- PROFILE -----------------------------\n");
+    console.log(profile);
+    console.log("\n---------------------- ACCESS TOKEN -----------------------------\n");
+    console.log(accessToken);
+    console.log("---------------------- REFRESH TOKEN -----------------------------\n");
+    console.log(refreshToken);
+    const firstResult = await usersApi.getFacebookUser(profile.id);
+    if(isFBUser(firstResult)){
+         return done(null, firstResult);
+    }else if(firstResult instanceof ApiError){
+        const newUser : IFacebookUser = {
+            timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
+            name: profile.displayName,
+            age: profile.birthday ? profile.birthday : 'none',
+            facebookID: profile.id
         }
-    }else if(result instanceof ApiError){
-        return done(null, null, {message: result.message});
+        const result = await usersApi.saveFacebookUser(newUser);
+        if(isCUDResponse(result)){
+            return done(null, result.data)
+        }else{
+         return done(result)
+        }
     }else{
-        return done(result)
+        return done(firstResult);
     }
- }
- 
- export const passportSignUp : VerifyFunctionWithRequest = async (req: Request, username: string, password: string, done: doneFunction) => {
-        console.log('Inside passportSignUp')     
-        console.log('\n----------------- REQ BODY -------------------------\n');
-        console.log(req.body);
-        const firstResult : IMongoUser | ApiError | InternalError = await usersApi.getUserByUsername(username);
-        if(isUser(firstResult)){
-            return done(null, null, { message: `The email submitted is already in use.` });
-        }else if(firstResult instanceof ApiError){
-            const newUser : INew_User = {
-                timestamp: req.body.timestamp,
-                username: username,
-                password: Utils.createHash(password),
-                name: req.body.name,
-                surname: req.body.surname,
-                age: req.body.age,
-                alias: req.body.alias,
-                avatar: req.body.avatar,
-            };
-            const result : CUDResponse | InternalError = await usersApi.addUser(newUser);
-            if(isCUDResponse(result)){
-                return done(null, result)
-            }else{
-                return done(result)  // Internal Error sent, generated at the attempt to register a new user.
-            }
-        }else{
-            return done(firstResult) // Internal Error sent, generated at the search of an existing user with the submitted username.
-        }
- }
- 
-
-
- /**
-  * 
-  * @param user IUser object which contains encripted password
-  * @param password password submitted from frontend
-  * @returns true if matches, false if it doesn't matches
-  */
- export const validPassword = (user: IMongoUser, password: string): boolean => {
-     return bcrypt.compareSync(password, user.password)
- }
+}
 
 /**
  * 
@@ -89,27 +61,28 @@ export const passportLogin: VerifyFunctionWithRequest = async (req: Request, use
  * 
  */
 
-const LocalStrategy = passportLocal.Strategy
-const strategyOptions : IStrategyOptionsWithRequest = {
-    usernameField: "username",
-    passwordField: "password",
-    passReqToCallback: true
-    
+const FacebookStrategy = passportFacebook.Strategy
+const passportConfig : passportFacebook.StrategyOptionWithRequest = {
+    clientID: process.env.FACEBOOK_APP_ID as string,
+    clientSecret: process.env.FACEBOOK_APP_SECRET as string,
+    callbackURL: "http://localhost:8080/api/auth/index",
+    passReqToCallback: true,
 }
 
-passport.use('login', new LocalStrategy(strategyOptions, passportLogin))
-passport.use('signup', new LocalStrategy(strategyOptions, passportSignUp));
+passport.use(new FacebookStrategy(passportConfig, facebookVerify))
+
 
 
 passport.serializeUser((user, done: (err: any, id?: string) => void) => {
     console.log("Serializing")
-    done(null, user._id.toString())
+    console.log(user)
+    done(null, user.facebookID)
 });
 
-passport.deserializeUser(async (id: string, done: (err: any, user: IMongoUser | undefined | false | null) => void) => {
+passport.deserializeUser(async (id: string, done: (err: any, user: IMongoFBUser | undefined | false | null) => void) => {
     console.log("Deserializing")
-    const result : IMongoUser[] | ApiError | InternalError = await usersApi.getUser(id);
-    if(isUser(result)){
+    const result = await usersApi.getFacebookUser(id);
+    if(isFBUser(result)){
         done(null, result)
     }else{
         done(result, null)

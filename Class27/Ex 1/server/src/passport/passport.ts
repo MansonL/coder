@@ -30,7 +30,7 @@ export const facebookVerify: VerifyFunctionWithRequest = async (req: Request, ac
     console.log(refreshToken);
     const firstResult = await usersStore.findByID(profile.id);
     if(isUser(firstResult)){
-        return done(null, firstResult);
+         return done(null, firstResult);
     }else if(firstResult instanceof ApiError){
         const newUser : IUser = {
             timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -45,12 +45,12 @@ export const facebookVerify: VerifyFunctionWithRequest = async (req: Request, ac
         }
         const result = await usersStore.saveOne(newUser);
         if(isUser(result)){
-
+            return done(null, result)
         }else{
-         done()
+         return done(result, null)
         }
     }else{
-        done(firstResult, null);
+        return done(firstResult, null);
     }
 }
 
@@ -64,7 +64,7 @@ const FacebookStrategy = passportFacebook.Strategy
 const passportConfig : passportFacebook.StrategyOptionWithRequest = {
     clientID: process.env.FACEBOOK_APP_ID as string,
     clientSecret: process.env.FACEBOOK_APP_SECRET as string,
-    callbackURL: "http://localhost:8080/api/login",
+    callbackURL: "http://localhost:8080/api/auth/index",
     passReqToCallback: true,
 }
 

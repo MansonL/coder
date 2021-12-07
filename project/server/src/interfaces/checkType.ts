@@ -1,4 +1,4 @@
-import { CUDResponse, IMongoCartProduct, IMongoMessage, IMongoProduct, IMongoUser, InternalError } from "./interfaces"
+import { CUDResponse, IMongoCartProduct, IMongoFBUser, IMongoMessage, IMongoProduct, IMongoUser, InternalError } from "./interfaces"
 
 export const isCartProduct = (data: any): data is IMongoCartProduct  => {
     if(data.length){
@@ -21,6 +21,14 @@ export const isUser = (data: any): data is IMongoUser => {
         return 'username' in data[0]
     }else{
         return 'username' in data
+    }
+}
+
+export const isFBUser = (data: any): data is IMongoFBUser => {
+    if(data.length){
+        return 'facebookID' in data[0]
+    }else{
+        return 'facebookID' in data
     }
 }
 

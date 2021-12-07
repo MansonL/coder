@@ -63,6 +63,23 @@ export interface INew_Message {
 }
 
 /**
+ * Facebook User queried from Mongo
+ */
+export interface IMongoFBUser extends IFacebookUser {
+    _id: string;
+}
+
+/**
+ * Facebook Passport New User
+ */
+export interface IFacebookUser {
+    timestamp: string;
+    facebookID : string;
+    name: string;
+    age: string;
+}
+
+/**
  *
  * Type of User Object to be stored and query from Mongo.
  *
@@ -128,7 +145,7 @@ export interface IQuery {
 
 export interface CUDResponse {
     message: string;
-    data: IMongoProduct | IMongoMessage | IMongoUser | [];
+    data: IMongoProduct | IMongoMessage | IMongoUser | IMongoFBUser | [];
 }
 
 /**

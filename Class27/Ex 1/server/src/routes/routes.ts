@@ -6,11 +6,11 @@ export const router = Router();
 
 router.get('/login', Controller.login);
 
-router.get('/auth/facebook', passport.authenticate('facebook'));
+router.get('/facebook', passport.authenticate('facebook'));
 
-router.get('/auth/index', passport.authenticate('facebook', {
-    successRedirect: 'http://localhost:8080/api/login',
-    failureRedirect: 'http://localhost:8080/api/login'
+router.get('/index', passport.authenticate('facebook', {
+    successRedirect: '/login',
+    failureRedirect: '/login'
 }))
 
 router.get('/signup', Controller.signup);

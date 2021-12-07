@@ -6,6 +6,8 @@ import {
     INew_Message,
     INew_User,
     INew_Product,
+    IFacebookUser,
+    IMongoFBUser,
 } from '../interfaces/interfaces';
 import faker from 'faker';
 import moment from 'moment';
@@ -129,6 +131,26 @@ export class Utils {
         });
         return users;
     };
+
+    static extractFBUsers = (documents: (Document<any, any, IFacebookUser> &
+        IFacebookUser & {
+            _id: Types.ObjectId;
+        })[]): IMongoFBUser[] => {
+            const users: IMongoFBUser[] = documents.map((document): IMongoFBUser => {
+                const { timestamp, name, age, facebookID } = document.toObject({ flattenMaps: true });
+                const _id: string = document._id;
+                const user : IMongoFBUser = {
+                    timestamp: timestamp,
+                    name: name,
+                    age: age,
+                    facebookID: facebookID,
+                    _id: _id
+                }
+                return user
+            });
+            return users
+        }
+
     static extractMongoCartDocs = (documents: any): IMongoCartProduct[] => {
         const productsIds = documents.map((document: any) => {
             const { product_id } = document;

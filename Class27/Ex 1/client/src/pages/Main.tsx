@@ -1,5 +1,5 @@
 import { UserProvider } from './components/UserProvider'
-import { Routes, Link, Route, Router, BrowserRouter } from 'react-router-dom';
+import { Routes, Link, Route, BrowserRouter } from 'react-router-dom';
 import { Home } from './Home'
 import './main.css';
 import React, { useEffect, useRef, useState } from 'react';

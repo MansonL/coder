@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 class AuthController {
 
     login(req: Request, res: Response){
+        console.log(req.user)
         if(req.isAuthenticated()){
             res.send({
                 message: "Already logged in.",  // Future res.redirect('/profile')

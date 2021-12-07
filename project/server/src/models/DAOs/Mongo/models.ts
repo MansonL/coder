@@ -1,6 +1,7 @@
 import { Model, model, Schema } from 'mongoose';
 import {
     ICartProduct,
+    IFacebookUser,
     INew_Message,
     INew_Product,
     INew_User,
@@ -48,6 +49,13 @@ const usersSchema = new Schema({
     avatar: { type: String, required: true },
 });
 
+const facebookUserSchema = new Schema({
+    timestamp: { type: String, required: true },
+    facebookID: { type: String, required: true },
+    name: { type: String, required: true },
+    age: { type: String, required: true },
+})
+
 const messagesSchema = new Schema({
     timestamp: { type: String, required: true },
     author: usersSchema,
@@ -65,6 +73,7 @@ export const models = {
         messagesSchema
     ),
     users: model<INew_User, Model<INew_User>>('users', usersSchema),
+    facebookUsers: model<IFacebookUser, Model<IFacebookUser>>('FBUsers', facebookUserSchema),
 };
 
 const botData: INew_User = {

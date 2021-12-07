@@ -30,4 +30,4 @@ app.use(passport.session());
 
 
 
-app.use('/api', router);
+app.use('/api/auth', router);
