@@ -74,6 +74,8 @@ export interface IMongoFBUser extends IFacebookUser {
  */
 export interface IFacebookUser {
     timestamp: string;
+    email: string;
+    facebookPhotos: string[];
     facebookID : string;
     name: string;
     age: string;

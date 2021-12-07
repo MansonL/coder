@@ -52,6 +52,11 @@ const usersSchema = new Schema({
 const facebookUserSchema = new Schema({
     timestamp: { type: String, required: true },
     facebookID: { type: String, required: true },
+    email: {type: String, required: true},
+    facebookPhotos: [{
+        type: String,
+        required: true,
+    }],
     name: { type: String, required: true },
     age: { type: String, required: true },
 })

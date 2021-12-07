@@ -80,3 +80,31 @@
   .logged-in-msg {
     margin-bottom: 0.8rem;
   }
+  .submit-row {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+    text-align: center;
+    justify-content: center;
+    width: 50%;
+   margin: auto;
+  }
+.submit-form {
+  border: 0.1rem solid #faf0dc;
+    background-color: transparent;
+    border-radius: 0.8rem;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.social-media-login-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 0.5rem;
+}
+.twitter-btn {
+  background-color: #1DA1F2;
+  color: white;
+  border-color: #1DA1F2;
+}

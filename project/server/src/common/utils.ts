@@ -137,10 +137,12 @@ export class Utils {
             _id: Types.ObjectId;
         })[]): IMongoFBUser[] => {
             const users: IMongoFBUser[] = documents.map((document): IMongoFBUser => {
-                const { timestamp, name, age, facebookID } = document.toObject({ flattenMaps: true });
+                const { timestamp, email, facebookPhotos, name, age, facebookID } = document.toObject({ flattenMaps: true });
                 const _id: string = document._id;
                 const user : IMongoFBUser = {
                     timestamp: timestamp,
+                    email: email,
+                    facebookPhotos: facebookPhotos,
                     name: name,
                     age: age,
                     facebookID: facebookID,
@@ -187,9 +189,10 @@ export class Utils {
  * Function for encrypting user password
  * @param password to encrypt
  * @returns password encrypted
- */
-
+ *
+    */
  static createHash = (password: string): string => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10))
 }
+
 }

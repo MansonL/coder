@@ -40,6 +40,8 @@ export const facebookVerify: VerifyFunctionWithRequest = async (req: Request, ac
     }else if(firstResult instanceof ApiError){
         const newUser : IFacebookUser = {
             timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
+            email: profile.emails ? profile.emails[0].value : 'no email',
+            facebookPhotos: profile.photos ? profile.photos.map(photo => photo.value) : [''],
             name: profile.displayName,
             age: profile.birthday ? profile.birthday : 'none',
             facebookID: profile.id
@@ -67,6 +69,7 @@ const passportConfig : passportFacebook.StrategyOptionWithRequest = {
     clientSecret: process.env.FACEBOOK_APP_SECRET as string,
     callbackURL: "http://localhost:8080/api/auth/index",
     passReqToCallback: true,
+    profileFields: ['id', 'displayName', 'emails', 'photos']
 }
 
 passport.use(new FacebookStrategy(passportConfig, facebookVerify))
