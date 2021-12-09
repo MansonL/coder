@@ -78,6 +78,7 @@ export interface IFacebookUser {
     facebookPhotos: string[];
     facebookID : string;
     name: string;
+    surname: string;
     age: string;
 }
 

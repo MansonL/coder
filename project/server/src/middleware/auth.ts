@@ -5,7 +5,7 @@ import passport from "../passport/passport";
 
 export const authRouter : Router = Router();
 
-/*
+/* PASSPORT-LOCAL
 authRouter.post('/signup', (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate('signup', function(err: any, user: any, info){
         if(err){

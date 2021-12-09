@@ -10,11 +10,12 @@ import { DBProducts } from './DBProducts';
 import { Cart } from './Cart';
 import { LogIn } from './LogIn';
 import { SignUp } from './SignUp';
+import { IFacebookUser, IMongoUser } from '../../../server/src/interfaces/interfaces';
 
 
 export interface authResponse {
     message: string;
-    data: any
+    data: IMongoUser | IFacebookUser
 }
 
 export function Main () {
@@ -25,7 +26,7 @@ export function Main () {
   useEffect(() => {
     document.addEventListener('click', (ev: MouseEvent) => {
       if(dropdownMenu && dropdownBtn && ev.target){
-          if(ev.target != dropdownBtn.current && ev.target !== dropdownMenu.current){
+          if(ev.target !== dropdownBtn.current && ev.target !== dropdownMenu.current){
             if(showMenu) setShowMenu(false)
           }
         }
@@ -55,7 +56,7 @@ export function Main () {
     <Link to="/messages"><button className="top-buttons">Messages</button></Link>
     <Link to="/login"><button className="top-buttons">Log in/Log out</button></Link>
   </div><hr/>
-  <div className="body">
+  <div className="content-body">
   
     <Routes>
       

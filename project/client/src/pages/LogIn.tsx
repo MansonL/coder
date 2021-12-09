@@ -6,7 +6,7 @@ import { LogSignHeader } from "./components/LogSignHeader";
 import { UserContext } from "./components/UserProvider";
 import './LogIn.css'
 import { authResponse } from "./Main";
-
+import { isFBUser, isUser } from '../../../server/src/interfaces/checkType'
 
 export function LogIn (){
     
@@ -15,7 +15,7 @@ export function LogIn (){
     const [msgResult, setMsgResult] = useState('');
     const [loggingOut, setLoggingOut] = useState(false);
 
-    const { loggedIn, updateLoginStatus, updateUser } = useContext(UserContext);
+    const { loggedIn, updateLoginStatus, updateDBUser, updateFBUser } = useContext(UserContext);
 
     const [showHide, setShowHide] = useState(false);
     
@@ -60,7 +60,11 @@ export function LogIn (){
         setLoginSignResult(true);
         setMsgResult(data.message);
         setTimeout(() => {
-          updateUser(data.data)
+          if(isFBUser(data.data)){
+            updateFBUser(data.data)  
+          }else if(isUser(data.data)){
+            updateDBUser(data.data)
+          }
           updateLoginStatus();
           setLoggingOut(false);
         },2000)
@@ -145,7 +149,7 @@ export function LogIn (){
           </div>
         <div className="pswd-form">
           <div className="effect-input"><input type={showHide ? "text" : "password"} className="label-styled-input" value={credentials.password} onChange={onChange} name="password"/>
-            <label className={`${credentials.password != '' ? "hasContent" : "label-styled"}`}>Password</label>
+            <label className={`${credentials.password !== '' ? "hasContent" : "label-styled"}`}>Password</label>
               <span className="form-border"/></div>
           <span className="show-pswd" onClick={showHideClick}>{showHide ? "Hide": "Show"}</span>
         </div>

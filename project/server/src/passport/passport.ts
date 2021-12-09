@@ -42,7 +42,8 @@ export const facebookVerify: VerifyFunctionWithRequest = async (req: Request, ac
             timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
             email: profile.emails ? profile.emails[0].value : 'no email',
             facebookPhotos: profile.photos ? profile.photos.map(photo => photo.value) : [''],
-            name: profile.displayName,
+            name: profile.displayName.split(" ")[0],
+            surname: profile.displayName.split(" ")[1],
             age: profile.birthday ? profile.birthday : 'none',
             facebookID: profile.id
         }

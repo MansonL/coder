@@ -1,6 +1,6 @@
 import Joi from "joi";
 import moment from "moment";
-import { INew_Product, INew_User } from "../../../../Class25/Entregable/server/src/interfaces/interfaces";
+import { INew_Product, INew_User } from "../../../Class25/Entregable/server/src/interfaces/interfaces";
 
 const maxDate = moment().subtract(10, 'y').format('MM/DD/YYYY');
 const minDate = moment().subtract(99, 'y').format('MM/DD/YYYY');

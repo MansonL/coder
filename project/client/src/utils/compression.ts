@@ -1,7 +1,7 @@
 
 import { denormalize, NormalizedSchema, schema } from 'normalizr';
 import { inspect } from 'util';
-import { IMongoMessage, IMongoUser } from '../../../server/src/interfaces/interfaces';
+import { IMongoMessage, IMongoUser } from '../../server/src/interfaces/interfaces';
 
 const authorsSchema = new schema.Entity(
     'authors',

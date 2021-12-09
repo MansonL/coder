@@ -1,7 +1,8 @@
 import { createContext, useEffect, useState } from "react";
-import { IMongoUser } from "../../../../server/src/interfaces/interfaces";
+import { IFacebookUser, IMongoUser } from "../../../../server/src/interfaces/interfaces";
 import axios from 'axios'
 import { authResponse } from '../Main';
+import { isFBUser, isUser } from "../../../../server/src/interfaces/checkType";
 
 interface ClickableProps {
     children: JSX.Element[] | JSX.Element;
@@ -9,7 +10,7 @@ interface ClickableProps {
 
 
 export const UserContext = createContext({
-    user: {
+    DBuser: {
         _id: '',
     timestamp: '',
     username: '',
@@ -20,13 +21,23 @@ export const UserContext = createContext({
     age: '',
     avatar: '',
     },
+    FBUser: {
+        timestamp: '',
+        facebookID: '',
+        name: '',
+        surname: '',
+        email: '',
+        facebookPhotos: [''],
+        age: '',
+    },
     loggedIn: false,
     updateLoginStatus: () => {},
-    updateUser: (user: IMongoUser) => {},
+    updateDBUser: (user: IMongoUser) => {},
+    updateFBUser: (user: IFacebookUser) => {},
 });
 
 export function UserProvider (props: ClickableProps) {
-    const [user, setUser] = useState<IMongoUser>({
+    const [DBuser, setUser] = useState<IMongoUser>({
         _id: '',
         timestamp: '',
         username: '',
@@ -37,24 +48,42 @@ export function UserProvider (props: ClickableProps) {
         age: '',
         avatar: '',
     });
+    const [FBUser, setFBUser] = useState<IFacebookUser>({
+        timestamp: '',
+        facebookID: '',
+        name: '',
+        surname: '',
+        email: '',
+        facebookPhotos: [''],
+        age: '',
+    })
     const [loggedIn, setLoggedIn] = useState(false);
 
     const updateLoginStatus = () => {
         setLoggedIn(loggedIn ? false : true)
     }
 
-    const updateUser = (user: IMongoUser) => {
+    const updateDBUser = (user: IMongoUser) => {
         setUser(user)
+    }
+
+    const updateFBUser = (user: IFacebookUser) => {
+        setFBUser(user)
     }
 
     const fetchUser = () => {
         axios.get<authResponse>('http://localhost:8080/api/auth/login', { withCredentials: true }).then(response => {
             console.log("Updating status")
             const data = response.data;
-            if(data.data[0]){
+            console.log(data);
+            if(isFBUser(data.data)){
                 setLoggedIn(true);
-                setUser(data.data[0]);
-            }else{
+                setFBUser(data.data);
+            }else if(isUser(data.data)){
+                setLoggedIn(true);
+                setUser(data.data)
+            }else {
+                setLoggedIn(false);
                 setUser({
                     _id: '',
             timestamp: '',
@@ -66,7 +95,7 @@ export function UserProvider (props: ClickableProps) {
             age: '',
             avatar: '',
                 })
-                setLoggedIn(false);
+                
             }
         })
     }
@@ -76,7 +105,7 @@ export function UserProvider (props: ClickableProps) {
     },[])
 
     return (
-        <UserContext.Provider value={{user, loggedIn, updateLoginStatus, updateUser}}>
+        <UserContext.Provider value={{DBuser, FBUser, loggedIn, updateLoginStatus, updateDBUser, updateFBUser}}>
             {props.children}
         </UserContext.Provider>
     )

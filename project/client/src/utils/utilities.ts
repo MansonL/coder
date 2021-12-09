@@ -1,4 +1,4 @@
-import { IMongoCartProduct, IMongoMessage, IMongoProduct, IMongoUser, INew_Product } from "../../../server/src/interfaces/interfaces";
+import { IMongoCartProduct, IMongoMessage, IMongoProduct, IMongoUser, INew_Product } from "../../server/src/interfaces/interfaces";
 import { socket } from "../lib/socket";
 
 /**
