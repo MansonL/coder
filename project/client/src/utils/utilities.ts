@@ -1,5 +1,4 @@
-import { IMongoCartProduct, IMongoMessage, IMongoProduct, IMongoUser, INew_Product } from "../../server/src/interfaces/interfaces";
-import { socket } from "../lib/socket";
+import { IMongoMessage, IMongoProduct, IMongoUser, IMongoFBUser } from "./interfaces";
 
 /**
  * 
@@ -42,5 +41,28 @@ export const hasUserOrEmpty = (user: [] | IMongoUser): user is IMongoUser => {
 
 export const hasMessagesOrEmpty = (message: [] | IMongoMessage): message is IMongoMessage  => {
     return 'message' in message
+}
+
+/**
+ * 
+ * Functions for checking types
+ * 
+ */
+
+
+ export const isUser = (data: any): data is IMongoUser => {
+    if(data.length){
+        return 'username' in data[0]
+    }else{
+        return 'username' in data
+    }
+}
+
+export const isFBUser = (data: any): data is IMongoFBUser => {
+    if(data.length){
+        return 'facebookID' in data[0]
+    }else{
+        return 'facebookID' in data
+    }
 }
 

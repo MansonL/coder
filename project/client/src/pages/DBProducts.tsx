@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { IMongoCartProduct, IMongoProduct } from "../../../server/src/interfaces/interfaces";
+import { IMongoCartProduct, IMongoProduct } from "../utils/interfaces" ;
 import { socket } from "../lib/socket";
 import { Products } from "./Products";
 import React from "react";

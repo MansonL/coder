@@ -1,5 +1,5 @@
 import React, {  useContext, useEffect, useState } from 'react';
-import { IMongoUser, IMongoMessage, INew_Message } from '../../../server/src/interfaces/interfaces';
+import { IMongoUser, IMongoMessage, INew_Message } from '../utils/interfaces';
 import { NormalizedSchema } from 'normalizr'
 import { validation } from '../utils/joiSchemas';
 import { socket } from '../lib/socket';

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { INew_User } from "../../../../server/src/interfaces/interfaces";
+import { INew_User } from "../../utils/interfaces";
 import '../SignUp.css'
 
 interface SignUpFormProps {

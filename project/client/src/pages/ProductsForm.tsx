@@ -1,7 +1,7 @@
 import axios from 'axios';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { CUDResponse, IMongoProduct, INew_Product } from '../../../server/src/interfaces/interfaces';
+import { CUDResponse, IMongoProduct, INew_Product } from '../utils/interfaces';
 import { socket } from '../lib/socket';
 import { validation } from '../utils/joiSchemas';
 import { hasProductOrEmpty } from '../utils/utilities';

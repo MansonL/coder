@@ -2,7 +2,7 @@ import axios from "axios";
 import moment from "moment";
 import React from "react";
 import { useContext, useEffect, useState } from "react";
-import { INew_User } from "../../../server/src/interfaces/interfaces";
+import { INew_User } from "../utils/interfaces";
 import { validation } from "../utils/joiSchemas";
 import { LoggedIn } from "./components/LoggedIn";
 import { LogSignHeader } from "./components/LogSignHeader";

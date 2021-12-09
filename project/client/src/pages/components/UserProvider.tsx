@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { IFacebookUser, IMongoUser } from "../../../../server/src/interfaces/interfaces";
 import axios from 'axios'
 import { authResponse } from '../Main';
-import { isFBUser, isUser } from "../../../../server/src/interfaces/checkType";
+import { isFBUser, isUser } from "../../utils/utilities";
 
 interface ClickableProps {
     children: JSX.Element[] | JSX.Element;

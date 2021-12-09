@@ -10,7 +10,7 @@ import { DBProducts } from './DBProducts';
 import { Cart } from './Cart';
 import { LogIn } from './LogIn';
 import { SignUp } from './SignUp';
-import { IFacebookUser, IMongoUser } from '../../../server/src/interfaces/interfaces';
+import { IFacebookUser, IMongoUser } from '../utils/interfaces';
 
 
 export interface authResponse {

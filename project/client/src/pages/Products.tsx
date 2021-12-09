@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './products.css'
-import { CUDResponse, IMongoCartProduct, IMongoProduct, IQuery } from '../../../server/src/interfaces/interfaces'
+import { CUDResponse, IMongoCartProduct, IMongoProduct, IQuery } from '../utils/interfaces'
 import { socket } from '../lib/socket'
 import axios from 'axios'
 import { hasProductOrEmpty } from '../utils/utilities'

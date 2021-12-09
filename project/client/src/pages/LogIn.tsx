@@ -6,7 +6,7 @@ import { LogSignHeader } from "./components/LogSignHeader";
 import { UserContext } from "./components/UserProvider";
 import './LogIn.css'
 import { authResponse } from "./Main";
-import { isFBUser, isUser } from '../../../server/src/interfaces/checkType'
+import { isFBUser, isUser } from '../utils/utilities';
 
 export function LogIn (){
     
