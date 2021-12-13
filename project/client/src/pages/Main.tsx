@@ -1,27 +1,30 @@
-import { UserProvider } from './components/UserProvider'
+import { UserContext, UserProvider } from './components/UserProvider'
 import { Routes, Link, Route, Router, BrowserRouter } from 'react-router-dom';
 import { Messages } from './Messages';
 import { ProductsForm } from './ProductsForm';
 import { Home } from './Home';
 import './main.css';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { RandomProducts } from './randomProducts';
 import { DBProducts } from './DBProducts';
 import { Cart } from './Cart';
 import { LogIn } from './LogIn';
 import { SignUp } from './SignUp';
-import { IFacebookUser, IMongoUser } from '../utils/interfaces';
+import { IMongoUser } from '../utils/interfaces';
+import { Profile } from './Profile';
 
 
 export interface authResponse {
     message: string;
-    data: IMongoUser | IFacebookUser
+    data: IMongoUser 
 }
 
 export function Main () {
   const dropdownMenu = useRef(null);
   const dropdownBtn = useRef(null);
   const [showMenu, setShowMenu] = useState(false)
+
+  const { loggedIn } = useContext(UserContext)
 
   useEffect(() => {
     document.addEventListener('click', (ev: MouseEvent) => {
@@ -54,7 +57,7 @@ export function Main () {
       </div>
     </div>
     <Link to="/messages"><button className="top-buttons">Messages</button></Link>
-    <Link to="/login"><button className="top-buttons">Log in/Log out</button></Link>
+    <Link to="/login"><button className="top-buttons">{loggedIn ? "Log out" : "Log In"}</button></Link>
   </div><hr/>
   <div className="content-body">
   
@@ -68,6 +71,7 @@ export function Main () {
       <Route path="/form" element={<ProductsForm/>} />
       <Route path="/login" element={<LogIn/>}/>
       <Route path="/signup" element={<SignUp/>}/>
+      <Route path="/profile" element={ <Profile />} />
     
     </Routes>
     

@@ -1,7 +1,6 @@
 import { Model, model, Schema } from 'mongoose';
 import {
     ICartProduct,
-    IFacebookUser,
     INew_Message,
     INew_Product,
     INew_User,
@@ -42,27 +41,18 @@ const cartProductSchema = new Schema({
 
 const usersSchema = new Schema({
     timestamp: { type: String, required: true },
-    username: { type: String, required: true },
-    password: { type: String, required: true},
+    username: { type: String },
+    password: { type: String },
     name: { type: String, required: true },
     surname: { type: String, required: true },
-    alias: { type: String, required: true },
-    age: { type: String, required: true },
+    alias: { type: String },
+    age: { type: String },
     avatar: { type: String, required: true },
-});
-
-const facebookUserSchema = new Schema({
-    timestamp: { type: String, required: true },
-    facebookID: { type: String, required: true },
-    email: {type: String, required: true},
-    facebookPhotos: [{
+    photos : [{
         type: String,
-        required: true,
     }],
-    name: { type: String, required: true },
-    surname: { type: String, required: true },
-    age: { type: String, required: true },
-})
+    facebookID: { type: String }
+});
 
 const messagesSchema = new Schema({
     timestamp: { type: String, required: true },
@@ -81,7 +71,6 @@ export const models = {
         messagesSchema
     ),
     users: model<INew_User, Model<INew_User>>('users', usersSchema),
-    facebookUsers: model<IFacebookUser, Model<IFacebookUser>>('FBUsers', facebookUserSchema),
 };
 
 const botData: INew_User = {
@@ -93,6 +82,8 @@ const botData: INew_User = {
     alias: `Welcome Bot`,
     age: "27/12/2000",
     avatar: `https://cdn.icon-icons.com/icons2/1371/PNG/512/robot02_90810.png`,
+    facebookID: '',
+    photos: [],
 };
 
 export const WelcomeBot = new models.users(botData);

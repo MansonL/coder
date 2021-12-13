@@ -5,21 +5,16 @@ import {
     INew_User,
     IMongoUser,
     CUDResponse,
-    InternalError,
-    IFacebookUser,
-    IMongoFBUser,
+    InternalError
 } from '../../../interfaces/interfaces';
 import { Utils } from '../../../common/utils';
-import { DBUsersClass } from '../../../interfaces/interfaces';
 import { ApiError } from '../../../utils/errorApi';
 import { EUsersErrors } from '../../../common/EErrors';
 
 export class MongoUsers {
     private users: Model<INew_User>;
-    private FBusers: Model<IFacebookUser>
     constructor(type: string) {
         this.users = models.users;
-        this.FBusers = models.facebookUsers;
         this.init();
     }
     async init() {
@@ -53,7 +48,7 @@ export class MongoUsers {
           } 
     }
     }
-    /* PASSPORT_LOCAL
+    /* PASSPORT SIGNUP LOCAL */
     async getByUser(username: string): Promise<IMongoUser | ApiError | InternalError> {
         try {
             const doc = await this.users.findOne({ username: username });
@@ -67,42 +62,24 @@ export class MongoUsers {
         } catch (error) {
             return {
                 error: error,
-                message: "An error occured" as string
+                message: "An error occured" 
             }
         }
     }
-    */
-    /*  Just for PASSPORT FACEBOOK  */
-    async getFBUser(id: string): Promise<IMongoFBUser | ApiError | InternalError> {
+    /* PASSPORT SIGNUP & LOGIN FACEBOOK */
+    async getByFacebookID (id: string): Promise<IMongoUser | ApiError | InternalError> {
         try {
-            const doc = await this.FBusers.find({ facebookID: id });
-            if(doc.length > 0){
-                const result = Utils.extractFBUsers(doc)[0];
-                return result
+            const doc = await this.users.findOne({ facebookID: id });
+            if(doc){
+                const user : IMongoUser = Utils.extractMongoUsers([doc])[0]
+                return user
             }else{
                 return ApiError.notFound(EUsersErrors.UserNotFound);
             }
         } catch (error) {
             return {
                 error: error,
-                message: "An error occured."
-            }
-        }
-    }
-
-    /*  Just for PASSPORT FACEBOOK  */
-    async saveFBUser(newUser: IFacebookUser): Promise<CUDResponse | InternalError> {
-        try {
-            const doc = await this.FBusers.create(newUser);
-            const result = Utils.extractFBUsers([doc])[0];
-            return {
-                message: `User successfully created.`,
-                data: result,
-            }
-        } catch (error) {
-            return {
-                error: error,
-                message: "An error occured."
+                message: "An error occured" 
             }
         }
     }

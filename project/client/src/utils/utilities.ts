@@ -1,4 +1,4 @@
-import { IMongoMessage, IMongoProduct, IMongoUser, IMongoFBUser } from "./interfaces";
+import { IMongoMessage, IMongoProduct, IMongoUser } from "./interfaces";
 
 /**
  * 
@@ -58,11 +58,4 @@ export const hasMessagesOrEmpty = (message: [] | IMongoMessage): message is IMon
     }
 }
 
-export const isFBUser = (data: any): data is IMongoFBUser => {
-    if(data.length){
-        return 'facebookID' in data[0]
-    }else{
-        return 'facebookID' in data
-    }
-}
 

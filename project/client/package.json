@@ -13,6 +13,7 @@
     "@types/normalizr": "^2.0.18",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
+    "@types/react-router-dom": "^5.3.2",
     "axios": "^0.24.0",
     "joi": "^17.5.0",
     "moment": "^2.29.1",

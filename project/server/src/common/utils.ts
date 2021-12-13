@@ -6,8 +6,6 @@ import {
     INew_Message,
     INew_User,
     INew_Product,
-    IFacebookUser,
-    IMongoFBUser,
 } from '../interfaces/interfaces';
 import faker from 'faker';
 import moment from 'moment';
@@ -113,7 +111,7 @@ export class Utils {
             })[]
     ): IMongoUser[] => {
         const users: IMongoUser[] = documents.map((document): IMongoUser => {
-            const { timestamp, username, password, name, surname, age, alias, avatar } =
+            const { timestamp, username, password, name, surname, age, alias, avatar, facebookID, photos } =
                 document.toObject({ flattenMaps: true });
             const _id: string = document._id;
             const mongoUser: IMongoUser = {
@@ -126,33 +124,14 @@ export class Utils {
                 age: age,
                 alias: alias,
                 avatar: avatar,
+                facebookID: facebookID,
+                photos: photos,
             };
             return mongoUser;
         });
         return users;
     };
 
-    static extractFBUsers = (documents: (Document<any, any, IFacebookUser> &
-        IFacebookUser & {
-            _id: Types.ObjectId;
-        })[]): IMongoFBUser[] => {
-            const users: IMongoFBUser[] = documents.map((document): IMongoFBUser => {
-                const { timestamp, email, facebookPhotos, name, surname, age, facebookID } = document.toObject({ flattenMaps: true });
-                const _id: string = document._id;
-                const user : IMongoFBUser = {
-                    timestamp: timestamp,
-                    email: email,
-                    facebookPhotos: facebookPhotos,
-                    name: name,
-                    surname: surname,
-                    age: age,
-                    facebookID: facebookID,
-                    _id: _id
-                }
-                return user
-            });
-            return users
-        }
 
     static extractMongoCartDocs = (documents: any): IMongoCartProduct[] => {
         const productsIds = documents.map((document: any) => {
@@ -187,13 +166,22 @@ export class Utils {
     };
 
     /**
- * Function for encrypting user password
- * @param password to encrypt
- * @returns password encrypted
- *
+    * Function for encrypting user password
+    * @param password to encrypt
+    * @returns password encrypted
+    *
     */
- static createHash = (password: string): string => {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-}
+    static createHash = (password: string): string => {
+        return bcrypt.hashSync(password, bcrypt.genSaltSync(10))
+    }
 
+    /**
+    * 
+    * @param user IUser object which contains encripted password
+    * @param password password submitted from frontend
+    * @returns true if matches, false if it doesn't matches
+    */
+    static validPassword = (user: IMongoUser, password: string): boolean => {
+        return bcrypt.compareSync(password, user.password)
+    }
 }

@@ -6,7 +6,7 @@ class AuthController {
         console.log(req.user)
         if(req.isAuthenticated()){
             res.send({
-                message: "Already logged in.",  // Future res.redirect('/profile')
+                message: "Already logged in.", 
                 data: req.user
             })
         }else{

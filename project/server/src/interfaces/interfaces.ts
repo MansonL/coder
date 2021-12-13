@@ -32,7 +32,6 @@ export interface ICartProduct extends INew_Product {
  *
  */
 export interface INew_Product {
-    [key: string]: number | string;
     title: string;
     description: string;
     timestamp: string; // Will have this type after the controller set product's
@@ -63,26 +62,6 @@ export interface INew_Message {
 }
 
 /**
- * Facebook User queried from Mongo
- */
-export interface IMongoFBUser extends IFacebookUser {
-    _id: string;
-}
-
-/**
- * Facebook Passport New User
- */
-export interface IFacebookUser {
-    timestamp: string;
-    email: string;
-    facebookPhotos: string[];
-    facebookID : string;
-    name: string;
-    surname: string;
-    age: string;
-}
-
-/**
  *
  * Type of User Object to be stored and query from Mongo.
  *
@@ -97,7 +76,6 @@ export interface IMongoUser extends INew_User {
  *
  */
 export interface INew_User {
-    [key: string]: string;
     timestamp: string;
     username: string;
     password: string;
@@ -106,6 +84,8 @@ export interface INew_User {
     age: string;
     alias: string;
     avatar: string;
+    photos: string[];
+    facebookID: string;
 }
 
 /**
@@ -148,7 +128,7 @@ export interface IQuery {
 
 export interface CUDResponse {
     message: string;
-    data: IMongoProduct | IMongoMessage | IMongoUser | IMongoFBUser | [];
+    data: IMongoProduct | IMongoMessage | IMongoUser | [];
 }
 
 /**

@@ -11,7 +11,7 @@ import { UserContext } from './components/UserProvider';
 
 export function Messages(){
   
-  const { DBuser, loggedIn } = useContext(UserContext);
+  const { user, loggedIn } = useContext(UserContext);
   const [users, setUsers] = useState<IMongoUser[]>([]);
   const [messages, setMessages] = useState<IMongoMessage[]>([])
   const [message, setMessage] = useState('');
@@ -35,7 +35,7 @@ export function Messages(){
       const msg : INew_Message = {
         timestamp: moment().format('YYYY-MM-DD HH:mm:ss'),
         author: {
-          ...DBuser,
+          ...user,
         },
         message: message
       }
@@ -101,7 +101,7 @@ export function Messages(){
         
         // Setting if it's a message from the current session user or not...
         
-        const sentOrReceived = message.author.username === DBuser.username ? ["sent-msg", "sent-content-msg"] : ["received-msg", "received-content-msg"];
+        const sentOrReceived = message.author.username === user.username ? ["sent-msg", "sent-content-msg"] : ["received-msg", "received-content-msg"];
         return (
           <div key={idx} className={sentOrReceived[0]}>
           {sentOrReceived[0] === "received-msg" && <div><img src={message.author.avatar} className="msg-avatar"/></div>}

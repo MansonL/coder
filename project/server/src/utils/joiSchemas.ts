@@ -61,7 +61,8 @@ class Validations {
          */
         this.user = Joi.object<INew_User>({
             timestamp: Joi.string().required(),
-            user: Joi.string().email({ tlds: { allow: false } }),
+            username: Joi.string().email({ tlds: { allow: false } }),
+            
             name: Joi.string().min(4).max(20).required(),
             surname: Joi.string().min(4).max(20).required(),
             age: Joi.number().min(10).max(100).required(),

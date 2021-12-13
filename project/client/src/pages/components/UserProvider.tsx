@@ -1,8 +1,8 @@
 import { createContext, useEffect, useState } from "react";
-import { IFacebookUser, IMongoUser } from "../../../../server/src/interfaces/interfaces";
+import { IMongoUser } from "../../../../server/src/interfaces/interfaces";
 import axios from 'axios'
 import { authResponse } from '../Main';
-import { isFBUser, isUser } from "../../utils/utilities";
+import { isUser } from "../../utils/utilities";
 
 interface ClickableProps {
     children: JSX.Element[] | JSX.Element;
@@ -10,7 +10,7 @@ interface ClickableProps {
 
 
 export const UserContext = createContext({
-    DBuser: {
+    user: {
         _id: '',
     timestamp: '',
     username: '',
@@ -20,24 +20,16 @@ export const UserContext = createContext({
     alias: '',
     age: '',
     avatar: '',
-    },
-    FBUser: {
-        timestamp: '',
-        facebookID: '',
-        name: '',
-        surname: '',
-        email: '',
-        facebookPhotos: [''],
-        age: '',
+    photos: [''],
+    facebookID: '',
     },
     loggedIn: false,
     updateLoginStatus: () => {},
     updateDBUser: (user: IMongoUser) => {},
-    updateFBUser: (user: IFacebookUser) => {},
 });
 
 export function UserProvider (props: ClickableProps) {
-    const [DBuser, setUser] = useState<IMongoUser>({
+    const [user, setUser] = useState<IMongoUser>({
         _id: '',
         timestamp: '',
         username: '',
@@ -47,45 +39,16 @@ export function UserProvider (props: ClickableProps) {
         alias: '',
         age: '',
         avatar: '',
+        facebookID:'',
+        photos: [''],
     });
-    const [FBUser, setFBUser] = useState<IFacebookUser>({
-        timestamp: '',
-        facebookID: '',
-        name: '',
-        surname: '',
-        email: '',
-        facebookPhotos: [''],
-        age: '',
-    })
     const [loggedIn, setLoggedIn] = useState(false);
 
     const updateLoginStatus = () => {
-        setLoggedIn(loggedIn ? false : true)
-    }
-
-    const updateDBUser = (user: IMongoUser) => {
-        setUser(user)
-    }
-
-    const updateFBUser = (user: IFacebookUser) => {
-        setFBUser(user)
-    }
-
-    const fetchUser = () => {
-        axios.get<authResponse>('http://localhost:8080/api/auth/login', { withCredentials: true }).then(response => {
-            console.log("Updating status")
-            const data = response.data;
-            console.log(data);
-            if(isFBUser(data.data)){
-                setLoggedIn(true);
-                setFBUser(data.data);
-            }else if(isUser(data.data)){
-                setLoggedIn(true);
-                setUser(data.data)
-            }else {
-                setLoggedIn(false);
-                setUser({
-                    _id: '',
+        setLoggedIn(loggedIn ? false : true);
+        if(loggedIn){
+            setUser({
+            _id: '',
             timestamp: '',
             username: '',
             password: '',
@@ -94,6 +57,39 @@ export function UserProvider (props: ClickableProps) {
             alias: '',
             age: '',
             avatar: '',
+            photos: [''],
+            facebookID: ''
+            })
+        }
+    }
+
+    const updateDBUser = (user: IMongoUser) => {
+        setUser(user)
+    }
+
+
+    const fetchUser = () => {
+        axios.get<authResponse>('http://localhost:8080/api/auth/login', { withCredentials: true }).then(response => {
+            console.log("Updating status")
+            const data = response.data;
+            console.log(data);
+            if(isUser(data.data)){
+                setLoggedIn(true);
+                setUser(data.data)
+            }else {
+                setLoggedIn(false);
+                setUser({
+                    _id: '',
+                timestamp: '',
+                username: '',
+                password: '',
+                name: '',
+                surname: '',
+                alias: '',
+                age: '',
+                avatar: '',
+                photos: [''],
+                facebookID: '',
                 })
                 
             }
@@ -105,7 +101,7 @@ export function UserProvider (props: ClickableProps) {
     },[])
 
     return (
-        <UserContext.Provider value={{DBuser, FBUser, loggedIn, updateLoginStatus, updateDBUser, updateFBUser}}>
+        <UserContext.Provider value={{user, loggedIn, updateLoginStatus, updateDBUser}}>
             {props.children}
         </UserContext.Provider>
     )

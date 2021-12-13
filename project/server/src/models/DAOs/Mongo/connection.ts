@@ -4,7 +4,7 @@ import { MemoryType } from '../../usersFactory';
 import { atlasURI, mongoURI } from './models';
 
 const mongoURL = storage === MemoryType.MongoAtlas ? atlasURI : mongoURI;
-console.log(mongoURL)
+
 
 export const mongoConnection = ()   => {
         return mongoose.connect(mongoURL).then((data) => {

@@ -7,7 +7,7 @@ import { mongoConnection } from '../models/DAOs/Mongo/connection';
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import cookieParser from 'cookie-parser'
-import passport from '../passport/passport'
+import passport from '../passport/index'
 
 export const app: express.Application = express();
 app.use(cors({

@@ -1,24 +1,23 @@
 import axios from "axios";
 import moment from "moment";
 import React from "react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { INew_User } from "../utils/interfaces";
 import { validation } from "../utils/joiSchemas";
-import { LoggedIn } from "./components/LoggedIn";
-import { LogSignHeader } from "./components/LogSignHeader";
 import { SignUpForm } from "./components/SignUpForm";
 import { authResponse } from "./Main";
 import { UserContext } from './components/UserProvider'
 import './SignUp.css'
+import { Profile } from "./Profile";
+import { LogSignHeaderWrapper } from "./components/LogSignHeaderWrapper";
 
 export function SignUp () {
     
     const [showResult, setShowResult] = useState(false);
     const [loginSignResult, setLoginSignResult] = useState(false);
     const [msgResult, setMsgResult] = useState('');
-    const [loggingOut, setLoggingOut] = useState(false);
 
-    const { loggedIn, updateLoginStatus } = useContext(UserContext)
+    const { loggedIn } = useContext(UserContext)
 
     /**
      * Simple function for deleting the result message of the form submission attempt.
@@ -36,6 +35,8 @@ export function SignUp () {
         age: '',
         alias: '',
         avatar: '',
+        facebookID: '',
+        photos: [''],
     })
     const [repeatedPassword, setRepeatedPassword] = useState('')
     //const [showPassRequirements, setShowPassRequirements] = useState([false, false]);
@@ -71,6 +72,8 @@ export function SignUp () {
         ev.preventDefault();
         const user : INew_User= {
             ...newUser,
+            facebookID: '',
+            photos: [newUser.avatar],
             timestamp: moment().format('YYYY-MM-DD HH:mm:ss')
         }
         const { error } = validation.user.validate(user);
@@ -99,31 +102,16 @@ export function SignUp () {
         }
         
     }
-    
-    /**
-     * Click handler for logging out. We show a goodbye message and after 2 seconds come back to the login form.
-     */
-     const logOutClick = async () => {
-        setLoggingOut(true);
-        axios.get<authResponse>('http://localhost:8080/api/auth/logout', { withCredentials: true }).then(response => {
-            const data = response.data;
-            if(data.message.match(/Logged out/g)){
-              setLoggingOut(false);
-              updateLoginStatus();
-              setShowResult(false);
-            }
-      })
-      }
 
     return (
         <>
         {!loggedIn ?  <>
-        <LogSignHeader showResult={showResult} msgResult={msgResult} type="signup" deleteResultMsg={deleteResultMsg} logSignResult={loginSignResult}/>
+        <LogSignHeaderWrapper showResult={showResult} msgResult={msgResult} type="signup" deleteResultMsg={deleteResultMsg} logSignResult={loginSignResult}/>
     <section>
       <SignUpForm signupSubmit={signupSubmit} onChange={onChange} newUser={newUser} repeatedPassword={repeatedPassword} setRepeatedPassword={setRepeatedPassword}/>
 
     </section>
-    </> : <LoggedIn loggingOut={loggingOut} logOutClick={logOutClick}/>}
+    </> : <Profile/>}
     </>
     ) 
 }
