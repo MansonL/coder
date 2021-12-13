@@ -53,11 +53,16 @@ export const facebookVerify: VerifyFunctionWithRequest = async (req: Request, ac
  * PASSPORT CONFIGS
  * 
  */
+export const commandData = process.argv.slice(1);
+
+const clientID = commandData[1] && commandData[1].length > 4 && !isNaN(Number(commandData[1])) ? commandData[1] : process.env.FACEBOOK_APP_ID as string
+
+const clientSecret = commandData[2] && commandData[2].length > 4 && isNaN(Number(commandData[2])) ? commandData[2] : process.env.FACEBOOK_APP_SECRET as string
 
 export const FacebookStrategy = passportFacebook.Strategy;
 export const passportFBConfig : passportFacebook.StrategyOptionWithRequest = {
-    clientID: process.env.FACEBOOK_APP_ID as string,
-    clientSecret: process.env.FACEBOOK_APP_SECRET as string,
+    clientID: clientID,
+    clientSecret: clientSecret,
     callbackURL: "http://localhost:8080/api/auth/index",
     passReqToCallback: true,
     profileFields: ['id', 'displayName', 'emails', 'photos']
