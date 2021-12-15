@@ -5,8 +5,7 @@ import { usersRouter } from './users';
 import { cartRouter } from './cart';
 import { authRouter } from '../middleware/auth';
 import { fork } from 'child_process';
-import path from 'path';
-import { commandData } from '../passport/facebook';
+import { commandData, CPUs } from '..';
 
 export const router: e.Router = Router();
 router.use('/products', productsRouter);
@@ -24,8 +23,14 @@ router.get('/info', (req: Request, res: Response) => {
         executionPath: process.execPath,
         processID: process.pid,
         folderPath: process.cwd(),
+        CPUNumber: CPUs
     })
 })
+
+router.get('/die', (req: Request, res: Response) => { 
+    res.send(`Process ${process.pid} killed.`);
+    process.exit();
+});
 
 router.get('/randoms', (req: Request, res: Response) => {
     const howMany = req.query.amount;
