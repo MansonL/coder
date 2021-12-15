@@ -53,7 +53,7 @@ export const facebookVerify: VerifyFunctionWithRequest = async (req: Request, ac
  * PASSPORT CONFIGS
  * 
  */
-export const commandData = process.argv.slice(1);
+export const commandData = process.argv.slice(2);
 
 const clientID = commandData[1] && commandData[1].length > 4 && !isNaN(Number(commandData[1])) ? commandData[1] : process.env.FACEBOOK_APP_ID as string
 
